@@ -3,7 +3,7 @@
     <v-container>
       <v-layout column justify-space-around>
          <v-flex xs12 sm8 md4>
-        <img src="../assets/suburbs2.png" alt="LOGO" style="width: 10%;">
+        <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
       </v-flex>
         <br>
         <v-flex xs12 sm6 md6 offset-xs0 offset-md0 offset-sm0>
@@ -77,7 +77,7 @@ export default {};
 
 <style scoped>
 .about1 {
-  width: 80%;
+  width: 100%;
 }
 .aboutBottom {
   width: 110%;

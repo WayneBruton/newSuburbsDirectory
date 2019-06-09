@@ -1,6 +1,6 @@
 <template>
   <v-container>
-        <img src="../assets/suburbs2.png" alt="LOGO" style="width: 10%; ">
+        <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%; ">
 
     <v-layout class="panelWidth" xs3 column justify-space-around>
       <v-flex xs12 sm8 md8 offset-md0>
@@ -53,7 +53,7 @@
             type="success"
             >{{ success }}
           </v-alert>
-          <v-btn id="btn2"  @click="" light style="background-color:#F4EBDE;"
+          <v-btn id="btn2"   light style="background-color:#F4EBDE;"
             >Send</v-btn
           >
         </panel>

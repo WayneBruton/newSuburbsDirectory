@@ -5,6 +5,8 @@ import Faq from "./views/Faq.vue";
 import Contact from "./views/Contact.vue";
 import Directory from "./views/Directory.vue";
 import About from "./views/About.vue";
+import Profiles from "./views/Profiles.vue";
+import ProfileDetails from "./views/ProfileDetails.vue";
 
 
 
@@ -38,6 +40,16 @@ export default new Router({
       path: "/about",
       name: "about",
       component: About
+    },
+    {
+      path: "/profiles",
+      name: "profiles",
+      component: Profiles
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: ProfileDetails
     }
 
   ]

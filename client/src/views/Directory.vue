@@ -2,28 +2,29 @@
   <v-container column justify-content-space-evenly style=" width: 100%">
     <v-layout column>
       <v-flex xs12 sm8 md4>
-        <img src="../assets/suburbs2.png" alt="LOGO" style="width: 10%;">
+        <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
       </v-flex>
       <transition name="welcome">
         <v-flex>
-          <h1>View our Categories</h1>
+          <h1>{{ this.$store.state.areaChosen[0].area_description }}</h1>
         </v-flex>
       </transition>
     </v-layout>
+    <v-alert :top="alertPostion" class="noProfiles" v-if="message" :value="true" type="info">{{ message }}</v-alert>
     <v-layout row wrap justify-space-between>
-        <v-flex
-          ml-1
-          mt-4
-          mr-2
-          xs12
-          sm8
-          md3
-          offset-sm0
-          offset-xs0
-          offset-md0
-          v-for="(item, id) in items"
-          :key="id"
-        >
+      <v-flex
+        ml-1
+        mt-4
+        mr-2
+        xs12
+        sm8
+        md3
+        offset-sm0
+        offset-xs0
+        offset-md0
+        v-for="(item, id) in this.$store.state.categories"
+        :key="id"
+      >
         <!-- <v-hover>
         <v-card
         slot-scope="{ hover }"
@@ -39,122 +40,109 @@
             xs12
             sm8
             md3
-            > -->
-          <img :src="item.category_image" alt >
-          <h3>{{ item.category_name }}</h3>
-        <!-- </v-card>
-        </v-hover> -->
-        </v-flex>
-    </v-layout>
-      <!-- </v-card> -->
+        >-->
 
+        <v-img
+          class="imgCat"
+          v-if="item.count > 0"
+          :id="item.id"
+          :src="item.image_url"
+          alt
+          @click="chooseCategory($event)"
+        ></v-img>
+        <v-img
+          class="imgCat emptyOfProfiles"
+          v-else
+          :id="item.id"
+          :src="item.image_url"
+          alt
+          @click="chooseCategory($event)"
+        ></v-img>
+        <h3>{{ item.category_description }}({{ item.count }})</h3>
+
+        <!-- </v-card>
+        </v-hover>-->
+      </v-flex>
+    </v-layout>
+    <!-- </v-card> -->
   </v-container>
 </template>
 
 <script>
+import DirectoryService from "@/services/DirectoryServices.js";
 export default {
   data() {
     return {
-      items: [
-        {
-          category_image: require("../assets/testImgs/accomodation.png"),
-          category_name: "Accomodation"
-        },
-        {
-          category_image: require("../assets/testImgs/artscrafts.png"),
-          category_name: "Arts & Crafts"
-        },
-        {
-          category_image: require("../assets/testImgs/automotive.png"),
-          category_name: "Automotive"
-        },
-        {
-          category_image: require("../assets/testImgs/businessservices.png"),
-          category_name: "Business Services"
-        },
-        {
-          category_image: require("../assets/testImgs/decor.png"),
-          category_name: "Decor"
-        },
-        {
-          category_image: require("../assets/testImgs/events.png"),
-          category_name: "Events"
-        },
-        {
-          category_image: require("../assets/testImgs/financial.png"),
-          category_name: "Financial"
-        },
-        {
-          category_image: require("../assets/testImgs/fooddrink.png"),
-          category_name: "Food & Drink"
-        },
-        {
-          category_image: require("../assets/testImgs/garden.png"),
-          category_name: "Garden Services"
-        },
-        {
-          category_image: require("../assets/testImgs/househome.png"),
-          category_name: "House & Home"
-        },
-        {
-          category_image: require("../assets/testImgs/ittechnology.png"),
-          category_name: "IT & Technology"
-        },
-        {
-          category_image: require("../assets/testImgs/jewelryaccessories.png"),
-          category_name: "Jewelry & Accessories"
-        },
-        {
-          category_image: require("../assets/testImgs/kids.png"),
-          category_name: "Kids"
-        },
-        {
-          category_image: require("../assets/testImgs/medical.png"),
-          category_name: "Medical"
-        },
-        {
-          category_image: require("../assets/testImgs/pets.png"),
-          category_name: "Pets"
-        },
-        {
-          category_image: require("../assets/testImgs/photography.png"),
-          category_name: "Photography"
-        },
-        {
-          category_image: require("../assets/testImgs/pregnancybabies.png"),
-          category_name: "Pregnancy & Babies"
-        },
-        {
-          category_image: require("../assets/testImgs/property.png"),
-          category_name: "Property"
-        },
-        {
-          category_image: require("../assets/testImgs/transport.png"),
-          category_name: "Transport"
-        },
-        {
-          category_image: require("../assets/testImgs/traveltourism.png"),
-          category_name: "Travel & Tourism"
-        },
-        {
-          category_image: require("../assets/testImgs/wellnessbeauty.png"),
-          category_name: "Wellness & Beauty"
-        }
-      ]
+      categories: [],
+      area: [],
+      message: "",
+      alertPostion: 0
     };
   },
   mounted() {
-    console.log(this.items[0].category_name);
+    this.categories = this.$store.state.categories;
+  },
+
+  methods: {
+    chooseCategory: function(event) {
+      let targetId = parseInt(event.currentTarget.id);
+      let chosen = this.$store.state.categories.find(el => {
+        return el.id === targetId;
+      });
+      // console.log(window.innerHeight)
+      this.alertPostion = window.innerHeight * 5
+      console.log("Category Chosen:", targetId)
+      if (chosen.count === 0) {
+        this.message = "No profiles yet. Be the first!";
+        setTimeout(() => {
+          this.message = "";
+        }, 1500);
+      } else {
+        this.message = "";
+        let area = this.$store.state.areaChosen[0].id
+        let category = targetId
+        let chosenCategory = this.categories.find((el) => {
+          return el.id === targetId
+        })
+        let profilesChosen = {
+          area: area,
+          areaDescription: this.$store.state.areaChosen[0].area_description,
+          category: category,
+          category_description: chosenCategory.category_description
+        }
+        console.log("profilesChosen",profilesChosen)
+        this.$store.dispatch("getProfiles", profilesChosen);
+        // console.log(this.$store.state.profilesForCategoryAndAreaChosen)
+        this.$router.push('profiles')
+
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
-img {
-    width: 100%;
+.imgCat {
+  width: 100%;
 }
-img:hover {
-    width: 99%;  
+.imgCat:hover {
+  width: 99%;
+  cursor: pointer;
+}
+.emptyOfProfiles:hover {
+  opacity: 0.3;
+  /* width: 30%; */
+  /* height: 30%; */
+}
+
+.noProfiles {
+  z-index: 1;
+  position: fixed;
+  top: 50%;
+  margin: 0 auto;
+  width: 75%;
+
+
 }
 @media screen and (max-width: 768px) {
   /* v-card {
