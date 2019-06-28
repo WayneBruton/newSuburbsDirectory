@@ -6,8 +6,10 @@ import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import { sync } from "vuex-router-sync";
 import "material-design-icons/iconfont/material-icons.css";
+import VueDisqus from 'vue-disqus'
 
 Vue.use(Vuetify);
+Vue.use(VueDisqus)
 
 Vue.config.productionTip = false;
 

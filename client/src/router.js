@@ -7,8 +7,11 @@ import Directory from "./views/Directory.vue";
 import About from "./views/About.vue";
 import Profiles from "./views/Profiles.vue";
 import ProfileDetails from "./views/ProfileDetails.vue";
-
-
+import Profile from "./views/Profile.vue";
+import Launchpad from "./views/Launchpad.vue";
+import Login from "./views/Login.vue";
+import ResetPassword from "./views/ResetPassword.vue";
+import EditProfile from "./views/EditProfile.vue";
 
 Vue.use(Router);
 
@@ -50,7 +53,31 @@ export default new Router({
       path: "/register",
       name: "register",
       component: ProfileDetails
+    },
+    {
+      path: "/profile/:profileId",
+      name: "profile",
+      component: Profile
+    },
+    {
+      path: "/launchpad",
+      name: "launchpad",
+      component: Launchpad
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: Login
+    },
+    {
+      path: "/resetPassword/:reset",
+      name: "resetPassword",
+      component: ResetPassword
+    },
+    {
+      path: "/editProfile",
+      name: "editProfile",
+      component: EditProfile
     }
-
   ]
 });

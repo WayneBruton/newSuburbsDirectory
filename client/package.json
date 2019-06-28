@@ -16,6 +16,8 @@
     "vue": "^2.6.10",
     "vue-carousel-3d": "^0.2.0",
     "vue-crop-simple": "^2.1.0",
+    "vue-cropperjs": "^4.0.0",
+    "vue-disqus": "^3.0.5",
     "vue-draggable-resizable": "^2.0.0-rc2",
     "vue-lazyload": "^1.2.6",
     "vue-load-image": "^0.1.7",

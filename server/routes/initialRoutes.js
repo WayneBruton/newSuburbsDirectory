@@ -26,7 +26,7 @@ router.get("/areas", (req, res) => {
         el.image_url = `${process.env.IMG_URL}${el.image_url}`
       });
       res.json(result);
-      console.log(result)
+      // console.log(result)
     });
     connection.release();
   });
@@ -63,23 +63,24 @@ router.get("/categories/:areaId", (req, res) => {
         el.image_url = `${process.env.IMG_URL}${el.image_url}`
       });
       res.json(result);
-      console.log(result)
+      // console.log(result)
     });
     connection.release();
   });
 });
-
+ 
 
 router.put("/profiles", (req, res) => {
   let bod = req.body
   let area = req.body.area
   let category = req.body.category
-  console.log("Testing")
+  // console.log("Testing")
   // res.json(bod)
 
   let sql = `select id, businessName, profile_description, profile_image
         from client_profiles
         where JSON_CONTAINS(areas, '${area}',"$") and JSON_CONTAINS(catarea, '${category}',"$") and profile_approved = true and paid_to_date = true order by businessName`
+
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();

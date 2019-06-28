@@ -3,109 +3,337 @@ const router = express.Router();
 const pool = require("./connection");
 const multer = require("multer");
 const fs = require("fs");
-const Jimp = require("jimp");
+const Joi = require("joi");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
+
+function jwtSignUser(user) {
+  const SIX_HOURS = 60 * 60 * 6;
+  return jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn: SIX_HOURS
+  });
+}
 
 const upload = multer({
   dest: "./public/uploads/"
 });
 
-//   router.post("/removeImageFileName", (req, res) => {
-//     console.log("THIS IS THE FILENAME", req.body.fileName);
-//     let fileName = req.body.fileName;
-//     fs.unlink(`public/uploads/${fileName}`, err => {
-//       console.log(err);
-//       console.log("File Deleted");
-//     });
-//     res.send({ fileDeleted: fileName });
+// SET/USE TOKEN
+// let userJson = {
+//   id: result[0].id,
+//   username: result[0].first_name,
+//   email: result[0].email
+// };
+// res.header("Authorization", "Bearer" + jwtSignUser(userJson));
+// res.json({
+//   user: userJson,
+//   token: jwtSignUser(userJson),
+//   hash: hash
+// });
+
+// CHECK TOKEN
+
+//   let checktoken = (req, res, next) => {
+//     // console.log(req.body)
+//   let token = req.body.token;
+//   jwt.verify(token, jwtSecret, (err, decoded) => {
+//     if (err) {
+//       res.json({
+//         success: false,
+//         message: "Token is not valid"
+//       });
+//       next();
+//     } else {
+//       return res.send({
+//         success: true,
+//         message: "Token is valid"
+//       });
+//     }
 //   });
+// };
 
-router.post("/insertPofileDraftImage", upload.single("file"), (req, res) => {
-  console.log(req.file);
-  // console.log(req.body);
-  console.log("testing");
-  let fileType = req.file.mimetype.split("image/")[1];
-  // console.log(fileType);
-  // res.json('Testing')
+// router.put("/authenticateAdmin", checktoken, (req, res) => {});
 
-  try {
-    let filePath = req.file.path.split("public/")[1];
-    let imageUrl = `${process.env.IMG_URL}/${filePath}`;
-    res.json({
-      File: req.file,
-      imageFile: imageUrl,
-      fileType: fileType
+router.put("/getPackages", function(req, res) {
+  console.log("NUMBER OF SUBURBS",req.body.number);
+
+  let numberOfAreas = req.body.number;
+
+  var sql = `select * from packages where number_of_suburbs = ${numberOfAreas} order by id`;
+
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      };
+
+      res.json(result);
     });
-  } catch (err) {
-    res.json({ error: "Could not upload at this time, please try later" });
+    connection.release();
+  });
+});
+
+router.get("/getExtraPackages", function(req, res) {
+  var sql = `select * from extra_packages order by id`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) throw error;
+
+      res.json(result);
+    });
+    connection.release();
+  });
+});
+
+router.get("/getProfile/:id", function(req, res) {
+  console.log(req.params.id)
+  // res.json({Awesome: req.params.id})
+  var sql = `select * from client_profiles where id = ${req.params.id}`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) throw error;
+
+      res.json(result);
+    });
+    connection.release();
+  });
+});
+
+router.post("/addProfile", upload.array(), function(req, res) {
+  var base64Data = req.body.file;
+  let base64Image = base64Data.split(";base64,").pop();
+  var base64Data1 = req.body.file1;
+  let base64Image1 = base64Data1.split(";base64,").pop();
+  var base64Data2 = req.body.file2;
+  let base64Image2 = base64Data2.split(";base64,").pop();
+  var base64Data3 = req.body.file3;
+  let base64Image3 = base64Data3.split(";base64,").pop();
+
+  let initArray = req.body.areas.split(",");
+  let areas = [];
+  let catarea = [];
+  let extra_packages = [];
+  for (i = 0; i < initArray.length; i++) {
+    areas.push(parseInt(initArray[i]));
+  }
+  initArray = req.body.catarea.split(",");
+  for (i = 0; i < initArray.length; i++) {
+    catarea.push(parseInt(initArray[i]));
+  }
+
+  if (req.body.extra_packages !== "") {
+    initArray = req.body.extra_packages.split(",");
+    for (i = 0; i < initArray.length; i++) {
+      extra_packages.push(parseInt(initArray[i]));
+    }
+  } else {
+    extra_packages = [];
+  }
+  let id = 0;
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+    let sql1 = ` INSERT INTO client_profiles (businessName,first_name,last_name,mob_no,email,website,facebook,instagram,
+    areas,selectedOption,catarea,profile_description, extra_packages,password,  product_service, adminAssist, profile_heading, profile_approved, paid_to_date
+) values (
+'${req.body.businessName}','${req.body.firstName}','${req.body.lastName}','${
+      req.body.contactNumber
+    }','${req.body.email}','${req.body.website}','${req.body.facebook}','${
+      req.body.instagram
+    }',
+"[${areas}]",${req.body.selectedOption},"[${catarea}]","${
+      req.body.profile_description
+    }", "[${extra_packages}]","${hash}", "service", true, 'test', true, true
+)`;
+    let sql2 = `select id from client_profiles where email like '${
+      req.body.email
+    }' and businessName like '${req.body.businessName}' `;
+    let sql = `${sql1};${sql2}`;
+    pool.getConnection(function(err, connection) {
+      if (err) {
+        connection.release();
+        resizeBy.send("Error with connection");
+      }
+      connection.query(sql, function(error, result) {
+        if (error) throw error;
+        id = result[1][0].id;
+
+        ////////////////////////
+
+        fs.writeFile(
+          `public/images/profiles/${id}ProfilePic.png`,
+          base64Image,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(`public/images/profiles/${id}ProfilePic.png`, function(
+              err,
+              data
+            ) {});
+          }
+        );
+        fs.writeFile(
+          `public/images/profiles/${id}Business1Pic.png`,
+          base64Image1,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(
+              `public/images/profiles/${id}Business1Pic.png`,
+              function(err, data) {}
+            );
+          }
+        );
+        fs.writeFile(
+          `public/images/profiles/${id}Business2Pic.png`,
+          base64Image2,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(
+              `public/images/profiles/${id}Business2Pic.png`,
+              function(err, data) {}
+            );
+          }
+        );
+        fs.writeFile(
+          `public/images/profiles/${id}Business3Pic.png`,
+          base64Image3,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(
+              `public/images/profiles/${id}Business3Pic.png`,
+              function(err, data) {}
+            );
+          }
+        );
+
+        //////////////////////////////
+
+        let sql3 = `update client_profiles set profile_image = '/images/profiles/${id}ProfilePic.png', business_image1 = '/images/profiles/${id}Business1Pic.png', business_image2 = '/images/profiles/${id}Business2Pic.png', business_image3 = '/images/profiles/${id}Business3Pic.png' 
+       where id = ${id}`;
+        console.log(sql3);
+        connection.query(sql3, function(error, result) {
+          if (error) throw error;
+          console.log(result);
+          console.log(id);
+          console.log(req.body.firstName);
+          console.log(req.body.email);
+          let userJson = {
+            id: id,
+            username: req.body.firstName,
+            email: req.body.email
+          };
+          res.header("Authorization", "Bearer" + jwtSignUser(userJson));
+          res.json({
+            user: userJson,
+            token: jwtSignUser(userJson)
+          });
+        });
+      });
+      connection.release();
+    });
+  });
+});
+
+router.put("/checkEmail", function(req, res) {
+  let email = req.body.email;
+  console.log(email);
+  var sql = `select email from client_profiles where email = '${email}'`;
+  const schema = {
+    email: Joi.string().email()
+  };
+  const { error, value } = Joi.validate(req.body, schema);
+  if (error) {
+    console.log("ERROR IS:", error.details[0].context.key);
+    switch (error.details[0].context.key) {
+      case "email":
+        res.json({
+          error: "You must provide a valid email address"
+        });
+        break;
+      default:
+        res.json({
+          error: "Invalid email information"
+        });
+    }
+  } else {
+    pool.getConnection(function(err, connection) {
+      if (err) {
+        connection.release();
+        resizeBy.send("Error with connection");
+      }
+      connection.query(sql, function(error, result) {
+        if (error) throw error;
+        if (result.length) {
+          res.json({
+            error: "This email already exists, rather log in"
+          });
+        } else {
+          res.json(result);
+        }
+      });
+      connection.release();
+    });
   }
 });
 
-//   CROP ROUTES
 
-router.put("/cropProfileImage", (req, res) => {
-//   console.log("Awesome");
-//   res.send("Awesome");
+router.put("/getRatings", function(req, res) {
+  console.log("GetRatings",req.body.id);
+  let id = req.body.id
+  let sql = `select * from profile_ratings where profile_number = ${id} order by id desc`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) throw error;
+
+      res.json(result);
+    });
+    connection.release();
+  });
+});
+
+
+router.post("/updateRatings", function(req, res) {
   console.log(req.body);
+  let profile_number = req.body.id
+  let rating = req.body.rating
+  let narrative = req.body.comments
 
-  var imageToCrop = "public/uploads/" + req.body.imageToCrop;
-  let a = parseInt(Math.random() * 10000);
-  console.log(a);
-  let profileImageName = `newCrop${a}`;
-  let imgWidth = parseInt(req.body.originalImageWidth);
-  let imgHeight = parseInt(req.body.originalImageHeight);
-  let divWidth = parseInt(req.body.divWidth);
-  let divHeight = parseInt(req.body.divHeight);
-  let cropperWidth = parseInt(req.body.cropperWidth);
-  let cropperHeight = parseInt(req.body.cropperHeight);
-  let x = parseInt(req.body.cropperX);
-  let y = parseInt(req.body.cropperY);
-  x = parseInt(x / divWidth * imgWidth)
-  y = parseInt(y / divHeight * imgHeight)
-  let w = parseInt(cropperWidth / divWidth * imgWidth)
-  let h = parseInt(cropperHeight / divHeight * imgHeight)
-  if (req.body.imageToDelete !== null) {
-    let imageToDelete = req.body.imageToDelete
-    imageToDelete = imageToDelete.split('3000')
-    imageToDelete = imageToDelete[imageToDelete.length - 1]
-    console.log(imageToDelete)
-    fs.unlink("/uploads/newCrop8169.jpg", (err) => {
-        console.log(err)
-    })
-  }
-  
+  let sql = `insert into profile_ratings (profile_number, rating, narrative) values (
+    ${profile_number},
+    ${rating},
+    "${narrative}"
+  )`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) throw error;
 
-  // let x = parseInt(req.params.x);
-  // let y = parseInt(req.params.y);
-  // let w = parseInt(req.params.w);
-  // let h = parseInt(req.params.h);
-  // let pw = parseInt(req.params.pw);
-  // let ph = parseInt(req.params.ph);
-  // let newSize;
-  // if (pw > ph) {
-  //     newSize = pw;
-  // } else {
-  //     newSize = ph;
-  // }
-
-  Jimp.read(imageToCrop)
-      .then(lenna => {
-          return lenna
-              // .resize(pw, ph) // resize
-              .crop(x,y,w,h)
-              // .resize(newSize, newSize) // resize
-              .quality(100) // set JPEG quality
-              // .greyscale() // set greyscale
-              .write(`public/uploads/${profileImageName}.jpg`); // save
-            //   .write(`public/images/profiles/${profileImageName}.jpg`); // save
-      }).then(() => {
-        res.send({data: `http://localhost:3000/uploads/${profileImageName}.jpg`})
-        console.log("Done")
-
-      })
-      .catch(err => {
-          console.log(err)
-          res.send(err)
-      });
+      res.json(result);
+    });
+    connection.release();
+  });
 });
 
 module.exports = router;

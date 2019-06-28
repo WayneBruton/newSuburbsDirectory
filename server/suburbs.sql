@@ -145,6 +145,9 @@ select * from categories;
 
 
 
+
+
+
     desc client_profiles;
 
 
@@ -187,6 +190,7 @@ alter table charities add column charity_image2 varchar(60);
 alter table charities add column charity_image3 varchar(60);
 
 
+
 CREATE TABLE notices (
     id INT AUTO_INCREMENT PRIMARY KEY,
     heading VARCHAR(60) NOT NULL UNIQUE,
@@ -197,6 +201,50 @@ CREATE TABLE notices (
     isActive boolean not null default false
 );
 
+
+
+-- NEW
+
+
+CREATE TABLE extra_packages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    option_name VARCHAR(100) NOT NULL,
+    option_description VARCHAR(150) NOT NULL,
+    per_month DECIMAL(6,2) NOT NULL DEFAULT 0   
+);
+
+INSERT INTO extra_packages (option_name, option_description, per_month) values 
+('Constantia & Surrounds', 'A piggy back site to join', 25),
+('Admin Assistance', 'Let us assist you loading your adverts', 80),
+('Cover Photo', 'Monthly have a cover photo on our banner', 1200);
+
+
+alter table client_profiles add column extra_packages JSON
+alter table client_profiles add column password varchar(255) not null
+
+alter table client_profiles add column ratings float default 0;
+alter table client_profiles drop column profile_heading;
+alter table client_profiles drop column linkedIn;
+alter table client_profiles drop column feedback;
+alter table client_profiles drop column terms;
+alter table client_profiles drop column product_service;
+alter table client_profiles drop column adminAssist;
+alter table client_profiles modify column email unique; 
+alter table packages drop column per_year;
+alter table packages drop column once_off;
+
+
+update packages set per_month = 90 * number_of_suburbs where option_description like 'Website listing One Facebook self-service business advert per week (Mondays only)'
+update packages set per_month = 120 * number_of_suburbs where option_description like 'Website listing Two Facebook self-service business adverts per week (Mondays & Thursdays only)'
+
+create table profile_ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    profile_number INT Not Null,
+    rating DECIMAL(2,1) not null,
+    narrative text not null,
+    created_at timestamp default now(),
+    FOREIGN KEY (profile_number) REFERENCES client_profiles(id)
+);
 
 
 

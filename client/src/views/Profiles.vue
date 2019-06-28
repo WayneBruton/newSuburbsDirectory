@@ -11,7 +11,7 @@
         </v-flex>
       </transition>
     </v-layout>
-    <v-layout row justify-space-between>
+    <!-- <v-layout row justify-space-between>
       <v-flex elevation-3 xs12 sm8 md12>
         <panel title="Search" v-if="totalItems.length > 10">
           <div style="display: flex; justify-content: space-between; width:100%;">
@@ -22,7 +22,7 @@
           </div>
         </panel>
       </v-flex>
-    </v-layout>
+    </v-layout> -->
     <v-layout row wrap justify-space-around>
       <v-flex
         ml-1
@@ -46,7 +46,7 @@
             :class="`elevation-${hover ? 12 : 2}`"
             class="mx-auto showroom"
             width="300"
-            height="500"
+            height="550"
             offset-xs0
             offset-sm0
             offset-md0
@@ -123,8 +123,8 @@ export default {
   async mounted() {
       let area = this.$store.state.profilesForCategoryAndAreaChosen.area
       let category = this.$store.state.profilesForCategoryAndAreaChosen.category
-      console.log(area)
-      console.log(category)
+      // console.log(area)
+      // console.log(category)
     this.items = [];
     let credentials = {
       area: area,
@@ -146,8 +146,8 @@ export default {
       viewItem: function(event) {
         let targetId = event.currentTarget.value;
     console.log("The target id is", targetId)
-        // this.$store.dispatch("setSelectedProduct", targetId);
-        // this.$router.push({ name: "product", params: { productId: targetId } });
+        this.$store.dispatch("setSelectedProfile", targetId);
+        this.$router.push({ name: "profile", params: { profileId: targetId } });
       }
     }
 };

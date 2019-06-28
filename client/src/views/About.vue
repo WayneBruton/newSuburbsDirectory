@@ -1,90 +1,154 @@
 <template>
-  <div class="about">
-    <v-container>
-      <v-layout column justify-space-around>
-         <v-flex xs12 sm8 md4>
-        <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
+  <v-container column justify-content-space-evenly style=" width: 100%">
+    <v-layout column>
+      <v-flex xs12 sm8 md4>
+        <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
       </v-flex>
-        <br>
-        <v-flex xs12 sm6 md6 offset-xs0 offset-md0 offset-sm0>
-          <!-- <hr> -->
-          <h1>About Us</h1>
-          <!-- <hr> -->
+      <transition name="welcome">
+        <v-flex>
+          <h1>Meet our Team</h1>
         </v-flex>
-        <br>
-        <v-flex xs12 sm12 md12 offset-xs0 offset-md0 offset-sm0>
-          <img class="about1" src="../assets/blog-3428667_1920.jpg" alt="LOGO" >
-        </v-flex>
-        <br>
-        <br>
-        <v-flex xs12 sm6 md6 offset-xs0 offset-md0 offset-sm0>
-          <div class="about-content">
-            <p>The Suburbs Directory was born in early 2019 with the idea being conceived in early 2018.</p>
-            <p>
-              The Suburbs Directory was formed to be the business platform for 7 successful community Facebook Groups.
-              <br>
-              <br>
+      </transition>
+    </v-layout>
+    <br />
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly;">
+      <!-- <v-layout row wrap justify-space-between> -->
+      <v-flex ml-1 mt-4 mr-2 xs12 sm8 md4 offset-sm0 offset-xs0 offset-md0>
+        <img class="imgCat" src="../assets/Lisa.jpeg" alt />
+        <br />
+        <br />
+        <h3>Lisa Berg: Owner</h3>
+        <p>
+          The blonde haired, blue eyed business women who’s made all this happen! She’s given blood, sweat and tears to
+          make The Suburbs Directory into what it is today. Lisa has had first-hand experience working within the NPO sector,
+          mainly with abused women and children. It was her longing to see the charities who support those most vulnerable
+          in our communities receive regular financial support. It was that desire that lead us to start The Suburbs Directory.
+        </p>
+      </v-flex>
+      <!-- </v-layout> -->
+      <!-- <v-layout row wrap justify-space-between> -->
+      <v-flex ml-1 mt-4 mr-2 xs12 sm8 md4 offset-sm0 offset-xs0 offset-md0>
+        <img class="imgCat" src="../assets/Nicole.jpeg" alt />
+        <br />
+        <br />
+        <h3>Nicole Berg: Owner / Creative Director</h3>
+        <p>
+          The pepper to the Salt & Pepper sister duo, Nicole is our go-to
+          for all things creative! When she's not behind her computer
+          working on The Suburbs Directory or shooting product photography
+          you're likely to spot her in the outdoors with her trusty sidekick,
+          Marley. She is meticulous and a complete nitpicker, which is why your
+          businesses adverts are always a cut above the rest. Without Nicole The Suburbs
+          Directory would look and feel like a dry dessert. Weakness: being
+          unable to walk past a dog with out stopping to pet it.
+        </p>
+      </v-flex>
+      <v-flex ml-1 mt-4 mr-2 xs12 sm8 md4 offset-sm0 offset-xs0 offset-md0>
+        <img class="imgCat" src="../assets/Leeane.jpeg" alt />
+        <br />
+        <br />
+        <h3>Lee-Ann Laufs: Admin & All Round Badass</h3>
+        <p>
+          There is just not enough room to do a write up about this phenomenal
+          woman! Known on Facebook for her sassy nature, blog, and dare we say
+          her potty mouth. She is one amazing social media guru you don’t want
+          to mess with. All jokes aside this Mom of two regularly leaves us in
+          awe with her ability to run both her businesses, Like and Share
+          Marketing and Jumping Connor Hire all while managing the Constantia
+          and Surrounds Facebook Group as well as being the assistant admin on
+          our Southern Suburbs Community Group! There is no room to doubt this
+          women's abilities! Lee-Ann jumped on board for the sole reason of
+          supporting our charities. She may have a big mouth but she 100% has an
+          even bigger heart!
+        </p>
+      </v-flex>
+      <v-flex ml-1 mt-4 mr-2 xs12 sm8 md4 offset-sm0 offset-xs0 offset-md0>
+        <img class="imgCat" src="../assets/Gav.jpeg" alt />
+        <br />
+        <br />
+        <h3>Gavin Finlayson: Admin & Life Saver</h3>
+        <p>
+          Picture this, you’re driving down the M3, the wind blowing in your
+          hair.... you’re doing 120kph, and that’s when you spot him. You hit
+          the brakes, drop your phone, turn the music down and allow some choice
+          words to escape your mouth. It’s just too late, you weren’t quick
+          enough and then you see it, the dreadful flash of the speeding camera.
+          Congratulations! You may have just met Gavin. That’s right, besides
+          running our South Peninsula group and being the hardest working, most
+          humble man we know he’s also the Santa Claus of the South (He knows
+          when you’ve been bad or good). If you would like to meet him in a less
+          unpleasant way, you can always catch him down at Fish Hoek beach or
+          running along the road.
+        </p>
+      </v-flex>
+      <v-flex ml-1 mt-4 mr-2 xs12 sm8 md4 offset-sm0 offset-xs0 offset-md0>
+        <img class="imgCat" src="../assets/Me.jpeg" alt />
+        <br />
+        <br />
+        <h3>Wayne Bruton: Website Developer & Tech Genius</h3>
+        <p>
+          The tech genius who has so diligently put up with all of our
+          indecisiveness! We could not imagine having had anyone else design our
+          website for us other than Wayne. If you are needing a site of your
+          own, you need to get in touch with this guy. The fact that he hasn’t
+          lobbed a MacBook at our heads during this process is a testament to
+          his calm nature and willingness to take on any challenge!
+        </p>
+      </v-flex>
 
-              <strong>The seven groups are:</strong>
-              <br>
-              <br>South Peninsula Sell & Swop
-              <br>Southern Suburbs Sell & Swop
-              <br>City Bowl Sell & Swop
-              <br>Northern Suburbs Sell & Swop
-              <br>Atlantic Seaboard Sell & Swop
-              <br>West Coast Sell & Swop
-              <br>Helderberg Sell & Swop.
-              <br>
-            </p>
-            <p>It all started with South Peninsula Sell & Swop in 2015, a community based Facebook group, where its members were able to buy, sell & swop second hand goods, share information and connect with the greater community. Over the last three years the group has grown from strength to strength and currently hosts more than 14 000 members.</p>
-            <p>In early 2019 we decided to allow businesses access to the groups by offering them an advertising opportunity via our online directory. This allows businesses to access the enormous amount of foot traffic on each of the Facebook groups.</p>
-            <p>The decision to run The Business Directory alongside our Facebook groups was not based on the idea of building a business empire, but rather on the idea of how we can impact on job creation and the communities around us.</p>
-            <p>We have put a few structures in place to make sure we stick to our promise of job creation, impacting positively and effectively on each of our seven communities and giving back to the businesses that list with us and help us to achieve our first two promises.</p>
-            <p>Each of the seven suburbs will have one NPO / NGO assigned to it per year. This NPO / NGO would form part of the specific community that it has been assigned to. That NPO / NGO will then receive a monthly donation from us for the next 12 months, all based on how many businesses are registered with that specific suburb, so the more business listings that Suburb has, the more money that community project will receive from The Suburbs Directory.</p>
-            <p>
-              We firmly believe that supporting each other in business is an essential part of growing a healthy, supportive and fundamentally sound business community.
-              We are excited to see a strong reputable business community form within each of the seven areas of the Western Cape, whilst contributing effectively to job creation, the communities around us and to each of the businesses who support us.
-            </p>
-            <p>
-              <strong>THE SUBURBS DIRECTORY TEAM</strong>
-            </p>
-          </div>
-        </v-flex>
-        <br>
-        <br>
-      <v-layout row justify-space-around>
-        <v-flex xs12 sm6 md4 offset-xs0 offset-md0 offset-sm0>
-          <!-- <div style="display: flex; justify-content: space-between;"> -->
-          <img class="aboutBottom" src="../assets/Screen Shot 2019-05-27 at 3.30.49 PM.png" alt="LOGO">
-          <!-- <img class="aboutBottom" src="../assets/Screen Shot 2019-05-27 at 3.31.32 PM.png" alt="LOGO"> -->
-          <!-- </div> -->
-        </v-flex>
-        <v-flex xs12 sm6 md4 offset-xs0 offset-md0 offset-sm0>
-          <!-- <div style="display: flex; justify-content: space-between;"> -->
-          <!-- <img class="aboutBottom" src="../assets/Screen Shot 2019-05-27 at 3.30.49 PM.png" alt="LOGO"> -->
-          <img class="aboutBottom" src="../assets/Screen Shot 2019-05-27 at 3.31.32 PM.png" alt="LOGO">
-          <!-- </div> -->
-        </v-flex>
-      </v-layout>
-      </v-layout>
-    </v-container>
-  </div>
+      <!-- </v-layout> -->
+    </div>
+    <!-- </v-card> -->
+  </v-container>
 </template>
 
 <script>
-export default {};
+// import DirectoryService from "@/services/DirectoryServices.js";
+export default {
+  data() {
+    return {};
+  },
+  mounted() {},
+
+  methods: {}
+};
 </script>
 
 <style scoped>
-.about1 {
+.imgCat {
   width: 100%;
+  /* background-color: #F4EBDE; */
+
+  border: 1px solid black;
+  /* border: 1px solid transparent; */
+  border-radius: 50%;
 }
-.aboutBottom {
-  width: 110%;
+.imgCat:hover {
+  width: 99%;
+  cursor: pointer;
 }
-p {
-  font-size: 120%;
+.emptyOfProfiles:hover {
+  opacity: 0.3;
+  /* width: 30%; */
+  /* height: 30%; */
+}
+
+.noProfiles {
+  z-index: 1;
+  position: fixed;
+  top: 50%;
+  margin: 0 auto;
+  width: 75%;
+}
+@media screen and (max-width: 768px) {
+  /* v-card {
+    width: 250px;
+    margin-left: 0%;
+    margin-right: 10%;
+     padding: 0%;
+  } */
+  .showroom {
+    width: 100;
+  }
 }
 </style>
-
-

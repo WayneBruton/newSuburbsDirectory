@@ -1,100 +1,83 @@
 <template>
   <v-container>
-    <h1>Add / Edit profile</h1>
+    <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
+    <h1>Add profile</h1>
     <!-- <v-alert class="danger-alert"  :value="true" type="info">If you already have a profile, please login</v-alert> -->
     <v-layout xs9 column offset-xs2>
       <v-layout class="panelWidth" xs3 column justify-space-around>
         <v-flex xs3 offset-xs0>
           <v-flex>
-            <br>
+            <br />
             <v-flex sm12 offset-xs0>
               <form enctype="multipart/form-data">
-                <panel title="upload main profile image">
-                  <input type="file" ref="file" @change="selectFile">
-                  <br>
-                  <br>
-                  <v-checkbox
-                    v-if="showProfileCropper"
-                    v-model="showProfilePreview"
-                    label="showPreview"
-                    color="beige lighten-1"
-                  ></v-checkbox>
-                  <div>
-                    <div
-                      v-if="profileImg"
-                      ref="holdingDivProfile"
-                      id="holdingDivProfile"
-                      :style="profileStyles"
-                    >
-                      <img :src="profileImgSRC" alt ref="profileImg" style="width: 100%">
-                      <vue-draggable-resizable
-                        v-if="showProfileCropper"
-                        :parent="true"
-                        class-name-active="my-active-class"
-                        class-name="my-class"
-                        :z-index="10"
-                        :y="10"
-                        :x="10"
-                        :w="profileCropperWidth"
-                        :h="profileCropperHeight"
-                        @dragging="onDrag"
-                        @resizing="onResize"
-                        :min-width="200"
-                        :min-height="125"
-                        :lock-aspect-ratio="true"
-                      >
-                        <p>X: {{ x }} / Y: {{ y }} - Width: {{ width }} / Height: {{ height }}</p>
-                      </vue-draggable-resizable>
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                      <img
-                        v-if="showProfilePreview"
-                        :src="profileCroppedImageSRC"
-                        alt
-                        ref
-                        style="width: 30%"
-                      >
-                    </div>
-                  </div>
-                  <br>
-                </panel>
-                <br>
-                <!-- <v-container column justify-space-around> -->
-
-                <!-- </v-container> -->
-                <br>
-                <br>
-
+                <br />
+                <br />
+                <v-text-field
+                  label="Email Address"
+                  placeholder="email address"
+                  autocomplete="false"
+                  type="email"
+                  @change="checkEmail"
+                  @blur="checkEmail"
+                  v-model="email"
+                ></v-text-field>
+                <v-text-field
+                  label="Password"
+                  placeholder="Password"
+                  autocomplete="false"
+                  type="password"
+                  v-model="password"
+                ></v-text-field>
+                <v-text-field
+                  label="Repeat Password"
+                  placeholder="Repeat Password"
+                  autocomplete="false"
+                  type="password"
+                  v-model="repeatPassword"
+                  @blur="passwordTest"
+                ></v-text-field>
                 <v-text-field
                   label="Business Name"
                   placeholder="Business Name"
                   autocomplete="false"
+                  v-model="businessName"
                 ></v-text-field>
-                <v-text-field label="First Name" placeholder="First Name" autocomplete="false"></v-text-field>
-                <v-text-field label="Last Name" placeholder="Last Name" autocomplete="false"></v-text-field>
+                <v-text-field
+                  v-model="firstName"
+                  label="First Name"
+                  placeholder="First Name"
+                  autocomplete="false"
+                ></v-text-field>
+                <v-text-field
+                  v-model="lastName"
+                  label="Last Name"
+                  placeholder="Last Name"
+                  autocomplete="false"
+                ></v-text-field>
                 <v-text-field
                   label="Contact Number"
                   placeholder="Contact Number"
                   type="number"
                   autocomplete="false"
+                  v-model="contactNumber"
                 ></v-text-field>
-                <v-text-field label="Email" placeholder="email" autocomplete="false"></v-text-field>
                 <v-text-field
                   label="Website"
                   placeholder="Enter your Website URL"
                   autocomplete="false"
+                  v-model="website"
                 ></v-text-field>
                 <v-text-field
                   label="Facebook"
                   placeholder="Enter your Facebook link"
                   autocomplete="false"
+                  v-model="faceBook"
                 ></v-text-field>
                 <v-text-field
                   label="Instagram"
                   placeholder="Enter your instagram link"
                   autocomplete="false"
+                  v-model="instagram"
                 ></v-text-field>
                 <v-flex>
                   <v-label>Area</v-label>
@@ -108,23 +91,34 @@
                     style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                   >
                     <v-checkbox
+                      @click="areaClick"
+                      v-model="area.areaChosen"
                       :id="area.id.toString()"
                       :label="area.area_description"
                       color="beige lighten-1"
                     ></v-checkbox>
                   </li>
                 </ul>
-                <br>
-                <hr>
-
-                <br>
-                <v-flex>
-                  <v-label>Options</v-label>
-                </v-flex>
-                <v-flex xs12 sm6 md12 d-flex>
-                  <v-select :items="items" box label="Choose your package option"></v-select>
-                </v-flex>
-                <br>
+                <br />
+                <hr />
+                <br />
+                <div v-if="areasArray.length">
+                  <v-flex>
+                    <v-label>Options</v-label>
+                  </v-flex>
+                  <br />
+                  <v-flex xs12 sm6 md12 d-flex>
+                    <v-select
+                      v-model="selectedOption"
+                      @change="selectedOpt"
+                      :items="items"
+                      box
+                      label="Choose your package option"
+                    ></v-select>
+                    <!-- <v-select :items="item.option_description" box label="Choose your package option"></v-select> -->
+                  </v-flex>
+                </div>
+                <br />
                 <v-flex>
                   <v-label>Category</v-label>
                 </v-flex>
@@ -138,9 +132,11 @@
                       style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                     >
                       <v-checkbox
-                        :id="category.id.toString()"
+                        :id="category.id.toString() + 'C'"
+                        v-model="category.categoryChosen"
                         :label="category.category_description"
                         color="beige lighten-1"
+                        @click="categoryClick"
                       ></v-checkbox>
                     </li>
                   </ul>
@@ -149,138 +145,257 @@
                   label="Business Description"
                   required
                   placeholder="Description about 250 words"
+                  v-model="description"
                 ></v-textarea>
-                <br>
+                <br />
                 <v-flex>
                   <v-label>Other Options</v-label>
                 </v-flex>
                 <v-flex>
-                  <v-checkbox
-                    v-model="constantia"
-                    label="Constantia & Surrounds"
-                    color="beige lighten-1"
-                  ></v-checkbox>
-                  <v-checkbox
-                    v-model="adminAssist"
-                    label="Admin Assistance"
-                    color="beige lighten-1"
-                  ></v-checkbox>
-                  <v-checkbox
-                    v-model="coverPhoto"
-                    label="Cover Photo (monthly)"
-                    color="beige lighten-1"
-                  ></v-checkbox>
+                  <ul
+                    style="display: flex; justify-content: space-between; flex-wrap: wrap; margin: 15px 35px; width: 100%; flex-direction: column;"
+                  >
+                    <li
+                      v-for="(extraPackage, i) in extraPackages"
+                      :key="i"
+                      style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
+                    >
+                      <v-checkbox
+                        :id="extraPackage.id.toString() + 'E'"
+                        v-model="extraPackage.extraPackagesChosen"
+                        :label="extraPackage.option_name"
+                        color="beige lighten-1"
+                        @click="extraPackageClick"
+                      ></v-checkbox>
+                    </li>
+                  </ul>
                 </v-flex>
-                <br>
-
-                <hr>
-                <br>
+                <br />
+                <hr />
+                <br />
+                <panel title="upload main profile image">
+                  <input
+                    type="file"
+                    ref="file"
+                    name="image"
+                    accept="image/*"
+                    style="font-size: 1.2em; padding: 10px 0;"
+                    @change="setImage"
+                  />
+                  <br />
+                  <div class="imageDiv" style>
+                    <vue-cropper
+                      ref="cropper"
+                      :guides="true"
+                      :view-mode="2"
+                      drag-mode="crop"
+                      :auto-crop-area="1"
+                      :min-container-width="250"
+                      :min-container-height="180"
+                      :background="true"
+                      :rotatable="true"
+                      :src="imgSrc"
+                      alt="Source Image"
+                      :img-style="{ width: '400px', height: '300px' }"
+                    ></vue-cropper>
+                  </div>
+                  <br />
+                  <br />
+                  <img
+                    v-if="cropImg"
+                    :src="cropImg"
+                    style="width: 200px; height: 150px; border: 1px solid gray"
+                    alt="Cropped Image"
+                  />
+                  <br />
+                  <br />
+                  <button
+                    @click.prevent="cropImage"
+                    v-if="imgSrc != ''"
+                    style="margin-right: 40px;"
+                  >
+                    Crop
+                  </button>
+                  <button @click.prevent="rotate" v-if="imgSrc != ''">
+                    Rotate
+                  </button>
+                  <br />
+                </panel>
+                <br />
                 <panel title="upload business image 1">
-                  <!-- <input type="file" ref="file"> -->
-                  <br>
-                  <br>
-                  <img src alt style="width: 30%;">
-                </panel>
-                <br>
-                <div
-                  ref="holdingDiv"
-                  style="height: 502px; width: 100%; border: 1px solid red; position: relative; display: none;"
-                >
-                  <img ref="image" src alt width="100%" height>
-                  <!-- <vue-draggable-resizable
-                    class-name-active="my-active-class"
-                    class-name="my-class"
-                    :z-index="10"
-                    :w="200"
-                    :h="200"
-                    @dragging="onDrag"
-                    @resizing="onResize"
-                    :lock-aspect-ratio="true"
-                    :parent="true"
+                  <br />
+                  <input
+                    type="file"
+                    ref="file1"
+                    name="image"
+                    accept="image/*"
+                    style="font-size: 1.2em; padding: 10px 0;"
+                    @change="setImage1"
+                  />
+                  <br />
+                  <div class="imageDiv">
+                    <vue-cropper
+                      ref="cropper1"
+                      :guides="true"
+                      :view-mode="2"
+                      drag-mode="crop"
+                      :auto-crop-area="1"
+                      :min-container-width="250"
+                      :min-container-height="180"
+                      :background="true"
+                      :rotatable="true"
+                      :src="imgSrc1"
+                      alt="Source Image"
+                      :img-style="{ width: '400px', height: '300px' }"
+                    ></vue-cropper>
+                  </div>
+                  <br />
+                  <br />
+                  <img
+                    v-if="cropImg1"
+                    :src="cropImg1"
+                    style="width: 200px; height: 150px; border: 1px solid gray"
+                    alt="Cropped Image"
+                  />
+                  <br />
+                  <br />
+                  <button
+                    @click.prevent="cropImage1"
+                    v-if="imgSrc != ''"
+                    style="margin-right: 40px;"
                   >
-                    <p>
-                      Hello! I'm a flexible component. You can drag me around and you can resize me.
-                      <br>
-                      X: {{ x }} / Y: {{ y }} - Width: {{ width }} / Height: {{ height }}
-                    </p>
-                  </vue-draggable-resizable>-->
-                </div>
-                <br>
+                    Crop
+                  </button>
+                  <button @click.prevent="rotate1" v-if="imgSrc1 != ''">
+                    Rotate
+                  </button>
+                  <br />
+                  <br />
+                </panel>
+                <br />
                 <panel title="upload business image 2">
-                  <!-- <input type="file" ref="file"> -->
-                  <br>
-                  <br>
-                  <img src alt style="width: 30%;">
-                  <div
-                    ref="holdingDiv"
-                    style="height: 502px; width: 502px; border: 1px solid red; position: relative; display: none;"
-                  >
-                    <img ref="image" src alt width="100%" height>
-                    <!-- <vue-draggable-resizable
-                      class-name-active="my-active-class"
-                      class-name="my-class"
-                      :z-index="10"
-                      :w="200"
-                      :h="200"
-                      @dragging="onDrag"
-                      @resizing="onResize"
-                      :lock-aspect-ratio="true"
-                      :parent="true"
-                      :resizable="true"
-                    >
-                      <p>
-                        Hello! I'm a flexible component. You can drag me around and you can resize me.
-                        <br>
-                        X: {{ x }} / Y: {{ y }} - Width: {{ width }} / Height: {{ height }}
-                      </p>
-                    </vue-draggable-resizable>-->
+                  <br />
+                  <input
+                    type="file"
+                    ref="file2"
+                    name="image"
+                    accept="image/*"
+                    style="font-size: 1.2em; padding: 10px 0;"
+                    @change="setImage2"
+                  />
+                  <br />
+                  <div class="imageDiv">
+                    <vue-cropper
+                      ref="cropper2"
+                      :guides="true"
+                      :view-mode="2"
+                      drag-mode="crop"
+                      :auto-crop-area="1"
+                      :min-container-width="250"
+                      :min-container-height="180"
+                      :background="true"
+                      :rotatable="true"
+                      :src="imgSrc2"
+                      alt="Source Image"
+                      :img-style="{ width: '400px', height: '300px' }"
+                    ></vue-cropper>
                   </div>
+                  <br />
+                  <br />
+                  <img
+                    v-if="cropImg2"
+                    :src="cropImg2"
+                    style="width: 200px; height: 150px; border: 1px solid gray"
+                    alt="Cropped Image"
+                  />
+                  <br />
+                  <br />
+                  <button
+                    @click.prevent="cropImage2"
+                    v-if="imgSrc != ''"
+                    style="margin-right: 40px;"
+                  >
+                    Crop
+                  </button>
+                  <button @click.prevent="rotate2" v-if="imgSrc2 != ''">
+                    Rotate
+                  </button>
+                  <br />
                 </panel>
-                <br>
-                <!-- <v-container column justify-space-around> -->
-
-                <br>
+                <br />
                 <panel title="upload business image 3">
-                  <!-- <input type="file" ref="file"> -->
-                  <br>
-                  <br>
-                  <img src alt style="width: 30%;">
-                  <div
-                    ref="holdingDiv"
-                    style="height: 502px; width: 502px; border: 1px solid red; position: relative; display: none;"
-                  >
-                    <img ref="image" src alt width="100%" height>
-                    <!-- <vue-draggable-resizable
-                      class-name-active="my-active-class"
-                      class-name-resizable="my-resizable-class"
-                      class-name="my-class"
-                      :z-index="10"
-                      :resizable="true"
-                      :w="200"
-                      :h="200"
-                      @dragging="onDrag"
-                      @resizing="onResize"
-                      :lock-aspect-ratio="true"
-                      :parent="true"
-                    >
-                      <p>
-                        Hello! I'm a flexible component. You can drag me around and you can resize me.
-                        <br>
-                        X: {{ x }} / Y: {{ y }} - Width: {{ width }} / Height: {{ height }}
-                      </p>
-                    </vue-draggable-resizable>-->
+                  <br />
+                  <input
+                    type="file"
+                    ref="file3"
+                    name="image"
+                    accept="image/*"
+                    style="font-size: 1.2em; padding: 10px 0;"
+                    @change="setImage3"
+                  />
+                  <br />
+                  <div class="imageDiv">
+                    <vue-cropper
+                      ref="cropper3"
+                      :guides="true"
+                      :view-mode="2"
+                      drag-mode="crop"
+                      :auto-crop-area="1"
+                      :min-container-width="250"
+                      :min-container-height="180"
+                      :background="true"
+                      :rotatable="true"
+                      :src="imgSrc3"
+                      alt="Source Image"
+                      :img-style="{ width: '400px', height: '300px' }"
+                    ></vue-cropper>
                   </div>
+                  <br />
+                  <br />
+                  <img
+                    v-if="cropImg3"
+                    :src="cropImg3"
+                    style="width: 200px; height: 150px; border: 1px solid gray"
+                    alt="Cropped Image"
+                  />
+                  <br />
+                  <br />
+                  <button
+                    @click.prevent="cropImage3"
+                    v-if="imgSrc3 != ''"
+                    style="margin-right: 40px;"
+                  >
+                    Crop
+                  </button>
+                  <button @click.prevent="rotate" v-if="imgSrc3 != ''">
+                    Rotate
+                  </button>
+                  <br />
+                  <br />
                 </panel>
-                <br>
-                <!-- <v-container column justify-space-around> -->
-
-                <v-btn light color="#F4EBDE">Save & return later</v-btn>
-                <v-btn id="btn2" light color="#F4EBDE">Continue >></v-btn>
+                <br />
+                <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
+                <v-btn id="btn2" light color="#F4EBDE" @click="save">
+                  Continue >>
+                </v-btn>
               </form>
             </v-flex>
-
-            <v-alert class="danger-alert" v-if="error" :value="true" type="error">{{ error }}</v-alert>
-            <v-alert class="danger-alert" v-if="success" :value="true" type="success">{{ success }}</v-alert>
+            <v-alert
+              class="danger-alert invalidEmail"
+              v-if="error"
+              :value="true"
+              type="error"
+            >
+              {{ error }}
+            </v-alert>
+            <v-alert
+              class="danger-alert"
+              v-if="success"
+              :value="true"
+              type="success"
+            >
+              {{ success }}
+            </v-alert>
           </v-flex>
         </v-flex>
       </v-layout>
@@ -289,61 +404,73 @@
 </template>
 
 <script>
-import VueDraggableResizable from "vue-draggable-resizable";
-
-// optionally import default styles
-import "vue-draggable-resizable/dist/VueDraggableResizable.css";
+import VueCropper from "vue-cropperjs";
+import "cropperjs/dist/cropper.css";
 import DirectoryService from "@/services/DirectoryServices";
 import Panel from "@/components/Panel";
 // import Authenticate from "@/functions/authenticateAdmin";
 export default {
   data() {
     return {
-      // PROFILE IMAGE
-      profileImg: null,
-      profileImgSRC: null,
-      profileImgfileType: null,
-      profileStyles: {
-        height: "100%",
-        width: "100%",
-        border: "1px solid yellow",
-        position: "relative"
-      },
-      showProfileCropper: false,
-      showProfilePreview: false,
-      profileCropperWidth: 200,
-      profileCropperHeight: 125,
-      profileCroppedImageSRC: null,
-      profileImageOriginalWidth: null,
-      profileImageOriginalHeight: null,
-      profileDivWidth: null,
-      profileDivHeight: null,
+      imgSrc: "",
+      cropImg: "",
+      imgSrc1: "",
+      cropImg1: "",
+      imgSrc2: "",
+      cropImg2: "",
+      imgSrc3: "",
+      cropImg3: "",
 
-      file: null,
-      areas: null,
-      constantia: false,
-      adminAssist: false,
-      coverPhoto: false,
-      categories: null,
-      items: ["Option1", "Option2", "Option3", "Option4", "Option5"],
+      areas: [],
+      areasArray: [],
+      packages: null,
+      items: [],
+      selectedOption: "",
+      optionChosen: "",
+
+      categories: [],
+      categoriesArray: [],
+
+      extraPackages: [],
+      extraPackagesChosen: [],
+
+      email: "1@2",
+      password: "12345",
+      repeatPassword: "12345",
+      businessName: "Bobs little Business",
+      firstName: "Wayne",
+      lastName: "Bruton",
+      contactNumber: "123456",
+      website: "myWebsite",
+      faceBook: "myFaceBook",
+      instagram: "myInstagram",
+      description: "My Test Description's Hello",
+
       error: null,
-      success: null,
-
-      width: 0,
-      height: 0,
-      x: 300,
-      y: 300
+      success: null
     };
   },
-  mounted() {
+  async mounted() {
     this.areas = this.$store.state.areas;
-    // console.log(this.areas);
+
+    this.areas.forEach(el => {
+      el.areaChosen = false;
+    });
+    console.log(this.areas);
     this.categories = this.$store.state.categories;
-    if (window.screen.width < 768) {
-      this.profileStyles.width = "100%";
-      alert("Hello");
-    }
-    // console.log(this.categories);
+
+    this.categories.forEach(el => {
+      el.categoryChosen = false;
+    });
+    console.log(this.categories);
+
+    let response = await DirectoryService.getExtraPackages();
+    // console.log("Extra Packages:", response.data)
+    this.extraPackages = response.data;
+    this.extraPackages.forEach(el => {
+      el.extraPackagesChosen = false;
+    });
+    console.log(this.extraPackages);
     // this.Authenticate = Authenticate.authenticate;
     // this.Authenticate();
     // if (!this.$store.state.administration.isAdminUserLoggedIn) {
@@ -356,193 +483,331 @@ export default {
     //     });
     //   }, 800);
     // }
-    // this.$nextTick(() => {
-    //   this.checkImageLoaded();
-    // });
   },
   components: {
     Panel,
-    VueDraggableResizable
+    VueCropper
   },
   methods: {
-    async selectFile() {
-      this.file = this.$refs.file.files[0];
-      let formData = new FormData();
-      formData.append("file", this.file);
-      formData.append("fileName", this.profileImg);
-      console.log(formData);
-      // if (this.profileImg) {
-      //   try {
-      //     await DirecoryService.insertPofileDraftImage({
-      //       // let response = await AdminService.removeImageFileName({
-      //       fileName: this.productImg
-      //     });
-      //   } catch (err) {
-      //     console.log(err);
-      //   }
-      // }
-      try {
-        let response = await DirectoryService.insertPofileDraftImage(formData);
-        this.profileImg = response.data.File.filename;
-        this.profileImgSRC = response.data.imageFile;
-        this.profileImgfileType = response.data.fileType;
-        // console.log('image width:', this.profileImgSRC.naturalWidth)
-        // console.log(response);
-        console.log("Image Name = profileImg", this.profileImg);
-        this.$nextTick(() => {
-          this.checkImageLoaded();
-        });
-      } catch (err) {
-        this.error = err;
-        console.log(err);
-      }
-    },
-    checkImage() {
-      this.profileImageOriginalWidth = this.$refs.profileImg.naturalWidth;
-      this.profileImageOriginalHeight = this.$refs.profileImg.naturalHeight;
-      let widthImg = this.$refs.profileImg.naturalWidth;
-      let heightImg = this.$refs.profileImg.naturalHeight;
-      // console.log(
-      //   "Holding Div Width",
-      //   this.$refs.holdingDivProfile.clientWidth
-      // );
-      // console.log(
-      //   "Holding Div Height",
-      //   this.$refs.holdingDivProfile.clientHeight
-      // );
-      // console.log(
-      //   "Holding Div left",
-      //   this.$refs.holdingDivProfile.getBoundingClientRect().left
-      // );
-      // console.log(
-      //   "Holding Div top",
-      //   this.$refs.holdingDivProfile.getBoundingClientRect().top
-      // );
-      // this.x = this.$refs.holdingDivProfile.getBoundingClientRect().left
-      // this.y = this.$refs.holdingDivProfile.getBoundingClientRect().top
-
-      // console.log(this.width);
-      console.log("Image Width:", widthImg);
-      console.log("Image Height:", heightImg);
-      // if (widthImg > heightImg) {
-      this.profileStyles.width = 100 + "%";
-      // this.profileStyles.height = 100 + '%'
-      // console.log(this.profileStyles.height);
-      this.w =
-        // }
-        setTimeout(() => {
-          this.showProfileCropper = true;
-          this.width = this.profileCropperWidth;
-          this.height = this.profileCropperHeight;
-          console.log("Profile Cropper Width:", this.width);
-          console.log("Profile Cropper Height:", this.height);
-        });
-      this.profileDivWidth = this.$refs.holdingDivProfile.clientWidth;
-      this.profileDivHeight = this.$refs.holdingDivProfile.clientHeight;
-
-      console.log(
-        "Holding Div Width 2",
-        this.$refs.holdingDivProfile.clientWidth
-      );
-      console.log(
-        "Holding Div Height 2",
-        this.$refs.holdingDivProfile.clientHeight
-      );
-
-      // this.profileStyles.height = this.$refs.holdingDivProfile.clientWidth * .66625 + 'px'
-      // this.profileStyles.height = widthImg + 'px'
-
-      // if (widthImg > heightImg) {
-      //   this.$refs.holdingDivProfile.height = heightImg;
-      //   this.profileImgCropBoxW = 200;
-      //   this.profileImgCropBoxH = 200;
-      // }
-
-      // setTimeout(() => {
-      //   console.log("Holding Div", this.$refs.holdingDivProfile.clientHeight);
-      //   console.log("Holding Div", this.$refs.holdingDivProfile.clientWidth);
-      //   console.log("Image Width:", widthImg);
-      //   console.log("Image Height:", heightImg);
-      // }, 1500);
-    },
-    checkImageLoaded() {
-      if (this.$refs.profileImg.complete) {
-        // this.showProfileCropper = true
-        this.checkImage();
-      } else {
-        this.$refs.profileImg.addEventListener("load", () => {
-          // this.showProfileCropper = true
-          this.checkImage();
-        });
-      }
-    },
-
-    async cropProfileImage() {
-      let data = {
-        imageToCrop: this.profileImg,
-        originalImageWidth: this.profileImageOriginalWidth,
-        originalImageHeight: this.profileImageOriginalHeight,
-        divWidth: this.profileDivWidth - 2,
-        divHeight: this.profileDivHeight - 2,
-        cropperWidth: this.profileCropperWidth,
-        cropperHeight: this.profileCropperHeight,
-        cropperX: this.x, //Left
-        cropperY: this.y, //Right
-        imageToDelete: this.profileCroppedImageSRC
+    async areaClick() {
+      this.areasArray = [];
+      let areaCount = this.areas.filter(el => {
+        if (el.areaChosen === true) {
+          this.areasArray.push(el.id);
+        }
+        return el.areaChosen === true;
+      });
+      console.log(areaCount);
+      let numberOfSuburbs = {
+        number: this.areasArray.length
       };
-      let response = await DirectoryService.cropProfileImage(data);
-      console.log(response.data.data)
-      this.profileCroppedImageSRC = response.data.data
-      console.log('I WANT TO DELETE THIS IMAGE::',this.profileCroppedImageSRC)
+      let response = await DirectoryService.getPackages(numberOfSuburbs);
+      console.log(response.data);
+      this.packages = response.data;
+      let items = [];
+      this.packages.forEach(el => {
+        items.push(el.option_description);
+      });
+      console.log("ITEMS:", items);
+      this.items = items;
+      console.log(this.items);
+
+      areaCount = [];
+      console.log(this.areasArray);
+    },
+    categoryClick() {
+      this.categoriesArray = [];
+      let categoryCount = this.categories.filter(el => {
+        if (el.categoryChosen === true) {
+          this.categoriesArray.push(el.id);
+        }
+        return el.categoryChosen === true;
+      });
+      console.log(categoryCount);
+      console.log(this.categoriesArray);
+    },
+    extraPackageClick() {
+      this.extraPackagesChosen = [];
+      let extraPackagesCount = this.extraPackages.filter(el => {
+        if (el.extraPackagesChosen === true) {
+          this.extraPackagesChosen.push(el.id);
+        }
+        return el.extraPackagesChosen === true;
+      });
+      console.log(extraPackagesCount);
+      // categoryCount = []
+      console.log("This.extraPackagesChosen", this.extraPackagesChosen);
+    },
+    selectedOpt() {
+      console.log("TESTING", this.selectedOption);
+      let packageChosen = this.packages.filter(el => {
+        if (el.option_description === this.selectedOption) {
+          return el.id;
+        }
+      });
+      console.log(packageChosen);
+      this.optionChosen = packageChosen[0].id;
+      console.log("Option Chosen", this.optionChosen);
+    },
+    async checkEmail() {
+      let email = {
+        email: this.email
+      };
+      try {
+        let response = await DirectoryService.checkEmail(email);
+        if (response.data.error) {
+          this.error = response.data.error;
+          setTimeout(() => {
+            this.email = "";
+            this.error = null;
+          }, 2500);
+        }
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+      // console.log(response);
+    },
+    passwordTest() {
+      if (this.password !== this.repeatPassword) {
+        this.error = "passwords do not match";
+        this.password = "";
+        this.repeatPassword = "";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      }
+    },
+    async save() {
+      console.log("Clicked");
+
+      let formData = new FormData();
+      formData.append("file", this.cropImg);
+      formData.append("file1", this.cropImg1);
+      formData.append("file2", this.cropImg2);
+      formData.append("file3", this.cropImg3);
+      formData.append("email", this.email);
+      formData.append("password", this.password);
+      formData.append("businessName", this.businessName);
+      formData.append("firstName", this.firstName);
+      formData.append("lastName", this.lastName);
+      formData.append("contactNumber", this.contactNumber);
+      formData.append("website", this.website);
+      formData.append("facebook", this.faceBook);
+      formData.append("instagram", this.instagram);
+      formData.append("areas", this.areasArray);
+      formData.append("selectedOption", this.optionChosen);
+      formData.append("catarea", this.categoriesArray);
+      formData.append("profile_description", this.description);
+      formData.append("extra_packages", this.extraPackagesChosen);
+
+      if (this.email === "") {
+        this.error = "Please fill in an email address";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (this.password === "") {
+        this.error = "Please fill in a password";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (this.password !== this.repeatPassword) {
+        this.error = "passwords do not match";
+        this.password = "";
+        this.repeatPassword = "";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (
+        this.businessName === "" ||
+        this.firstName === "" ||
+        this.lastName === "" ||
+        this.contactNumber === ""
+      ) {
+        this.error =
+          "Business Name, First Name, Last Name and Contact Number must be filled in";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (!this.areasArray.length) {
+        this.error = "Choose at least 1 area";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (this.optionChosen === "") {
+        this.error = "At least one option needs to be chosen";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (!this.categoriesArray.length) {
+        this.error = "Choose at least 1 category";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (this.description === "") {
+        this.error = "A description is required";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else if (
+        this.cropImg === "" ||
+        this.cropImg1 === "" ||
+        this.cropImg2 === "" ||
+        this.cropImg3 === ""
+      ) {
+        this.error = "All Images must be selected";
+        setTimeout(() => {
+          this.error = null;
+        }, 1500);
+      } else {
+        let response = await DirectoryService.addProfile(formData);
+        console.log(response.data);
+        let token = response.data.token;
+        let user = response.data.user;
+        console.log(token);
+        console.log(user);
+        this.$store.dispatch("setToken", token);
+        this.$store.dispatch("setUser", user);
+        console.log(this.$store.state.userName);
+        console.log(this.$store.state.email);
+      }
+    },
+    setImage(e) {
+      const file = e.target.files[0];
+      if (!file.type.includes("image/")) {
+        alert("Please select an image file");
+        return;
+      }
+      if (typeof FileReader === "function") {
+        const reader = new FileReader();
+        reader.onload = event => {
+          this.imgSrc = event.target.result;
+          this.cropImg = event.target.result;
+          // rebuild cropperjs with the updated source
+          this.$refs.cropper.replace(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("Sorry, FileReader API not supported");
+      }
+    },
+    cropImage() {
+      // get image data for post processing, e.g. upload or setting image src
+      this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+    },
+    rotate() {
+      // guess what this does :)
+      this.$refs.cropper.rotate(90);
+    },
+    // BI1
+
+    setImage1(e) {
+      const file = e.target.files[0];
+      if (!file.type.includes("image/")) {
+        alert("Please select an image file");
+        return;
+      }
+      if (typeof FileReader === "function") {
+        const reader = new FileReader();
+        reader.onload = event => {
+          this.imgSrc1 = event.target.result;
+          this.cropImg1 = event.target.result;
+          // rebuild cropperjs with the updated source
+          this.$refs.cropper1.replace(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("Sorry, FileReader API not supported");
+      }
+    },
+    cropImage1() {
+      // get image data for post processing, e.g. upload or setting image src
+      this.cropImg1 = this.$refs.cropper1.getCroppedCanvas().toDataURL();
+    },
+    rotate1() {
+      // guess what this does :)
+      this.$refs.cropper1.rotate(90);
     },
 
-    onResize: function(x, y, width, height) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.profileCropperWidth = this.width,
-      this.profileCropperHeight = this.height
-      console.log(this.width, this.height);
-      setTimeout(() => {
-        this.cropProfileImage();
-      }, 200);
+    // BI2
+    setImage2(e) {
+      const file = e.target.files[0];
+      if (!file.type.includes("image/")) {
+        alert("Please select an image file");
+        return;
+      }
+      if (typeof FileReader === "function") {
+        const reader = new FileReader();
+        reader.onload = event => {
+          this.imgSrc2 = event.target.result;
+          this.cropImg2 = event.target.result;
+          // rebuild cropperjs with the updated source
+          this.$refs.cropper2.replace(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("Sorry, FileReader API not supported");
+      }
     },
-    onDrag: function(x, y) {
-      this.x = x;
-      this.y = y;
-      this.profileCropperWidth = this.width,
-      this.profileCropperHeight = this.height
-      setTimeout(() => {
-        this.cropProfileImage();
-      }, 200);
+    cropImage2() {
+      // get image data for post processing, e.g. upload or setting image src
+      this.cropImg2 = this.$refs.cropper2.getCroppedCanvas().toDataURL();
+    },
+    rotate2() {
+      // guess what this does :)
+      this.$refs.cropper2.rotate(90);
+    },
+    // BI3
+    setImage3(e) {
+      const file = e.target.files[0];
+      if (!file.type.includes("image/")) {
+        alert("Please select an image file");
+        return;
+      }
+      if (typeof FileReader === "function") {
+        const reader = new FileReader();
+        reader.onload = event => {
+          this.imgSrc3 = event.target.result;
+          this.cropImg3 = event.target.result;
+          // rebuild cropperjs with the updated source
+          this.$refs.cropper3.replace(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("Sorry, FileReader API not supported");
+      }
+    },
+    cropImage3() {
+      // get image data for post processing, e.g. upload or setting image src
+      this.cropImg3 = this.$refs.cropper3.getCroppedCanvas().toDataURL();
+    },
+    rotate3() {
+      // guess what this does :)
+      this.$refs.cropper3.rotate(90);
     }
   }
 };
 </script>
 
 <style scoped>
-/* #holdingDivProfile {
-  width: 500px;
-  height: 333.125px;
-  border: 1px solid black;
-} */
-.my-class {
-  background-color: yellow;
-  /* color: white; */
-  opacity: 0.5;
+.imageDiv {
+  width: 400px;
+  height: 300px;
+  border: 1px solid gray;
+  display: inline-block;
 }
-.my-active-class {
-  border: 1px solid black;
-  -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+
+.invalidEmail {
+  z-index: 1;
+  position: fixed;
+  top: 50%;
+  margin: 0 auto;
+  width: 75%;
 }
 
 @media screen and (max-width: 768px) {
-  #holdingDivProfile {
+  .imageDiv {
     width: 100%;
-    /* height: 500px; */
   }
 }
 </style>

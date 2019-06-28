@@ -1,6 +1,6 @@
 <template>
   <!-- <v-footer class="pa-3" dark> -->
-  <v-footer fixed style="background-color:#F4EBDE;">
+  <v-footer fixed style="background-color:#F4EBDE; width: 100%;">
     <v-spacer></v-spacer>
     <v-flex bottom md3 xs12>
       <div>
@@ -37,5 +37,9 @@ a {
 a:hover {
   color: black;
   font-size: 15px;
+}
+
+@media screen and (max-width: 768px) {
+
 }
 </style>

@@ -28,7 +28,8 @@ app.use(bodyParser.json());
 
 // const storeRoutes = require("../server/routes/store"),
 const mainRoutes = require("./routes/initialRoutes"),
-  profileRoutes = require("./routes/profileRoutes");
+  profileRoutes = require("./routes/profileRoutes"),
+  authorizationRoutes = require("./routes/authorizationRoutes");
 //   checkoutRoutes = require("./routes/checkoutRoutes"),
 //   finalizePaymentRoutes = require("./routes/finalizePaymentRoutes"),
 //   contactRoutes = require("./routes/contactRoutes"),
@@ -40,6 +41,7 @@ const mainRoutes = require("./routes/initialRoutes"),
 
 app.use(mainRoutes);
 app.use(profileRoutes);
+app.use(authorizationRoutes);
 // app.use(contactRoutes);
 // app.use(checkoutRoutes);
 // app.use(finalizePaymentRoutes);
