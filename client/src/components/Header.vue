@@ -44,14 +44,16 @@
       </v-menu>
     </v-toolbar-items>-->
     <v-toolbar-items>
-      <v-btn class="#305f72 notHamburger" flat>Community</v-btn>
+      <v-btn class="#305f72 notHamburger" flat :to="{ name: 'notices' }">Community</v-btn>
     </v-toolbar-items>
     <v-toolbar-items>
-      <v-btn class="#305f72 notHamburger" flat>Charity</v-btn>
+      <v-btn class="#305f72 notHamburger" flat :to="{ name: 'charities' }">Charity</v-btn>
     </v-toolbar-items>
     <v-spacer></v-spacer>
     <v-toolbar-items>
-      <v-btn class="#305f72 notHamburger" flat>Pricing</v-btn>
+      <v-btn class="#305f72 notHamburger" flat :to="{ name: 'pricing' }">
+        Pricing
+      </v-btn>
     </v-toolbar-items>
     <!-- /////////////////// -->
 
@@ -109,7 +111,8 @@
           <v-list-tile :to="{ name: 'faq' }">
             <v-list-tile-title>
               FAQ
-              <v-icon left color="red darken-2" class="ml-2">help</v-icon>
+              <v-icon left color="red " class="ml-2">help</v-icon>
+              <!-- darken-2 -->
             </v-list-tile-title>
           </v-list-tile>
           <v-divider></v-divider>
@@ -149,7 +152,7 @@
       min-width="100%"
     >
       <template v-slot:activator="{ on }">
-        <v-btn dark icon v-on="on">
+        <v-btn icon v-on="on">
           <v-toolbar-side-icon class="hamburger" light></v-toolbar-side-icon>
         </v-btn>
       </template>
@@ -190,7 +193,11 @@
           <v-list-tile-title>Logout</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu" v-if="this.$store.state.loggedIn" :to="{ name: 'editProfile' }">
+        <v-list-tile
+          class="hamburgerMenu"
+          v-if="this.$store.state.loggedIn"
+          :to="{ name: 'editProfile' }"
+        >
           <v-list-tile-title>Edit Profile</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
@@ -205,7 +212,8 @@
         <v-list-tile class="hamburgerMenu" :to="{ name: 'faq' }">
           <v-list-tile-title>
             faq
-            <v-icon left color="red darken-2">help</v-icon>
+            <v-icon left color="red ">help</v-icon>
+            <!-- darken-2 -->
           </v-list-tile-title>
         </v-list-tile>
       </v-list>

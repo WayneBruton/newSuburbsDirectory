@@ -82,13 +82,13 @@
                 <!-- <div style="font-size: 15px;">R{{ item.price }}</div> -->
               </div>
             </v-card-title>
-            <v-rating
+            <!-- <v-rating
               half-increments
               light
               v-model="rating"
         
             >
-            </v-rating>
+            </v-rating> -->
             <v-card-actions>
               <v-btn
                 :id="item.id"

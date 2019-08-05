@@ -1,41 +1,36 @@
 <template>
   <v-container>
-    <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
+    <div style="display: flex; justify-content: center;">
+      <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
+    </div>
     <h1>Edit profile</h1>
-    <!-- <v-alert class="danger-alert"  :value="true" type="info">If you already have a profile, please login</v-alert> -->
+    <v-alert
+      class="danger-alert"
+      :value="openMessage"
+      type="info"
+    >If you already have a profile, please login</v-alert>
     <v-layout xs9 column offset-xs2>
       <v-layout class="panelWidth" xs3 column justify-space-around>
         <v-flex xs3 offset-xs0>
           <v-flex>
-            <br>
+            <br />
             <v-flex sm12 offset-xs0>
               <form enctype="multipart/form-data">
-                <br>
-                <br>
+                <br />
+                <br />
                 <v-text-field
                   label="Email Address"
                   placeholder="email address"
                   autocomplete="false"
                   type="email"
-                  @change="checkEmail"
-                  @blur="checkEmail"
                   v-model="email"
+                  readonly
+                  @click="snackbar = true"
                 ></v-text-field>
-                <!-- <v-text-field
-                  label="Password"
-                  placeholder="Password"
-                  autocomplete="false"
-                  type="password"
-                  v-model="password"
-                ></v-text-field>
-                <v-text-field
-                  label="Repeat Password"
-                  placeholder="Repeat Password"
-                  autocomplete="false"
-                  type="password"
-                  v-model="repeatPassword"
-                  @blur="passwordTest"
-                ></v-text-field>-->
+                <v-snackbar style="margin: 150px;" v-model="snackbar">
+                  {{ actualMessage }}
+                  <v-btn color="pink" text @click="snackbar = false">close</v-btn>
+                </v-snackbar>
                 <v-text-field
                   label="Business Name"
                   placeholder="Business Name"
@@ -91,34 +86,37 @@
                     style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                   >
                     <v-checkbox
-                      @click="areaClick"
+                      @click="snackbar = true"
                       v-model="area.areaChosen"
                       :id="area.id.toString()"
                       :label="area.area_description"
                       color="beige lighten-1"
+                      readonly
                     ></v-checkbox>
                   </li>
                 </ul>
-                <br>
-                <hr>
-                <br>
+                <br />
+                <hr />
+                <br />
                 <div v-if="areasArray.length">
                   <v-flex>
                     <v-label>Options</v-label>
                   </v-flex>
-                  <br>
+                  <br />
                   <v-flex xs12 sm6 md12 d-flex>
                     <v-select
                       v-model="selectedOption"
-                      @change="selectedOpt"
                       :items="items"
                       box
-                      :label="optionChosen ? selectedOption : 'Choose your package option'"
+                      :label="optionChosen 
+                              ? 
+                              selectedOption : 'Choose your package option'"
+                      readonly
+                      @click="snackbar = true"
                     ></v-select>
-                    <!-- <v-select :items="item.option_description" box label="Choose your package option"></v-select> -->
                   </v-flex>
                 </div>
-                <br>
+                <br />
                 <v-flex>
                   <v-label>Category</v-label>
                 </v-flex>
@@ -141,13 +139,19 @@
                     </li>
                   </ul>
                 </v-flex>
-                <v-textarea
+                <!-- <v-textarea
                   label="Business Description"
                   required
                   placeholder="Description about 250 words"
                   v-model="description"
-                ></v-textarea>
-                <br>
+                ></v-textarea> -->
+                <vue-editor v-model="description" :editorToolbar="customToolbar"></vue-editor>
+                  <br />
+                  <div v-if="description" v-html="description" style="border: 1px solid lightgrey"></div>
+                <!-- <p v-html="description"></p> -->
+
+                </div>
+                <br />
                 <v-flex>
                   <v-label>Other Options</v-label>
                 </v-flex>
@@ -165,14 +169,15 @@
                         v-model="extraPackage.extraPackagesChosen"
                         :label="extraPackage.option_name"
                         color="beige lighten-1"
-                        @click="extraPackageClick"
+                        @click="snackbar = true"
+                        readonly
                       ></v-checkbox>
                     </li>
                   </ul>
                 </v-flex>
-                <br>
-                <hr>
-                <br>
+                <br />
+                <hr />
+                <br />
                 <panel title="upload main profile image">
                   <input
                     type="file"
@@ -181,9 +186,12 @@
                     accept="image/*"
                     style="font-size: 1.2em; padding: 10px 0;"
                     @change="setImage"
-                  >
-                  <br>
-                  <div class="imageDiv" style>
+                  />
+                  <br />
+                  <div style="display: flex; justify-content: center;" v-if="!imgSrc">
+                    <img :src="originalImage" alt="Original Profile Image" style="width: 40%;" />
+                  </div>
+                  <div class="imageDiv" style v-if="imgSrc">
                     <vue-cropper
                       ref="cropper"
                       :guides="true"
@@ -199,27 +207,27 @@
                       :img-style="{ width: '400px', height: '300px' }"
                     ></vue-cropper>
                   </div>
-                  <br>
-                  <br>
+                  <br />
+                  <br />
                   <img
                     v-if="cropImg"
                     :src="cropImg"
                     style="width: 200px; height: 150px; border: 1px solid gray"
                     alt="Cropped Image"
-                  >
-                  <br>
-                  <br>
+                  />
+                  <br />
+                  <br />
                   <button
                     @click.prevent="cropImage"
                     v-if="imgSrc != ''"
                     style="margin-right: 40px;"
                   >Crop</button>
                   <button @click.prevent="rotate" v-if="imgSrc != ''">Rotate</button>
-                  <br>
+                  <br />
                 </panel>
-                <br>
+                <br />
                 <panel title="upload business image 1">
-                  <br>
+                  <br />
                   <input
                     type="file"
                     ref="file1"
@@ -227,9 +235,13 @@
                     accept="image/*"
                     style="font-size: 1.2em; padding: 10px 0;"
                     @change="setImage1"
-                  >
-                  <br>
-                  <div class="imageDiv">
+                  />
+
+                  <br />
+                  <div style="display: flex; justify-content: center;" v-if="!imgSrc1">
+                    <img :src="originalImage1" alt="Original Profile Image" style="width: 40%;" />
+                  </div>
+                  <div class="imageDiv" style v-if="imgSrc1">
                     <vue-cropper
                       ref="cropper1"
                       :guides="true"
@@ -245,28 +257,28 @@
                       :img-style="{ width: '400px', height: '300px' }"
                     ></vue-cropper>
                   </div>
-                  <br>
-                  <br>
+                  <br />
+                  <br />
                   <img
                     v-if="cropImg1"
                     :src="cropImg1"
                     style="width: 200px; height: 150px; border: 1px solid gray"
                     alt="Cropped Image"
-                  >
-                  <br>
-                  <br>
+                  />
+                  <br />
+                  <br />
                   <button
                     @click.prevent="cropImage1"
-                    v-if="imgSrc != ''"
+                    v-if="imgSrc1 != ''"
                     style="margin-right: 40px;"
                   >Crop</button>
                   <button @click.prevent="rotate1" v-if="imgSrc1 != ''">Rotate</button>
-                  <br>
-                  <br>
+                  <br />
+                  <br />
                 </panel>
-                <br>
+                <br />
                 <panel title="upload business image 2">
-                  <br>
+                  <br />
                   <input
                     type="file"
                     ref="file2"
@@ -274,9 +286,12 @@
                     accept="image/*"
                     style="font-size: 1.2em; padding: 10px 0;"
                     @change="setImage2"
-                  >
-                  <br>
-                  <div class="imageDiv">
+                  />
+                  <br />
+                  <div style="display: flex; justify-content: center;" v-if="!imgSrc2">
+                    <img :src="originalImage2" alt="Original Profile Image" style="width: 40%;" />
+                  </div>
+                  <div class="imageDiv" style v-if="imgSrc2">
                     <vue-cropper
                       ref="cropper2"
                       :guides="true"
@@ -292,27 +307,27 @@
                       :img-style="{ width: '400px', height: '300px' }"
                     ></vue-cropper>
                   </div>
-                  <br>
-                  <br>
+                  <br />
+                  <br />
                   <img
                     v-if="cropImg2"
                     :src="cropImg2"
                     style="width: 200px; height: 150px; border: 1px solid gray"
                     alt="Cropped Image"
-                  >
-                  <br>
-                  <br>
+                  />
+                  <br />
+                  <br />
                   <button
                     @click.prevent="cropImage2"
-                    v-if="imgSrc != ''"
+                    v-if="imgSrc2 != ''"
                     style="margin-right: 40px;"
                   >Crop</button>
                   <button @click.prevent="rotate2" v-if="imgSrc2 != ''">Rotate</button>
-                  <br>
+                  <br />
                 </panel>
-                <br>
+                <br />
                 <panel title="upload business image 3">
-                  <br>
+                  <br />
                   <input
                     type="file"
                     ref="file3"
@@ -320,9 +335,12 @@
                     accept="image/*"
                     style="font-size: 1.2em; padding: 10px 0;"
                     @change="setImage3"
-                  >
-                  <br>
-                  <div class="imageDiv">
+                  />
+                  <br />
+                  <div style="display: flex; justify-content: center;" v-if="!imgSrc3">
+                    <img :src="originalImage3" alt="Original Profile Image" style="width: 40%;" />
+                  </div>
+                  <div class="imageDiv" style v-if="imgSrc3">
                     <vue-cropper
                       ref="cropper3"
                       :guides="true"
@@ -338,28 +356,28 @@
                       :img-style="{ width: '400px', height: '300px' }"
                     ></vue-cropper>
                   </div>
-                  <br>
-                  <br>
+                  <br />
+                  <br />
                   <img
                     v-if="cropImg3"
                     :src="cropImg3"
                     style="width: 200px; height: 150px; border: 1px solid gray"
                     alt="Cropped Image"
-                  >
-                  <br>
-                  <br>
+                  />
+                  <br />
+                  <br />
                   <button
                     @click.prevent="cropImage3"
                     v-if="imgSrc3 != ''"
                     style="margin-right: 40px;"
                   >Crop</button>
                   <button @click.prevent="rotate" v-if="imgSrc3 != ''">Rotate</button>
-                  <br>
-                  <br>
+                  <br />
+                  <br />
                 </panel>
-                <br>
+                <br />
                 <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
-                <v-btn id="btn2" light color="#F4EBDE" @click="save">Continue >></v-btn>
+                <v-btn id="btn2" light color="#F4EBDE" @click="save">Save</v-btn>
               </form>
             </v-flex>
             <v-alert
@@ -381,10 +399,15 @@ import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
 import DirectoryService from "@/services/DirectoryServices";
 import Panel from "@/components/Panel";
+import { VueEditor } from "vue2-editor";
 // import Authenticate from "@/functions/authenticateAdmin";
 export default {
   data() {
     return {
+      originalImage: "",
+      originalImage1: "",
+      originalImage2: "",
+      originalImage3: "",
       imgSrc: "",
       cropImg: "",
       imgSrc1: "",
@@ -407,9 +430,8 @@ export default {
       extraPackages: [],
       extraPackagesChosen: [],
 
+      id: "",
       email: "",
-      password: "",
-      repeatPassword: "",
       businessName: "",
       firstName: "",
       lastName: "",
@@ -419,8 +441,29 @@ export default {
       instagram: "",
       description: "",
 
+      openMessage: true,
+
+      snackbar: false,
+      actualMessage: "To Change this please contact admin at Suburbs Directory",
+
       error: null,
-      success: null
+      success: null,
+
+
+      customToolbar: [
+        [{ font: [] }],
+        [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+        ["bold", "italic", "underline", "strike"],
+        [
+          { align: "" },
+          { align: "center" },
+          { align: "right" },
+          { align: "justify" }
+        ],
+        [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+        [{ indent: "-1" }, { indent: "+1" }],
+        [{ color: [] }, { background: [] }]
+      ]
     };
   },
   async mounted() {
@@ -439,7 +482,8 @@ export default {
       el.extraPackagesChosen = false;
     });
     let profile = await DirectoryService.getProfile(this.$store.state.profile);
-    console.log(profile.data)
+    console.log(profile.data);
+    this.id = profile.data[0].id;
     this.businessName = profile.data[0].businessName;
     this.email = profile.data[0].email;
     this.firstName = profile.data[0].first_name;
@@ -455,16 +499,16 @@ export default {
     this.categoriesArray = JSON.parse(profile.data[0].catarea);
     let img = process.env.VUE_APP_IMAGEURL;
     // console.log(img)
-    this.imgSrc = `${img}${profile.data[0].profile_image}`;
+    this.originalImage = `${img}${profile.data[0].profile_image}`;
     // this.cropImg = `${img}${profile.data[0].profile_image}`;
-    this.imgSrc1 = `${img}${profile.data[0].business_image1}`;
+    this.originalImage1 = `${img}${profile.data[0].business_image1}`;
     // this.cropImg1 = `${img}${profile.data[0].business_image1}`;
-    this.imgSrc2 = `${img}${profile.data[0].business_image2}`;
+    this.originalImage2 = `${img}${profile.data[0].business_image2}`;
     // this.cropImg2 = `${img}${profile.data[0].business_image2}`;
-    this.imgSrc3 = `${img}${profile.data[0].business_image3}`;
+    this.originalImage3 = `${img}${profile.data[0].business_image3}`;
     // this.cropImg3 = `${img}${profile.data[0].business_image3}`;
     // this.setImage()
-    console.log(this.imgSrc)
+    console.log(this.imgSrc);
     this.areasArray.forEach(el => {
       let area = el;
       this.areas.forEach(element => {
@@ -505,6 +549,9 @@ export default {
         }
       });
     });
+    setTimeout(() => {
+      this.openMessage = false;
+    }, 2000);
 
     // this.Authenticate = Authenticate.authenticate;
     // this.Authenticate();
@@ -521,7 +568,16 @@ export default {
   },
   components: {
     Panel,
-    VueCropper
+    VueCropper,
+    VueEditor
+  },
+  watch: {
+    description(newVal, oldVal) {
+      let newContent = this.description;
+      newContent = newContent.replace(/"/g, "'");
+      this.description = newContent;
+      console.log(this.description)
+    }
   },
   methods: {
     async areaClick() {
@@ -601,28 +657,17 @@ export default {
       } catch (e) {
         console.log(e);
       }
-      // console.log(response);
-    },
-    passwordTest() {
-      if (this.password !== this.repeatPassword) {
-        this.error = "passwords do not match";
-        this.password = "";
-        this.repeatPassword = "";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
-      }
     },
     async save() {
       console.log("Clicked");
 
       let formData = new FormData();
+      formData.append("id", this.id);
       formData.append("file", this.cropImg);
       formData.append("file1", this.cropImg1);
       formData.append("file2", this.cropImg2);
       formData.append("file3", this.cropImg3);
       formData.append("email", this.email);
-      formData.append("password", this.password);
       formData.append("businessName", this.businessName);
       formData.append("firstName", this.firstName);
       formData.append("lastName", this.lastName);
@@ -630,30 +675,13 @@ export default {
       formData.append("website", this.website);
       formData.append("facebook", this.faceBook);
       formData.append("instagram", this.instagram);
-      formData.append("areas", this.areasArray);
-      formData.append("selectedOption", this.optionChosen);
+      // formData.append("areas", this.areasArray);
+      // formData.append("selectedOption", this.optionChosen);
       formData.append("catarea", this.categoriesArray);
       formData.append("profile_description", this.description);
-      formData.append("extra_packages", this.extraPackagesChosen);
+      // formData.append("extra_packages", this.extraPackagesChosen);
 
-      if (this.email === "") {
-        this.error = "Please fill in an email address";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
-      } else if (this.password === "") {
-        this.error = "Please fill in a password";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
-      } else if (this.password !== this.repeatPassword) {
-        this.error = "passwords do not match";
-        this.password = "";
-        this.repeatPassword = "";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
-      } else if (
+       if (
         this.businessName === "" ||
         this.firstName === "" ||
         this.lastName === "" ||
@@ -664,16 +692,7 @@ export default {
         setTimeout(() => {
           this.error = null;
         }, 1500);
-      } else if (!this.areasArray.length) {
-        this.error = "Choose at least 1 area";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
-      } else if (this.optionChosen === "") {
-        this.error = "At least one option needs to be chosen";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
+      
       } else if (!this.categoriesArray.length) {
         this.error = "Choose at least 1 category";
         setTimeout(() => {
@@ -684,27 +703,21 @@ export default {
         setTimeout(() => {
           this.error = null;
         }, 1500);
-      } else if (
-        this.cropImg === "" ||
-        this.cropImg1 === "" ||
-        this.cropImg2 === "" ||
-        this.cropImg3 === ""
-      ) {
-        this.error = "All Images must be selected";
-        setTimeout(() => {
-          this.error = null;
-        }, 1500);
       } else {
-        let response = await DirectoryService.addProfile(formData);
-        console.log(response.data);
-        let token = response.data.token;
-        let user = response.data.user;
-        console.log(token);
-        console.log(user);
-        this.$store.dispatch("setToken", token);
-        this.$store.dispatch("setUser", user);
-        console.log(this.$store.state.userName);
-        console.log(this.$store.state.email);
+        let response = await DirectoryService.editProfile(formData);
+        console.log("THIS IS THE RESPONSE",response.data);
+        this.success = "You have successfully updated your profile"
+        setTimeout(() => {
+          this.$router.push({ name: "home" });
+        }, 2000)
+        // let token = response.data.token;
+        // let user = response.data.user;
+        // console.log(token);
+        // console.log(user);
+        // this.$store.dispatch("setToken", token);
+        // this.$store.dispatch("setUser", user);
+        // console.log(this.$store.state.userName);
+        // console.log(this.$store.state.email);
       }
     },
     setImage(e) {
@@ -806,7 +819,9 @@ export default {
           this.imgSrc3 = event.target.result;
           this.cropImg3 = event.target.result;
           // rebuild cropperjs with the updated source
-          this.$refs.cropper3.replace(event.target.result);
+          // if (event.target.result !== undefined) {
+            this.$refs.cropper3.replace(event.target.result);
+          // }
         };
         reader.readAsDataURL(file);
       } else {
@@ -845,5 +860,9 @@ export default {
   .imageDiv {
     width: 100%;
   }
+}
+img {
+  display: flex;
+  justify-content: center;
 }
 </style>

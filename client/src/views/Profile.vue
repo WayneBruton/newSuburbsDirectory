@@ -35,8 +35,8 @@
         <br />
         <hr />
         <br />
-        <v-rating readonly half-increments light v-model="ratingsToDate">
-        </v-rating>
+        <!-- <v-rating readonly half-increments light v-model="ratingsToDate">
+        </v-rating> -->
         <div style="display: flex; justify-content: space-around">
           <div style="display: flex; flex-direction: column;">
             <div>
@@ -51,7 +51,7 @@
             <div>
               <a :href="website" target="_blank">Website</a>
               <br />
-              <a href="website" target="_blank">email</a>
+              <a :href="email">email</a>
             </div>
           </div>
         </div>
@@ -77,8 +77,11 @@
           offset-sm0
           justify-space-evenly
         >
-          <v-textarea v-model="profile_description" readonly rows="20">
-          </v-textarea>
+          <!-- <v-textarea v-model="profile_description" readonly rows="20"> -->
+         
+          <!-- </v-textarea> -->
+
+           <div v-html="profile_description" readonly rows="20"></div>
         </v-flex>
         <br />
         <h3>Share</h3>
@@ -92,9 +95,9 @@
             <network network="facebook" style="margin: 10px;">
               <i class="fab fa-facebook-square fa-2x" style="color: #366ed8;"></i>
             </network>
-            <network network="googleplus" style="margin: 10px;">
+            <!-- <network network="googleplus" style="margin: 10px;">
               <i class="fab fa-google-plus-g fa-2x" style="color: red;"></i>
-            </network>
+            </network> -->
             <network network="linkedin" style="margin: 10px;">
               <i class="fab fa-linkedin fa-2x" style="color: #556fb5;"></i>
             </network>
@@ -170,7 +173,7 @@
         </v-layout>
         <br />
         <br />
-        <div v-if="ratings.length">
+        <!-- <div v-if="ratings.length">
           <h4>Ratings</h4>
           <br />
           <hr />
@@ -194,7 +197,7 @@
               </label>
             </li>
           </ul>
-        </div>
+        </div> -->
       </v-layout>
     </v-container>
   </div>
@@ -254,7 +257,7 @@ export default {
         el.business_image3
       }`;
       this.businessName = el.businessName;
-      this.email = el.email;
+      this.email = "mailTo:" + el.email;
       this.facebook = el.facebook;
       this.first_name = el.first_name;
       this.instagram = el.instagram;

@@ -57,7 +57,7 @@ const upload = multer({
 // router.put("/authenticateAdmin", checktoken, (req, res) => {});
 
 router.put("/getPackages", function(req, res) {
-  console.log("NUMBER OF SUBURBS",req.body.number);
+  console.log("NUMBER OF SUBURBS", req.body.number);
 
   let numberOfAreas = req.body.number;
 
@@ -70,8 +70,8 @@ router.put("/getPackages", function(req, res) {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
-      };
+        console.log(error);
+      }
 
       res.json(result);
     });
@@ -96,7 +96,7 @@ router.get("/getExtraPackages", function(req, res) {
 });
 
 router.get("/getProfile/:id", function(req, res) {
-  console.log(req.params.id)
+  console.log(req.params.id);
   // res.json({Awesome: req.params.id})
   var sql = `select * from client_profiles where id = ${req.params.id}`;
   pool.getConnection(function(err, connection) {
@@ -146,7 +146,7 @@ router.post("/addProfile", upload.array(), function(req, res) {
   let id = 0;
   bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
     let sql1 = ` INSERT INTO client_profiles (businessName,first_name,last_name,mob_no,email,website,facebook,instagram,
-    areas,selectedOption,catarea,profile_description, extra_packages,password,  product_service, adminAssist, profile_heading, profile_approved, paid_to_date
+    areas,selectedOption,catarea,profile_description, extra_packages,password,   profile_approved, paid_to_date
 ) values (
 '${req.body.businessName}','${req.body.firstName}','${req.body.lastName}','${
       req.body.contactNumber
@@ -155,7 +155,7 @@ router.post("/addProfile", upload.array(), function(req, res) {
     }',
 "[${areas}]",${req.body.selectedOption},"[${catarea}]","${
       req.body.profile_description
-    }", "[${extra_packages}]","${hash}", "service", true, 'test', true, true
+    }", "[${extra_packages}]","${hash}", true, true
 )`;
     let sql2 = `select id from client_profiles where email like '${
       req.body.email
@@ -291,11 +291,10 @@ router.put("/checkEmail", function(req, res) {
   }
 });
 
-
 router.put("/getRatings", function(req, res) {
-  console.log("GetRatings",req.body.id);
-  let id = req.body.id
-  let sql = `select * from profile_ratings where profile_number = ${id} order by id desc`
+  console.log("GetRatings", req.body.id);
+  let id = req.body.id;
+  let sql = `select * from profile_ratings where profile_number = ${id} order by id desc`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -310,18 +309,17 @@ router.put("/getRatings", function(req, res) {
   });
 });
 
-
 router.post("/updateRatings", function(req, res) {
   console.log(req.body);
-  let profile_number = req.body.id
-  let rating = req.body.rating
-  let narrative = req.body.comments
+  let profile_number = req.body.id;
+  let rating = req.body.rating;
+  let narrative = req.body.comments;
 
   let sql = `insert into profile_ratings (profile_number, rating, narrative) values (
     ${profile_number},
     ${rating},
     "${narrative}"
-  )`
+  )`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -331,6 +329,156 @@ router.post("/updateRatings", function(req, res) {
       if (error) throw error;
 
       res.json(result);
+    });
+    connection.release();
+  });
+});
+
+router.post("/editProfile", upload.array(), function(req, res) {
+  console.log(req.body);
+  var base64Data = req.body.file;
+  let base64Image = null;
+  let base64Image1 = null;
+  let base64Image2 = null;
+  let base64Image3 = null;
+  if (base64Data !== "") {
+    base64Image = base64Data.split(";base64,").pop();
+  }
+
+  var base64Data1 = req.body.file1;
+  if (base64Data1 !== "") {
+    base64Image1 = base64Data.split(";base64,").pop();
+  }
+  // let base64Image1 = base64Data1.split(";base64,").pop();
+  var base64Data2 = req.body.file2;
+  if (base64Data2 !== "") {
+    base64Image2 = base64Data.split(";base64,").pop();
+  }
+  // let base64Image2 = base64Data2.split(";base64,").pop();
+  var base64Data3 = req.body.file3;
+  if (base64Data3 !== "") {
+    base64Image3 = base64Data.split(";base64,").pop();
+  }
+  // let base64Image3 = base64Data3.split(";base64,").pop();
+
+  console.log(base64Image);
+  console.log(base64Image1);
+  console.log(base64Image2);
+  console.log(base64Image3);
+
+  // let initArray = req.body.areas.split(",");
+  // let areas = [];
+  let catarea = [];
+  // let extra_packages = [];
+  // for (i = 0; i < initArray.length; i++) {
+  //   areas.push(parseInt(initArray[i]));
+  // }
+  let initArray = req.body.catarea.split(",");
+  for (i = 0; i < initArray.length; i++) {
+    catarea.push(parseInt(initArray[i]));
+  }
+  console.log("CatArea", catarea);
+
+  //   if (req.body.extra_packages !== "") {
+  //     initArray = req.body.extra_packages.split(",");
+  //     for (i = 0; i < initArray.length; i++) {
+  //       extra_packages.push(parseInt(initArray[i]));
+  //     }
+  //   } else {
+  //     extra_packages = [];
+  //   }
+  let id = req.body.id;
+  // console.log("ID", id)
+  let sql = `update client_profiles set businessName = "${
+    req.body.businessName
+  }",first_name = "${req.body.firstName}",last_name = "${req.body.lastName}", 
+      mob_no = "${req.body.contactNumber}",email = "${
+    req.body.email
+  }", website = "${req.body.website}",facebook = "${
+    req.body.facebook
+  }",instagram = "${req.body.instagram}",
+      catarea = "[${catarea}]" ,profile_description = "${
+    req.body.profile_description
+  }" where id = ${id}`;
+
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) throw error;
+
+      ////////////////////////
+      if (base64Image !== null) {
+        fs.writeFile(
+          `public/images/profiles/${id}ProfilePic.png`,
+          base64Image,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(`public/images/profiles/${id}ProfilePic.png`, function(
+              err,
+              data
+            ) {});
+          }
+        );
+      }
+      if (base64Image1 !== null) {
+        fs.writeFile(
+          `public/images/profiles/${id}Business1Pic.png`,
+          base64Image1,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(
+              `public/images/profiles/${id}Business1Pic.png`,
+              function(err, data) {}
+            );
+          }
+        );
+      }
+      if (base64Image2 !== null) {
+        fs.writeFile(
+          `public/images/profiles/${id}Business2Pic.png`,
+          base64Image2,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(
+              `public/images/profiles/${id}Business2Pic.png`,
+              function(err, data) {}
+            );
+          }
+        );
+      }
+      if (base64Image3 !== null) {
+        fs.writeFile(
+          `public/images/profiles/${id}Business3Pic.png`,
+          base64Image3,
+          { encoding: "base64" },
+          function(err) {
+            if (err) console.log(err);
+            fs.readFile(
+              `public/images/profiles/${id}Business3Pic.png`,
+              function(err, data) {}
+            );
+          }
+        );
+      }
+
+      //////////////////////////////
+
+      let sql3 = `update client_profiles set profile_image = '/images/profiles/${id}ProfilePic.png', business_image1 = '/images/profiles/${id}Business1Pic.png', business_image2 = '/images/profiles/${id}Business2Pic.png', business_image3 = '/images/profiles/${id}Business3Pic.png'
+         where id = ${id}`;
+      console.log(sql3);
+      connection.query(sql3, function(error, result) {
+        if (error) throw error;
+        res.json({
+          result: "Congratulations, you have updarted your profile"
+         
+        });
+      });
     });
     connection.release();
   });

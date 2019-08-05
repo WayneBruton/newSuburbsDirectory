@@ -2,7 +2,6 @@
   <v-container>
     <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
     <h1>Add profile</h1>
-    <!-- <v-alert class="danger-alert"  :value="true" type="info">If you already have a profile, please login</v-alert> -->
     <v-layout xs9 column offset-xs2>
       <v-layout class="panelWidth" xs3 column justify-space-around>
         <v-flex xs3 offset-xs0>
@@ -98,7 +97,9 @@
                       color="beige lighten-1"
                     ></v-checkbox>
                   </li>
+                  <v-icon @click="showDialog" style="color: red;">attach_money</v-icon>
                 </ul>
+
                 <br />
                 <hr />
                 <br />
@@ -141,12 +142,22 @@
                     </li>
                   </ul>
                 </v-flex>
-                <v-textarea
+                <br />
+                <br />
+                <div id="app">
+                  <v-label>Business Description</v-label>
+                  <vue-editor v-model="description" :editorToolbar="customToolbar"></vue-editor>
+                  <br />
+                  <div v-if="description" v-html="description" style="border: 1px solid lightgrey"></div>
+                <p v-html="description"></p>
+
+                </div>
+                <!-- <v-textarea
                   label="Business Description"
                   required
                   placeholder="Description about 250 words"
-                  v-model="description"
-                ></v-textarea>
+                  v-html="description"
+                ></v-textarea> -->
                 <br />
                 <v-flex>
                   <v-label>Other Options</v-label>
@@ -168,6 +179,7 @@
                         @click="extraPackageClick"
                       ></v-checkbox>
                     </li>
+                    <v-icon @click="showDialog" style="color: red;">attach_money</v-icon>
                   </ul>
                 </v-flex>
                 <br />
@@ -213,12 +225,8 @@
                     @click.prevent="cropImage"
                     v-if="imgSrc != ''"
                     style="margin-right: 40px;"
-                  >
-                    Crop
-                  </button>
-                  <button @click.prevent="rotate" v-if="imgSrc != ''">
-                    Rotate
-                  </button>
+                  >Crop</button>
+                  <button @click.prevent="rotate" v-if="imgSrc != ''">Rotate</button>
                   <br />
                 </panel>
                 <br />
@@ -263,12 +271,8 @@
                     @click.prevent="cropImage1"
                     v-if="imgSrc != ''"
                     style="margin-right: 40px;"
-                  >
-                    Crop
-                  </button>
-                  <button @click.prevent="rotate1" v-if="imgSrc1 != ''">
-                    Rotate
-                  </button>
+                  >Crop</button>
+                  <button @click.prevent="rotate1" v-if="imgSrc1 != ''">Rotate</button>
                   <br />
                   <br />
                 </panel>
@@ -314,12 +318,8 @@
                     @click.prevent="cropImage2"
                     v-if="imgSrc != ''"
                     style="margin-right: 40px;"
-                  >
-                    Crop
-                  </button>
-                  <button @click.prevent="rotate2" v-if="imgSrc2 != ''">
-                    Rotate
-                  </button>
+                  >Crop</button>
+                  <button @click.prevent="rotate2" v-if="imgSrc2 != ''">Rotate</button>
                   <br />
                 </panel>
                 <br />
@@ -364,20 +364,199 @@
                     @click.prevent="cropImage3"
                     v-if="imgSrc3 != ''"
                     style="margin-right: 40px;"
-                  >
-                    Crop
-                  </button>
-                  <button @click.prevent="rotate" v-if="imgSrc3 != ''">
-                    Rotate
-                  </button>
+                  >Crop</button>
+                  <button @click.prevent="rotate" v-if="imgSrc3 != ''">Rotate</button>
                   <br />
                   <br />
                 </panel>
                 <br />
+                <!-- <v-icon @click="dialog = true">home</v-icon> -->
+                <v-layout row justify-center>
+                  <v-dialog v-model="dialog" max-width="600px">
+                    <template v-slot:activator="{ on }"></template>
+                    <v-card>
+                      <!-- <v-card-title>
+                        <span class="headline">Your Costs</span>
+                      </v-card-title> -->
+                      <v-card-text>
+                        <p>
+                          <small>
+                            <strong>These change as you add or remove choices.</strong>
+                          </small>
+                        </p>
+                        <v-container grid-list-md>
+                          <v-layout wrap>
+                            <v-flex xs12 sm8 md8 offset-md2>
+                              <v-layout row justify-center>
+                                <v-text-field
+                                  label="Areas"
+                                  required
+                                  :value="areasArray.length"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + areaCost.toFixed(2)"
+                                  readonly
+                                  text-align-right
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (areaCost * 12 * .8).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                              </v-layout>
+                              <v-layout row justify-center>
+                                <v-text-field label="Constantia" required value readonly></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + extraPackage1Cost.toFixed(2)"
+                                  readonly
+                                  right
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (extraPackage1Cost * 12 * .8).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                              </v-layout>
+                              <v-layout row justify-center>
+                                <v-text-field label="Admin Assist" required value readonly></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + extraPackage2Cost.toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (extraPackage2Cost * 12).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                              </v-layout>
+                              <v-layout row justify-center>
+                                <v-text-field label="Cover Photo" required value readonly></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + extraPackage3Cost.toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (extraPackage3Cost * 12 * .8).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                              </v-layout>
+                              <v-layout row justify-center>
+                                <v-text-field
+                                  label="Total"
+                                  required
+                                  value
+                                  style="font-style: bold; color: red;"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                
+                              </v-layout>
+                              <v-container>
+                                  <!-- <v-flex> -->
+                                <v-radio-group v-model="radios" row space-evenly>
+                                  <v-radio value="radio-1" label="Monthly" @change="optionChange"></v-radio>
+                                  <v-radio value="radio-2" label="Annual" @change="optionChange"></v-radio>
+                                </v-radio-group>
+                                <div v-if="radios == 'radio-1'">
+                                <v-text-field
+                                  class="text-xs-right"
+                                  required
+                                   :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                </div>
+                                <div v-if="radios == 'radio-2'">
+                                <v-text-field
+                                  class="text-xs-right"
+                                  required
+                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                </div>
+                                  <!-- </v-flex> -->
+                                </v-container>
+                            </v-flex>
+                          </v-layout>
+                        </v-container>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="orange darken-1" flat @click="dialog = false">Close</v-btn>
+                        <!-- <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn> -->
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-layout>
+
                 <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
-                <v-btn id="btn2" light color="#F4EBDE" @click="save">
-                  Continue >>
-                </v-btn>
+                <v-btn id="btn2" light color="#F4EBDE" @click="save" v-if="!saved">Join Us</v-btn>
+                <v-icon @click="showDialog" style="color: red;">attach_money</v-icon>
+                <div style="display: flex; justify-content: center;" v-if="minimumRequirements">
+                  <form
+                    action="https://www.payfast.co.za/eng/process"
+                    name="form_ad990b487f6e182cd44e0c189204bb70"
+                    onsubmit="return click_ad990b487f6e182cd44e0c189204bb70( this );"
+                    method="post"
+                  >
+                    <input type="hidden" name="cmd" value="_paynow" />
+                    <input type="hidden" name="receiver" value="10469596" />
+                    <input type="hidden" name="item_name" value="Suburbs Directory Subscription" />
+                    <input type="hidden" name="amount" value="95.99" />
+                    <input type="hidden" name="item_description" value />
+                    <input type="hidden" name="return_url" value="https://www.eccentrictoad.com" />
+                    <input type="hidden" name="cancel_url" value="https://www.eccentrictoad.com" />
+
+                    <table>
+                      <tr>
+                        <td colspan="2" align="center">
+                          <input
+                            type="image"
+                            src="https://www.payfast.co.za/images/buttons/light-small-paynow.png"
+                            width="165"
+                            height="36"
+                            alt="Pay Now"
+                            title="Pay Now with PayFast"
+                          />
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </div>
               </form>
             </v-flex>
             <v-alert
@@ -385,17 +564,8 @@
               v-if="error"
               :value="true"
               type="error"
-            >
-              {{ error }}
-            </v-alert>
-            <v-alert
-              class="danger-alert"
-              v-if="success"
-              :value="true"
-              type="success"
-            >
-              {{ success }}
-            </v-alert>
+            >{{ error }}</v-alert>
+            <v-alert class="danger-alert" v-if="success" :value="true" type="success">{{ success }}</v-alert>
           </v-flex>
         </v-flex>
       </v-layout>
@@ -408,6 +578,8 @@ import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
 import DirectoryService from "@/services/DirectoryServices";
 import Panel from "@/components/Panel";
+import { VueEditor } from "vue2-editor";
+
 // import Authenticate from "@/functions/authenticateAdmin";
 export default {
   data() {
@@ -427,12 +599,16 @@ export default {
       items: [],
       selectedOption: "",
       optionChosen: "",
+      areaCost: 0,
 
       categories: [],
       categoriesArray: [],
 
       extraPackages: [],
       extraPackagesChosen: [],
+      extraPackage1Cost: 0,
+      extraPackage2Cost: 0,
+      extraPackage3Cost: 0,
 
       email: "1@2",
       password: "12345",
@@ -447,7 +623,31 @@ export default {
       description: "My Test Description's Hello",
 
       error: null,
-      success: null
+      success: null,
+
+      minimumRequirements: false,
+      saved: false,
+
+      dialog: false,
+
+      radios: 'radio-1',
+      amountToPay: 0,
+      payMonthly: true,
+
+      customToolbar: [
+        [{ font: [] }],
+        [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+        ["bold", "italic", "underline", "strike"],
+        [
+          { align: "" },
+          { align: "center" },
+          { align: "right" },
+          { align: "justify" }
+        ],
+        [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+        [{ indent: "-1" }, { indent: "+1" }],
+        [{ color: [] }, { background: [] }]
+      ]
     };
   },
   async mounted() {
@@ -486,11 +686,44 @@ export default {
   },
   components: {
     Panel,
-    VueCropper
+    VueCropper,
+    VueEditor
+  },
+  watch: {
+    description(newVal, oldVal) {
+      let newContent = this.description;
+      newContent = newContent.replace(/"/g, "'");
+      this.description = newContent;
+      console.log(this.description)
+    }
   },
   methods: {
+    showDialog() {
+      this.dialog = true
+      this.amountToPay = (this.areaCost + this.extraPackage1Cost + this.extraPackage2Cost + this.extraPackage3Cost).toFixed(2)
+      console.log(this.amountToPay)
+    },
+    optionChange() {
+      
+      if (this.radios == 'radio-1') {
+        this.payMonthly = !this.payMonthly
+      } else if (this.radios == 'radio-2') {
+        this.payMonthly = !this.payMonthly
+      }
+      if (this.payMonthly === true) {
+        this.amountToPay = (this.areaCost + this.extraPackage1Cost + this.extraPackage2Cost + this.extraPackage3Cost).toFixed(2)
+      console.log(this.payMonthly)
+      console.log(this.amountToPay)
+      } else {
+        this.amountToPay = (((this.extraPackage1Cost + this.areaCost + this.extraPackage3Cost) * 12 * .8)+(this.extraPackage2Cost * 12)).toFixed(2)
+      console.log(this.payMonthly)
+      console.log(this.amountToPay)
+      }
+    },
+
     async areaClick() {
       this.areasArray = [];
+      this.areaCost = 0;
       let areaCount = this.areas.filter(el => {
         if (el.areaChosen === true) {
           this.areasArray.push(el.id);
@@ -501,8 +734,10 @@ export default {
       let numberOfSuburbs = {
         number: this.areasArray.length
       };
+      this.selectedOption = "";
+      this.optionChosen = "";
       let response = await DirectoryService.getPackages(numberOfSuburbs);
-      console.log(response.data);
+      console.log("PACKAGES ARE HERE", response.data);
       this.packages = response.data;
       let items = [];
       this.packages.forEach(el => {
@@ -528,15 +763,28 @@ export default {
     },
     extraPackageClick() {
       this.extraPackagesChosen = [];
+      this.extraPackage1Cost = 0;
+      this.extraPackage2Cost = 0;
+      this.extraPackage3Cost = 0;
       let extraPackagesCount = this.extraPackages.filter(el => {
         if (el.extraPackagesChosen === true) {
           this.extraPackagesChosen.push(el.id);
         }
         return el.extraPackagesChosen === true;
       });
+
       console.log(extraPackagesCount);
       // categoryCount = []
       console.log("This.extraPackagesChosen", this.extraPackagesChosen);
+      if (this.extraPackagesChosen.includes(1)) {
+        this.extraPackage1Cost = 25;
+      }
+      if (this.extraPackagesChosen.includes(2)) {
+        this.extraPackage2Cost = 80;
+      }
+      if (this.extraPackagesChosen.includes(3)) {
+        this.extraPackage3Cost = 1200;
+      }
     },
     selectedOpt() {
       console.log("TESTING", this.selectedOption);
@@ -545,8 +793,10 @@ export default {
           return el.id;
         }
       });
-      console.log(packageChosen);
+
+      console.log("Package Chosen", packageChosen);
       this.optionChosen = packageChosen[0].id;
+      this.areaCost = packageChosen[0].per_month;
       console.log("Option Chosen", this.optionChosen);
     },
     async checkEmail() {
@@ -660,6 +910,7 @@ export default {
           this.error = null;
         }, 1500);
       } else {
+        this.minimumRequirements = true;
         let response = await DirectoryService.addProfile(formData);
         console.log(response.data);
         let token = response.data.token;
@@ -670,6 +921,8 @@ export default {
         this.$store.dispatch("setUser", user);
         console.log(this.$store.state.userName);
         console.log(this.$store.state.email);
+        this.saved = true;
+        
       }
     },
     setImage(e) {

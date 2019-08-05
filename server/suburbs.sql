@@ -214,9 +214,10 @@ CREATE TABLE extra_packages (
 );
 
 INSERT INTO extra_packages (option_name, option_description, per_month) values 
-('Constantia & Surrounds', 'A piggy back site to join', 25),
-('Admin Assistance', 'Let us assist you loading your adverts', 80),
-('Cover Photo', 'Monthly have a cover photo on our banner', 1200);
+('Bishops Court Community Group', 'A piggy back site to join', 25),
+('Upper Claremont Community Group', 'A piggy back site to join', 25)
+
+
 
 
 alter table client_profiles add column extra_packages JSON

@@ -12,6 +12,10 @@ import Launchpad from "./views/Launchpad.vue";
 import Login from "./views/Login.vue";
 import ResetPassword from "./views/ResetPassword.vue";
 import EditProfile from "./views/EditProfile.vue";
+import Pricing from "./views/Pricing.vue";
+import Dashboard from "./views/Dashboard.vue";
+import Charities from "./views/Charities.vue";
+import Notices from "./views/Notices.vue";
 
 Vue.use(Router);
 
@@ -78,6 +82,26 @@ export default new Router({
       path: "/editProfile",
       name: "editProfile",
       component: EditProfile
+    },
+    {
+      path: "/pricing",
+      name: "pricing",
+      component: Pricing
+    },
+    {
+      path: "/admin/dashboard",
+      name: "dashboard",
+      component: Dashboard
+    },
+    {
+      path: "/charities",
+      name: "charities",
+      component: Charities
+    },
+    {
+      path: "/notices",
+      name: "notices",
+      component: Notices
     }
   ]
 });

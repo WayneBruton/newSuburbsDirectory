@@ -43,4 +43,12 @@ export default {
   resetPassword(credentials) {
     return Api().put(`/resetPassword`, credentials);
   },
+  checkout(credentials) {
+    console.log(credentials);
+    return Api().post(`/v1/checkouts`, credentials);
+  },
+  editProfile(credentials) {
+    console.log(credentials)
+    return Api().post(`/editProfile`, credentials);
+  }
 };
