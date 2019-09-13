@@ -90,7 +90,7 @@
                     style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                   >
                     <v-checkbox
-                      @click="areaClick"
+                      @change="areaClick"
                       v-model="area.areaChosen"
                       :id="area.id.toString()"
                       :label="area.area_description"
@@ -137,7 +137,7 @@
                         v-model="category.categoryChosen"
                         :label="category.category_description"
                         color="beige lighten-1"
-                        @click="categoryClick"
+                        @change="categoryClick"
                       ></v-checkbox>
                     </li>
                   </ul>
@@ -149,15 +149,8 @@
                   <vue-editor v-model="description" :editorToolbar="customToolbar"></vue-editor>
                   <br />
                   <div v-if="description" v-html="description" style="border: 1px solid lightgrey"></div>
-                <p v-html="description"></p>
-
+                  <p v-html="description"></p>
                 </div>
-                <!-- <v-textarea
-                  label="Business Description"
-                  required
-                  placeholder="Description about 250 words"
-                  v-html="description"
-                ></v-textarea> -->
                 <br />
                 <v-flex>
                   <v-label>Other Options</v-label>
@@ -176,7 +169,7 @@
                         v-model="extraPackage.extraPackagesChosen"
                         :label="extraPackage.option_name"
                         color="beige lighten-1"
-                        @click="extraPackageClick"
+                        @change="extraPackageClick"
                       ></v-checkbox>
                     </li>
                     <v-icon @click="showDialog" style="color: red;">attach_money</v-icon>
@@ -186,198 +179,33 @@
                 <hr />
                 <br />
                 <panel title="upload main profile image">
-                  <input
-                    type="file"
-                    ref="file"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage"
-                  />
                   <br />
-                  <div class="imageDiv" style>
-                    <vue-cropper
-                      ref="cropper"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg"
-                    :src="cropImg"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage"
-                    v-if="imgSrc != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate" v-if="imgSrc != ''">Rotate</button>
-                  <br />
+                  <ImageUpload></ImageUpload>
+                  <v-btn @click="uploadProfileImage">Choose</v-btn>
                 </panel>
                 <br />
                 <panel title="upload business image 1">
                   <br />
-                  <input
-                    type="file"
-                    ref="file1"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage1"
-                  />
-                  <br />
-                  <div class="imageDiv">
-                    <vue-cropper
-                      ref="cropper1"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc1"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg1"
-                    :src="cropImg1"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage1"
-                    v-if="imgSrc != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate1" v-if="imgSrc1 != ''">Rotate</button>
-                  <br />
-                  <br />
+                  <ImageUpload></ImageUpload>
+                  <v-btn @click="uploadImage1">Choose</v-btn>
                 </panel>
                 <br />
                 <panel title="upload business image 2">
                   <br />
-                  <input
-                    type="file"
-                    ref="file2"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage2"
-                  />
-                  <br />
-                  <div class="imageDiv">
-                    <vue-cropper
-                      ref="cropper2"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc2"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg2"
-                    :src="cropImg2"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage2"
-                    v-if="imgSrc != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate2" v-if="imgSrc2 != ''">Rotate</button>
-                  <br />
+                  <ImageUpload></ImageUpload>
+                  <v-btn @click="uploadImage2">Choose</v-btn>
                 </panel>
                 <br />
                 <panel title="upload business image 3">
                   <br />
-                  <input
-                    type="file"
-                    ref="file3"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage3"
-                  />
-                  <br />
-                  <div class="imageDiv">
-                    <vue-cropper
-                      ref="cropper3"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc3"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg3"
-                    :src="cropImg3"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage3"
-                    v-if="imgSrc3 != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate" v-if="imgSrc3 != ''">Rotate</button>
-                  <br />
-                  <br />
+                  <ImageUpload></ImageUpload>
+                  <v-btn @click="uploadImage3">Choose</v-btn>
                 </panel>
                 <br />
-                <!-- <v-icon @click="dialog = true">home</v-icon> -->
                 <v-layout row justify-center>
                   <v-dialog v-model="dialog" max-width="600px">
                     <template v-slot:activator="{ on }"></template>
                     <v-card>
-                      <!-- <v-card-title>
-                        <span class="headline">Your Costs</span>
-                      </v-card-title> -->
                       <v-card-text>
                         <p>
                           <small>
@@ -484,32 +312,31 @@
                                   :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
                                   readonly
                                 ></v-text-field>
-                                
                               </v-layout>
                               <v-container>
-                                  <!-- <v-flex> -->
+                                <!-- <v-flex> -->
                                 <v-radio-group v-model="radios" row space-evenly>
                                   <v-radio value="radio-1" label="Monthly" @change="optionChange"></v-radio>
                                   <v-radio value="radio-2" label="Annual" @change="optionChange"></v-radio>
                                 </v-radio-group>
                                 <div v-if="radios == 'radio-1'">
-                                <v-text-field
-                                  class="text-xs-right"
-                                  required
-                                   :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost).toFixed(2)"
-                                  readonly
-                                ></v-text-field>
+                                  <v-text-field
+                                    class="text-xs-right"
+                                    required
+                                    :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost).toFixed(2)"
+                                    readonly
+                                  ></v-text-field>
                                 </div>
                                 <div v-if="radios == 'radio-2'">
-                                <v-text-field
-                                  class="text-xs-right"
-                                  required
-                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
-                                  readonly
-                                ></v-text-field>
+                                  <v-text-field
+                                    class="text-xs-right"
+                                    required
+                                    :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                    readonly
+                                  ></v-text-field>
                                 </div>
-                                  <!-- </v-flex> -->
-                                </v-container>
+                                <!-- </v-flex> -->
+                              </v-container>
                             </v-flex>
                           </v-layout>
                         </v-container>
@@ -574,23 +401,20 @@
 </template>
 
 <script>
-import VueCropper from "vue-cropperjs";
-import "cropperjs/dist/cropper.css";
+// import VueCropper from "vue-cropperjs";
+// import "cropperjs/dist/cropper.css";
 import DirectoryService from "@/services/DirectoryServices";
 import Panel from "@/components/Panel";
+import ImageUpload from "@/components/ImageUpload";
 import { VueEditor } from "vue2-editor";
 
 // import Authenticate from "@/functions/authenticateAdmin";
 export default {
   data() {
     return {
-      imgSrc: "",
       cropImg: "",
-      imgSrc1: "",
       cropImg1: "",
-      imgSrc2: "",
       cropImg2: "",
-      imgSrc3: "",
       cropImg3: "",
 
       areas: [],
@@ -610,17 +434,17 @@ export default {
       extraPackage2Cost: 0,
       extraPackage3Cost: 0,
 
-      email: "1@2",
-      password: "12345",
-      repeatPassword: "12345",
-      businessName: "Bobs little Business",
-      firstName: "Wayne",
-      lastName: "Bruton",
-      contactNumber: "123456",
-      website: "myWebsite",
-      faceBook: "myFaceBook",
-      instagram: "myInstagram",
-      description: "My Test Description's Hello",
+      email: "",
+      password: "",
+      repeatPassword: "",
+      businessName: "",
+      firstName: "",
+      lastName: "",
+      contactNumber: "",
+      website: "",
+      faceBook: "",
+      instagram: "",
+      description: "",
 
       error: null,
       success: null,
@@ -630,7 +454,7 @@ export default {
 
       dialog: false,
 
-      radios: 'radio-1',
+      radios: "radio-1",
       amountToPay: 0,
       payMonthly: true,
 
@@ -686,38 +510,66 @@ export default {
   },
   components: {
     Panel,
-    VueCropper,
-    VueEditor
+    VueEditor,
+    ImageUpload
   },
   watch: {
     description(newVal, oldVal) {
-      let newContent = this.description;
+      oldVal = this.description;
+      newVal = oldVal;
+      let newContent = newVal;
       newContent = newContent.replace(/"/g, "'");
       this.description = newContent;
-      console.log(this.description)
+      console.log(this.description);
     }
   },
   methods: {
     showDialog() {
-      this.dialog = true
-      this.amountToPay = (this.areaCost + this.extraPackage1Cost + this.extraPackage2Cost + this.extraPackage3Cost).toFixed(2)
-      console.log(this.amountToPay)
+      this.dialog = true;
+      this.amountToPay = (
+        this.areaCost +
+        this.extraPackage1Cost +
+        this.extraPackage2Cost +
+        this.extraPackage3Cost
+      ).toFixed(2);
+      console.log(this.amountToPay);
+    },
+    uploadProfileImage() {
+      this.cropImg = this.$store.state.uploadedImage;
+    },
+    uploadImage1() {
+      this.cropImg1 = this.$store.state.uploadedImage;
+    },
+    uploadImage2() {
+      this.cropImg2 = this.$store.state.uploadedImage;
+    },
+    uploadImage3() {
+      this.cropImg3 = this.$store.state.uploadedImage;
     },
     optionChange() {
-      
-      if (this.radios == 'radio-1') {
-        this.payMonthly = !this.payMonthly
-      } else if (this.radios == 'radio-2') {
-        this.payMonthly = !this.payMonthly
+      if (this.radios == "radio-1") {
+        this.payMonthly = !this.payMonthly;
+      } else if (this.radios == "radio-2") {
+        this.payMonthly = !this.payMonthly;
       }
       if (this.payMonthly === true) {
-        this.amountToPay = (this.areaCost + this.extraPackage1Cost + this.extraPackage2Cost + this.extraPackage3Cost).toFixed(2)
-      console.log(this.payMonthly)
-      console.log(this.amountToPay)
+        this.amountToPay = (
+          this.areaCost +
+          this.extraPackage1Cost +
+          this.extraPackage2Cost +
+          this.extraPackage3Cost
+        ).toFixed(2);
+        console.log(this.payMonthly);
+        console.log(this.amountToPay);
       } else {
-        this.amountToPay = (((this.extraPackage1Cost + this.areaCost + this.extraPackage3Cost) * 12 * .8)+(this.extraPackage2Cost * 12)).toFixed(2)
-      console.log(this.payMonthly)
-      console.log(this.amountToPay)
+        this.amountToPay = (
+          (this.extraPackage1Cost + this.areaCost + this.extraPackage3Cost) *
+            12 *
+            0.8 +
+          this.extraPackage2Cost * 12
+        ).toFixed(2);
+        console.log(this.payMonthly);
+        console.log(this.amountToPay);
       }
     },
 
@@ -829,8 +681,6 @@ export default {
       }
     },
     async save() {
-      console.log("Clicked");
-
       let formData = new FormData();
       formData.append("file", this.cropImg);
       formData.append("file1", this.cropImg1);
@@ -922,145 +772,18 @@ export default {
         console.log(this.$store.state.userName);
         console.log(this.$store.state.email);
         this.saved = true;
-        
       }
-    },
-    setImage(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc = event.target.result;
-          this.cropImg = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
-    },
-    rotate() {
-      // guess what this does :)
-      this.$refs.cropper.rotate(90);
-    },
-    // BI1
-
-    setImage1(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc1 = event.target.result;
-          this.cropImg1 = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper1.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage1() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg1 = this.$refs.cropper1.getCroppedCanvas().toDataURL();
-    },
-    rotate1() {
-      // guess what this does :)
-      this.$refs.cropper1.rotate(90);
-    },
-
-    // BI2
-    setImage2(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc2 = event.target.result;
-          this.cropImg2 = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper2.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage2() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg2 = this.$refs.cropper2.getCroppedCanvas().toDataURL();
-    },
-    rotate2() {
-      // guess what this does :)
-      this.$refs.cropper2.rotate(90);
-    },
-    // BI3
-    setImage3(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc3 = event.target.result;
-          this.cropImg3 = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper3.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage3() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg3 = this.$refs.cropper3.getCroppedCanvas().toDataURL();
-    },
-    rotate3() {
-      // guess what this does :)
-      this.$refs.cropper3.rotate(90);
     }
   }
 };
 </script>
 
 <style scoped>
-.imageDiv {
-  width: 400px;
-  height: 300px;
-  border: 1px solid gray;
-  display: inline-block;
-}
-
 .invalidEmail {
   z-index: 1;
   position: fixed;
   top: 50%;
   margin: 0 auto;
   width: 75%;
-}
-
-@media screen and (max-width: 768px) {
-  .imageDiv {
-    width: 100%;
-  }
 }
 </style>

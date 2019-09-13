@@ -476,12 +476,282 @@ router.post("/editProfile", upload.array(), function(req, res) {
         if (error) throw error;
         res.json({
           result: "Congratulations, you have updarted your profile"
-         
         });
       });
     });
     connection.release();
   });
 });
+
+router.post("/addNoticeImage", upload.single("image"), function(req, res) {
+  let file = req.file;
+  let filename = req.file.filename;
+  let mimetype = req.file.mimetype.split("/");
+  mimetype = mimetype[1];
+  console.log(mimetype);
+  let oldPath = `./public/uploads/${filename}`;
+  let newPath = `public/images/notices/${filename}.${mimetype}`;
+  let url = `${process.env.IMG_URL}/images/notices/${filename}.${mimetype}`;
+  console.log(file);
+  fs.rename(oldPath, newPath, () => {
+    console.log("Moved");
+    console.log(url);
+    res.json({url: url})
+  });
+});
+
+
+router.post("/postNotice", function(req, res) {
+  let heading = req.body.heading
+  let notice_text = req.body.notice_text
+  // res.json({awesome: "It works!!!"})
+  let sql = `insert into notices (heading, notice_text) values ("${heading}","${notice_text}")`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json({result: "Success!!"});
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+});
+
+router.get('/getNotices', (req,res) => {
+  let sql = `select * from notices order by id desc`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+})
+
+router.post('/deleteNotices', (req, res) => {
+  console.log(req.body.id)
+  let id = req.body.id
+  let sql = `delete from notices where id = ${id}`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json("success!!");
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+})
+
+router.post("/addFAQ", function(req, res) {
+  let title = req.body.title
+  let faq_description  = req.body.description
+  // console.log(title)
+  // console.log(description)
+  // res.json({awesome: "It works!!!"})
+  let sql = `insert into faq (title, faq_description) values ("${title}","${faq_description}")`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json({result: "Success!!"});
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+});
+
+router.get('/getFAQ', (req,res) => {
+  let sql = `select * from faq order by title`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+})
+
+router.post('/deleteFAQ', (req, res) => {
+  console.log(req.body.id)
+  let id = req.body.id
+  let sql = `delete from faq where id = ${id}`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json("success!!");
+      }
+    });
+    connection.release();
+  });
+})
+
+router.get('/getProfilesForDashboard', (req,res) => {
+  let sql = `select id, businessName, profile_approved, paid_to_date from client_profiles order by businessName`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+})
+
+
+router.get('/getProfileForAdmin/:profileID', (req,res) => {
+  let id = req.params.profileID
+  console.log("Profile ID", id)
+  let sql = `select * from client_profiles where id = ${id}`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+})
+
+
+router.get('/getTasks', (req,res) => {
+  let sql = `select * from tasks order by created_at desc`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+    });
+    connection.release();
+  });
+})
+router.post('/addTask', (req,res) => {
+  let sql = `insert into tasks (headline, title, subtitle, done) values ("${req.body.headline}","${req.body.title}","${req.body.subtitle}", false)`
+  console.log(sql)
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+    });
+    connection.release();
+  });
+})
+router.delete('/deleteTask/:id', (req,res) => {
+  let id = req.params.id
+  let sql = `delete from tasks where id = ${id}`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+      // res.json(result);
+    });
+    connection.release();
+  });
+})
+
+router.put('/editTask', (req,res) => {
+  console.log(req.body)
+  let sql = `Update tasks set done = ${req.body.done} where id = ${req.body.id}`
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+    });
+    connection.release();
+  });
+})
 
 module.exports = router;

@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import DirectoryService from "@/services/DirectoryServices";
 export default {
   data() {
     return {
@@ -61,6 +62,23 @@ export default {
         }
       ]
     };
+  },
+  created() {
+    this.loadFAQ()
+  },
+  methods: {
+    async loadFAQ() {
+      this.items = []
+      let response = await DirectoryService.getFAQ();
+      response.data.forEach((el) => {
+        let faq = {
+          title: el.title,
+          description: el.faq_description
+        }
+        this.items.push(faq)
+      })
+
+    }
   }
 };
 </script>

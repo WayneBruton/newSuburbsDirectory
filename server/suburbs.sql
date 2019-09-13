@@ -105,7 +105,7 @@ update categories set image_url = "/images/categories/transport.png" where id = 
 update categories set image_url = "/images/categories/wellnessbeauty.png" where id = 18;
 update categories set image_url = "/images/categories/fooddrink.png" where id = 19;
 update categories set image_url = "/images/categories/jewelryaccessories.png" where id = 20;
-update categories set image_url = "/images/categories/photography.png" where id = 21;
+update categories set image_url = "/images/categories/photography.png" where id = 20;
 
 
 select * from categories;
@@ -193,17 +193,24 @@ alter table charities add column charity_image3 varchar(60);
 
 CREATE TABLE notices (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    heading VARCHAR(60) NOT NULL UNIQUE,
-    areas JSON NOT NULL,
+    heading VARCHAR(60) NOT NULL,
     notice_text text not null,
-    notice_image VARCHAR(60),
-    created_at timestamp default now(),
-    isActive boolean not null default false
+    created_at timestamp default now()
+);
+
+CREATE TABLE faq (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(160) NOT NULL,
+    faq_description text not null,
+    created_at timestamp default now()
 );
 
 
 
 -- NEW
+
+
+
 
 
 CREATE TABLE extra_packages (
@@ -214,13 +221,14 @@ CREATE TABLE extra_packages (
 );
 
 INSERT INTO extra_packages (option_name, option_description, per_month) values 
+('Admin Assist', 'Let us assist you with your admin', 80),
 ('Bishops Court Community Group', 'A piggy back site to join', 25),
 ('Upper Claremont Community Group', 'A piggy back site to join', 25)
 
 
 
 
-alter table client_profiles add column extra_packages JSON
+alter table client_profiles add column email varchar(45) not null unique;
 alter table client_profiles add column password varchar(255) not null
 
 alter table client_profiles add column ratings float default 0;
@@ -245,6 +253,15 @@ create table profile_ratings (
     narrative text not null,
     created_at timestamp default now(),
     FOREIGN KEY (profile_number) REFERENCES client_profiles(id)
+);
+
+create table tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    done boolean default false,
+    headline varchar(160) not null,
+    title varchar(160) not null,
+    subtitle text not null,
+    created_at timestamp default now()
 );
 
 

@@ -16,11 +16,16 @@ import Pricing from "./views/Pricing.vue";
 import Dashboard from "./views/Dashboard.vue";
 import Charities from "./views/Charities.vue";
 import Notices from "./views/Notices.vue";
+import NoticesAdd from "./views/NoticesAdd.vue";
+import FAQAdd from "./views/FAQAdd.vue";
+import ProfileList from "./views/ProfileList.vue";
+import ApproveProfile from "./views/ApproveProfile.vue";
+import Todo from "./views/Todo.vue";
 
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
+  // mode: "history",
   // base: process.env.BASE_URL,
   routes: [
     {
@@ -102,6 +107,31 @@ export default new Router({
       path: "/notices",
       name: "notices",
       component: Notices
+    },
+    {
+      path: "/noticesadd",
+      name: "noticesadd",
+      component: NoticesAdd
+    },
+    {
+      path: "/faqadd",
+      name: "faqadd",
+      component: FAQAdd
+    },
+    {
+      path: "/profilelist",
+      name: "profilelist",
+      component: ProfileList
+    },
+    {
+      path: "/profileAdmin",
+      name: "profileAdmin",
+      component: ApproveProfile
+    },
+    {
+      path: "/todo",
+      name: "todo",
+      component: Todo
     }
   ]
 });

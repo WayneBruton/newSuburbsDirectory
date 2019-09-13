@@ -57,11 +57,11 @@
         </div>
         <br />
         <br />
-        <div style="display: flex; justify-content: space-around">
-          <a :href="facebook" target="_blank">
+        <div style="display: flex; justify-content: center;">
+          <a :href="facebook" target="_blank" style="margin-right: 30px;">
             <i class="fab fa-facebook-square fa-2x" style="color: #366ed8"></i>
           </a>
-          <a :href="instagram" target="_blank">
+          <a :href="instagram" target="_blank" style="margin-left: 30px;">
             <i class="fab fa-instagram fa-2x" style="color: #e4508f"></i>
           </a>
         </div>
@@ -139,7 +139,7 @@
             </h5>
             <br />
             <br />
-            <vue-disqus shortname="waynesite" :identifier="profileId"></vue-disqus>
+            <vue-disqus shortname="waynesite" :identifier="profileId"></vue-disqus> 
             <!-- <h6>
               If an email address does not exist, the comment will be deleted.
             </h6>
@@ -258,14 +258,16 @@ export default {
       }`;
       this.businessName = el.businessName;
       this.email = "mailTo:" + el.email;
-      this.facebook = el.facebook;
+      this.facebook = 'http://' + el.facebook;
       this.first_name = el.first_name;
-      this.instagram = el.instagram;
+      this.instagram = 'http://' + el.instagram;
       this.last_name = el.last_name;
       this.mob_no = el.mob_no;
       this.profile_description = el.profile_description;
-      this.website = el.website;
+      this.website = 'http://' + el.website;
     });
+    console.log("This is the website",this.website)
+    console.log("This is the Facebook",this.facebook)
     this.getRatings();
   },
   methods: {

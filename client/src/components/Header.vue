@@ -49,6 +49,9 @@
     <v-toolbar-items>
       <v-btn class="#305f72 notHamburger" flat :to="{ name: 'charities' }">Charity</v-btn>
     </v-toolbar-items>
+    <v-toolbar-items>
+      <v-btn class="#305f72 notHamburger" flat :to="{ name: 'todo' }">Todo</v-btn>
+    </v-toolbar-items>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn class="#305f72 notHamburger" flat :to="{ name: 'pricing' }">
@@ -165,23 +168,32 @@
           <v-list-tile-title>Home</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu" :to="{ name: 'directory' }">
+        <v-list-tile class="hamburgerMenu" @click="clearArea">
           <v-list-tile-title>Business</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu">
+       
+        <v-list-tile class="hamburgerMenu" :to="{ name: 'notices' }">
+          <v-list-tile-title>Community</v-list-tile-title>
+        </v-list-tile>
+        <v-divider></v-divider>
+        <v-list-tile class="hamburgerMenu" :to="{ name: 'charities' }">
+          <v-list-tile-title>Charity</v-list-tile-title>
+        </v-list-tile>
+         <v-list-tile class="hamburgerMenu" :to="{ name: 'pricing' }">
           <v-list-tile-title>Pricing</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu">
-          <v-list-tile-title>Charity</v-list-tile-title>
+        <v-divider></v-divider>
+        <v-list-tile class="hamburgerMenu" :to="{ name: 'todo' }">
+          <v-list-tile-title>TODO</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu" v-if="!this.$store.state.loggedIn">
+        <v-list-tile class="hamburgerMenu" v-if="!this.$store.state.loggedIn" :to="{ name: 'login' }">
           <v-list-tile-title>Login</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu" v-if="!this.$store.state.loggedIn">
+        <v-list-tile class="hamburgerMenu" v-if="!this.$store.state.loggedIn" :to="{ name: 'register' }">
           <v-list-tile-title>Signup</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
@@ -271,7 +283,13 @@ export default {
       this.$store.dispatch("logout", user);
 
       console.log("CLICKED");
+    },
+    clearArea() {
+      this.$store.dispatch("setAreaChosen", null); 
+      console.log("Testing::",this.$store.state.areaChosen)
+      this.$router.push({name: 'launchpad'})
     }
+    
   }
 };
 </script>

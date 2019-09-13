@@ -7,7 +7,7 @@
       <h1>Package Options</h1>
       <v-container>
         <br />
-        <v-data-table :headers="headers" :loading="true" :items="packages" class="elevation-5">
+        <v-data-table :headers="headers" :loading="false" :items="packages" class="elevation-5">
           <!-- <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear> -->
           <template v-slot:items="props">
             <td class="text-xs-left" width="30%">{{ props.item.name }}</td>

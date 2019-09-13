@@ -76,7 +76,7 @@
                 </div>
                 <br>
                 <div>
-                <div style="height:80px;">{{ item.profile_description }}</div>
+                <div style="height:80px;" v-html="item.profile_description"></div>
                 </div>
                 <br>
                 <!-- <div style="font-size: 15px;">R{{ item.price }}</div> -->

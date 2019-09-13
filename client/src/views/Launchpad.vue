@@ -326,7 +326,7 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.$store.dispatch("setCategories", this.categories);
+      this.$store.dispatch("setCategories", this.categories); 
     }
   }
 };

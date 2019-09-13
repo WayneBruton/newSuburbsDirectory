@@ -48,7 +48,56 @@ export default {
     return Api().post(`/v1/checkouts`, credentials);
   },
   editProfile(credentials) {
-    console.log(credentials)
+    console.log(credentials);
     return Api().post(`/editProfile`, credentials);
+  },
+  addNoticeImage(credentials) {
+    console.log(credentials);
+    return Api().post(`/addNoticeImage`, credentials);
+  },
+  postNotice(credentials) {
+    console.log(credentials);
+    return Api().post(`/postNotice`, credentials);
+  },
+  getNotices() {
+    return Api().get(`/getNotices`);
+  },
+  deleteNotices(credentials) {
+    console.log(credentials);
+    return Api().post(`/deleteNotices`, credentials);
+  },
+  addFAQ(credentials) {
+    console.log(credentials);
+    return Api().post(`/addFAQ`, credentials);
+  },
+  getFAQ() {
+    return Api().get(`/getFAQ`);
+  },
+  deleteFAQ(credentials) {
+    console.log(credentials);
+    return Api().post(`/deleteFAQ`, credentials);
+  },
+  getProfilesForDashboard() {
+    return Api().get(`/getProfilesForDashboard`);
+  },
+  getProfileForAdmin(profileID) {
+    console.log("Profile to get::", profileID);
+    return Api().get(`/getProfileForAdmin/${profileID}`);
+  },
+  addTask(credentials) {
+    console.log(credentials);
+    return Api().post(`/addTask`, credentials);
+  },
+  getTasks() {
+    console.log("Getting Tasks!!");
+    return Api().get(`/getTasks`);
+  },
+  deleteTask(taskID) {
+    console.log("Profile to Delete::", taskID);
+    return Api().delete(`/deleteTask/${taskID}`);
+  },
+  editTask(credentials) {
+    console.log("Profile to Edit::", credentials);
+    return Api().put(`/editTask`, credentials);
   }
 };

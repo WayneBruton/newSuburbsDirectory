@@ -5,7 +5,7 @@
     <panel title="Dashboard">
       <v-layout class="panelWidth" xs12 column>
         <br />
-        <v-btn style="background-color: #F4EBDE;">Profiles</v-btn>
+        <v-btn style="background-color: #F4EBDE;" :to="{ name: 'profilelist' }">Profiles</v-btn>
         <br />
         <hr />
         <br />
@@ -13,11 +13,11 @@
         <br />
         <hr />
         <br />
-        <v-btn style="background-color: #F4EBDE;">Notices</v-btn>
+        <v-btn style="background-color: #F4EBDE;" :to="{ name: 'noticesadd' }">Notices</v-btn>
         <br />
         <hr />
         <br />
-        <v-btn style="background-color: #F4EBDE;">FAQ</v-btn>
+        <v-btn style="background-color: #F4EBDE;" :to="{ name: 'faqadd' }">FAQ</v-btn>
         <br />
         <hr />
         <br />

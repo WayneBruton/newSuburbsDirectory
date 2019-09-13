@@ -74,48 +74,6 @@
                   autocomplete="false"
                   v-model="instagram"
                 ></v-text-field>
-                <v-flex>
-                  <v-label>Area</v-label>
-                </v-flex>
-                <ul
-                  style="display: flex; justify-content: space-between; flex-wrap: wrap; margin: 15px 35px; width: 100%; flex-direction: column;"
-                >
-                  <li
-                    v-for="(area, i) in areas"
-                    :key="i"
-                    style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
-                  >
-                    <v-checkbox
-                      @click="snackbar = true"
-                      v-model="area.areaChosen"
-                      :id="area.id.toString()"
-                      :label="area.area_description"
-                      color="beige lighten-1"
-                      readonly
-                    ></v-checkbox>
-                  </li>
-                </ul>
-                <br />
-                <hr />
-                <br />
-                <div v-if="areasArray.length">
-                  <v-flex>
-                    <v-label>Options</v-label>
-                  </v-flex>
-                  <br />
-                  <v-flex xs12 sm6 md12 d-flex>
-                    <v-select
-                      v-model="selectedOption"
-                      :items="items"
-                      box
-                      :label="optionChosen 
-                              ? 
-                              selectedOption : 'Choose your package option'"
-                      readonly
-                      @click="snackbar = true"
-                    ></v-select>
-                  </v-flex>
-                </div>
                 <br />
                 <v-flex>
                   <v-label>Category</v-label>
@@ -139,241 +97,90 @@
                     </li>
                   </ul>
                 </v-flex>
-                <!-- <v-textarea
-                  label="Business Description"
-                  required
-                  placeholder="Description about 250 words"
-                  v-model="description"
-                ></v-textarea> -->
                 <vue-editor v-model="description" :editorToolbar="customToolbar"></vue-editor>
-                  <br />
-                  <div v-if="description" v-html="description" style="border: 1px solid lightgrey"></div>
-                <!-- <p v-html="description"></p> -->
-
-                </div>
                 <br />
-                <v-flex>
-                  <v-label>Other Options</v-label>
-                </v-flex>
-                <v-flex>
-                  <ul
-                    style="display: flex; justify-content: space-between; flex-wrap: wrap; margin: 15px 35px; width: 100%; flex-direction: column;"
-                  >
-                    <li
-                      v-for="(extraPackage, i) in extraPackages"
-                      :key="i"
-                      style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
-                    >
-                      <v-checkbox
-                        :id="extraPackage.id.toString() + 'E'"
-                        v-model="extraPackage.extraPackagesChosen"
-                        :label="extraPackage.option_name"
-                        color="beige lighten-1"
-                        @click="snackbar = true"
-                        readonly
-                      ></v-checkbox>
-                    </li>
-                  </ul>
-                </v-flex>
                 <br />
                 <hr />
                 <br />
                 <panel title="upload main profile image">
-                  <input
-                    type="file"
-                    ref="file"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage"
-                  />
+                  <ImageUpload></ImageUpload>
+                  <label
+                    for
+                    v-if="!this.$store.state.uploadedImage && !cropImg  || originalImage"
+                  >Original image</label>
                   <br />
-                  <div style="display: flex; justify-content: center;" v-if="!imgSrc">
+                  <div
+                    style="display: flex; justify-content: center;"
+                    v-if="!this.$store.state.uploadedImage && !cropImg  || originalImage"
+                  >
                     <img :src="originalImage" alt="Original Profile Image" style="width: 40%;" />
                   </div>
-                  <div class="imageDiv" style v-if="imgSrc">
-                    <vue-cropper
-                      ref="cropper"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg"
-                    :src="cropImg"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage"
-                    v-if="imgSrc != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate" v-if="imgSrc != ''">Rotate</button>
-                  <br />
+                  <v-btn @click="uploadProfileImage" v-if="this.$store.state.uploadedImage">Use</v-btn>
+                  <v-btn
+                    v-if="this.$store.state.uploadedImage && !cropImg"
+                    @click="cancelProfileUpload"
+                  >Cancel</v-btn>
                 </panel>
                 <br />
                 <panel title="upload business image 1">
+                  <ImageUpload></ImageUpload>
+                  <label
+                    for
+                    v-if="!this.$store.state.uploadedImage && !cropImg1 || originalImage1"
+                  >Original image</label>
                   <br />
-                  <input
-                    type="file"
-                    ref="file1"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage1"
-                  />
-
-                  <br />
-                  <div style="display: flex; justify-content: center;" v-if="!imgSrc1">
+                  <div
+                    style="display: flex; justify-content: center;"
+                    v-if="!this.$store.state.uploadedImage && !cropImg1 || originalImage1"
+                  >
+                    <!-- <label for="">Original image</label><br> -->
                     <img :src="originalImage1" alt="Original Profile Image" style="width: 40%;" />
                   </div>
-                  <div class="imageDiv" style v-if="imgSrc1">
-                    <vue-cropper
-                      ref="cropper1"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc1"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg1"
-                    :src="cropImg1"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage1"
-                    v-if="imgSrc1 != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate1" v-if="imgSrc1 != ''">Rotate</button>
-                  <br />
-                  <br />
+                  <v-btn @click="uploadImage1" v-if="this.$store.state.uploadedImage">Use</v-btn>
+                  <v-btn
+                    v-if="this.$store.state.uploadedImage && !cropImg1"
+                    @click="canceluploadImage1Upload"
+                  >Cancel</v-btn>
                 </panel>
                 <br />
                 <panel title="upload business image 2">
+                  <ImageUpload></ImageUpload>
+                  <label
+                    for
+                    v-if="!this.$store.state.uploadedImage && !cropImg2  || originalImage2"
+                  >Original image</label>
                   <br />
-                  <input
-                    type="file"
-                    ref="file2"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage2"
-                  />
-                  <br />
-                  <div style="display: flex; justify-content: center;" v-if="!imgSrc2">
+                  <div
+                    style="display: flex; justify-content: center;"
+                    v-if="!this.$store.state.uploadedImage && !cropImg2  || originalImage2"
+                  >
                     <img :src="originalImage2" alt="Original Profile Image" style="width: 40%;" />
                   </div>
-                  <div class="imageDiv" style v-if="imgSrc2">
-                    <vue-cropper
-                      ref="cropper2"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc2"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg2"
-                    :src="cropImg2"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage2"
-                    v-if="imgSrc2 != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate2" v-if="imgSrc2 != ''">Rotate</button>
-                  <br />
+                  <v-btn @click="uploadImage2" v-if="this.$store.state.uploadedImage">Use</v-btn>
+                  <v-btn
+                    v-if="this.$store.state.uploadedImage && !cropImg2"
+                    @click="canceluploadImage2Upload"
+                  >Cancel</v-btn>
                 </panel>
                 <br />
                 <panel title="upload business image 3">
+                  <ImageUpload></ImageUpload>
+                  <label
+                    for
+                    v-if="!this.$store.state.uploadedImage && !cropImg3  || originalImage3"
+                  >Original image</label>
                   <br />
-                  <input
-                    type="file"
-                    ref="file3"
-                    name="image"
-                    accept="image/*"
-                    style="font-size: 1.2em; padding: 10px 0;"
-                    @change="setImage3"
-                  />
-                  <br />
-                  <div style="display: flex; justify-content: center;" v-if="!imgSrc3">
+                  <div
+                    style="display: flex; justify-content: center;"
+                    v-if="!this.$store.state.uploadedImage && !cropImg3  || originalImage3"
+                  >
                     <img :src="originalImage3" alt="Original Profile Image" style="width: 40%;" />
                   </div>
-                  <div class="imageDiv" style v-if="imgSrc3">
-                    <vue-cropper
-                      ref="cropper3"
-                      :guides="true"
-                      :view-mode="2"
-                      drag-mode="crop"
-                      :auto-crop-area="1"
-                      :min-container-width="250"
-                      :min-container-height="180"
-                      :background="true"
-                      :rotatable="true"
-                      :src="imgSrc3"
-                      alt="Source Image"
-                      :img-style="{ width: '400px', height: '300px' }"
-                    ></vue-cropper>
-                  </div>
-                  <br />
-                  <br />
-                  <img
-                    v-if="cropImg3"
-                    :src="cropImg3"
-                    style="width: 200px; height: 150px; border: 1px solid gray"
-                    alt="Cropped Image"
-                  />
-                  <br />
-                  <br />
-                  <button
-                    @click.prevent="cropImage3"
-                    v-if="imgSrc3 != ''"
-                    style="margin-right: 40px;"
-                  >Crop</button>
-                  <button @click.prevent="rotate" v-if="imgSrc3 != ''">Rotate</button>
-                  <br />
-                  <br />
+                  <v-btn @click="uploadImage3" v-if="this.$store.state.uploadedImage">Use</v-btn>
+                  <v-btn
+                    v-if="this.$store.state.uploadedImage && !cropImg3"
+                    @click="canceluploadImage3Upload"
+                  >Cancel</v-btn>
                 </panel>
                 <br />
                 <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
@@ -395,11 +202,14 @@
 </template>
 
 <script>
-import VueCropper from "vue-cropperjs";
-import "cropperjs/dist/cropper.css";
+// import VueCropper from "vue-cropperjs";
+// import "cropperjs/dist/cropper.css";
 import DirectoryService from "@/services/DirectoryServices";
 import Panel from "@/components/Panel";
+import ImageUpload from "@/components/ImageUpload";
+
 import { VueEditor } from "vue2-editor";
+
 // import Authenticate from "@/functions/authenticateAdmin";
 export default {
   data() {
@@ -408,27 +218,27 @@ export default {
       originalImage1: "",
       originalImage2: "",
       originalImage3: "",
-      imgSrc: "",
+      // imgSrc: "",
       cropImg: "",
-      imgSrc1: "",
+      // imgSrc1: "",
       cropImg1: "",
-      imgSrc2: "",
+      // imgSrc2: "",
       cropImg2: "",
-      imgSrc3: "",
+      // imgSrc3: "",
       cropImg3: "",
 
-      areas: [],
-      areasArray: [],
-      packages: null,
-      items: [],
-      selectedOption: "",
-      optionChosen: "",
+      // areas: [],
+      // areasArray: [],
+      // packages: null,
+      // items: [],
+      // selectedOption: "",
+      // optionChosen: "",
 
       categories: [],
       categoriesArray: [],
 
-      extraPackages: [],
-      extraPackagesChosen: [],
+      // extraPackages: [],
+      // extraPackagesChosen: [],
 
       id: "",
       email: "",
@@ -441,14 +251,13 @@ export default {
       instagram: "",
       description: "",
 
-      openMessage: true,
+      openMessage: false,
 
-      snackbar: false,
-      actualMessage: "To Change this please contact admin at Suburbs Directory",
+      // snackbar: false,
+      // actualMessage: "To Change this please contact admin at Suburbs Directory",
 
       error: null,
       success: null,
-
 
       customToolbar: [
         [{ font: [] }],
@@ -467,20 +276,21 @@ export default {
     };
   },
   async mounted() {
-    this.areas = this.$store.state.areas;
-    this.areas.forEach(el => {
-      el.areaChosen = false;
-    });
+    this.$store.dispatch("setUploadedImage", "");
+    // this.areas = this.$store.state.areas;
+    // this.areas.forEach(el => {
+    //   el.areaChosen = false;
+    // });
     this.categories = this.$store.state.categories;
 
     this.categories.forEach(el => {
       el.categoryChosen = false;
     });
-    let response = await DirectoryService.getExtraPackages();
-    this.extraPackages = response.data;
-    this.extraPackages.forEach(el => {
-      el.extraPackagesChosen = false;
-    });
+    // let response = await DirectoryService.getExtraPackages();
+    // this.extraPackages = response.data;
+    // this.extraPackages.forEach(el => {
+    //   el.extraPackagesChosen = false;
+    // });
     let profile = await DirectoryService.getProfile(this.$store.state.profile);
     console.log(profile.data);
     this.id = profile.data[0].id;
@@ -493,9 +303,9 @@ export default {
     this.faceBook = profile.data[0].facebook;
     this.instagram = profile.data[0].instagram;
     this.description = profile.data[0].profile_description;
-    this.optionChosen = profile.data[0].selectedOption;
-    this.extraPackagesChosen = JSON.parse(profile.data[0].extra_packages);
-    this.areasArray = JSON.parse(profile.data[0].areas);
+    // this.optionChosen = profile.data[0].selectedOption;
+    // this.extraPackagesChosen = JSON.parse(profile.data[0].extra_packages);
+    // this.areasArray = JSON.parse(profile.data[0].areas);
     this.categoriesArray = JSON.parse(profile.data[0].catarea);
     let img = process.env.VUE_APP_IMAGEURL;
     // console.log(img)
@@ -509,14 +319,14 @@ export default {
     // this.cropImg3 = `${img}${profile.data[0].business_image3}`;
     // this.setImage()
     console.log(this.imgSrc);
-    this.areasArray.forEach(el => {
-      let area = el;
-      this.areas.forEach(element => {
-        if (element.id == area) {
-          element.areaChosen = true;
-        }
-      });
-    });
+    // this.areasArray.forEach(el => {
+    //   let area = el;
+    //   this.areas.forEach(element => {
+    //     if (element.id == area) {
+    //       element.areaChosen = true;
+    //     }
+    //   });
+    // });
     this.categoriesArray.forEach(el => {
       let category = el;
       this.categories.forEach(element => {
@@ -525,30 +335,30 @@ export default {
         }
       });
     });
-    let numberOfSuburbs = {
-      number: this.areasArray.length
-    };
-    let suburbs = await DirectoryService.getPackages(numberOfSuburbs);
-    this.packages = suburbs.data;
-    let items = [];
-    this.packages.forEach(el => {
-      items.push(el.option_description);
-    });
-    this.items = items;
-    let packageChosen = this.packages.filter(el => {
-      if (el.id === this.optionChosen) {
-        return el.option_description;
-      }
-    });
-    this.selectedOption = packageChosen[0].option_description;
-    this.extraPackagesChosen.forEach(el => {
-      let extraPackage = el;
-      this.extraPackages.forEach(element => {
-        if (element.id == extraPackage) {
-          element.extraPackagesChosen = true;
-        }
-      });
-    });
+    // let numberOfSuburbs = {
+    //   number: this.areasArray.length
+    // };
+    // let suburbs = await DirectoryService.getPackages(numberOfSuburbs);
+    // this.packages = suburbs.data;
+    // let items = [];
+    // this.packages.forEach(el => {
+    //   items.push(el.option_description);
+    // });
+    // this.items = items;
+    // let packageChosen = this.packages.filter(el => {
+    //   if (el.id === this.optionChosen) {
+    //     return el.option_description;
+    //   }
+    // });
+    // this.selectedOption = packageChosen[0].option_description;
+    // this.extraPackagesChosen.forEach(el => {
+    //   let extraPackage = el;
+    //   this.extraPackages.forEach(element => {
+    //     if (element.id == extraPackage) {
+    //       element.extraPackagesChosen = true;
+    //     }
+    //   });
+    // });
     setTimeout(() => {
       this.openMessage = false;
     }, 2000);
@@ -568,44 +378,79 @@ export default {
   },
   components: {
     Panel,
-    VueCropper,
-    VueEditor
+    VueEditor,
+    ImageUpload
   },
   watch: {
     description(newVal, oldVal) {
-      let newContent = this.description;
+      oldVal = this.description;
+      newVal = oldVal;
+      let newContent = newVal;
       newContent = newContent.replace(/"/g, "'");
       this.description = newContent;
-      console.log(this.description)
+      // console.log(this.description);
     }
   },
   methods: {
-    async areaClick() {
-      this.areasArray = [];
-      let areaCount = this.areas.filter(el => {
-        if (el.areaChosen === true) {
-          this.areasArray.push(el.id);
-        }
-        return el.areaChosen === true;
-      });
-      console.log(areaCount);
-      let numberOfSuburbs = {
-        number: this.areasArray.length
-      };
-      let response = await DirectoryService.getPackages(numberOfSuburbs);
-      console.log(response.data);
-      this.packages = response.data;
-      let items = [];
-      this.packages.forEach(el => {
-        items.push(el.option_description);
-      });
-      console.log("ITEMS:", items);
-      this.items = items;
-      console.log(this.items);
-
-      areaCount = [];
-      console.log(this.areasArray);
+    uploadProfileImage() {
+      this.cropImg = this.$store.state.uploadedImage;
+      // console.log( "Uploaded Image",this.cropImg)
+      this.originalImage = "";
     },
+    cancelProfileUpload() {
+      this.$store.dispatch("setUploadedImage", "");
+      this.cropImg = "";
+    },
+    uploadImage1() {
+      this.cropImg1 = this.$store.state.uploadedImage;
+      this.originalImage1 = "";
+    },
+    canceluploadImage1Upload() {
+      // this.$store.dispatch("setUploadedImage", "");
+      this.cropImg1 = "";
+    },
+    uploadImage2() {
+      this.cropImg2 = this.$store.state.uploadedImage;
+      this.originalImage2 = "";
+    },
+    canceluploadImage2Upload() {
+      // this.$store.dispatch("setUploadedImage", "");
+      this.cropImg2 = "";
+    },
+    uploadImage3() {
+      this.cropImg3 = this.$store.state.uploadedImage;
+      this.originalImage3 = "";
+    },
+    canceluploadImage3Upload() {
+      // this.$store.dispatch("setUploadedImage", "");
+      this.cropImg3 = "";
+    },
+    // async areaClick() {
+    //   this.areasArray = [];
+    //   let areaCount = this.areas.filter(el => {
+    //     if (el.areaChosen === true) {
+    //       this.areasArray.push(el.id);
+    //     }
+    //     return el.areaChosen === true;
+    //   });
+    //   console.log(areaCount);
+    //   let numberOfSuburbs = {
+    //     number: this.areasArray.length
+    //   };
+    //   let response = await DirectoryService.getPackages(numberOfSuburbs);
+    //   console.log(response.data);
+    //   this.packages = response.data;
+    //   let items = [];
+    //   this.packages.forEach(el => {
+    //     items.push(el.option_description);
+    //   });
+    //   console.log("ITEMS:", items);
+    //   this.items = items;
+    //   console.log(this.items);
+
+    //   areaCount = [];
+    //   console.log(this.areasArray);
+    // },
     categoryClick() {
       this.categoriesArray = [];
       let categoryCount = this.categories.filter(el => {
@@ -617,29 +462,29 @@ export default {
       console.log(categoryCount);
       console.log(this.categoriesArray);
     },
-    extraPackageClick() {
-      this.extraPackagesChosen = [];
-      let extraPackagesCount = this.extraPackages.filter(el => {
-        if (el.extraPackagesChosen === true) {
-          this.extraPackagesChosen.push(el.id);
-        }
-        return el.extraPackagesChosen === true;
-      });
-      console.log(extraPackagesCount);
-      // categoryCount = []
-      console.log("This.extraPackagesChosen", this.extraPackagesChosen);
-    },
-    selectedOpt() {
-      console.log("TESTING", this.selectedOption);
-      let packageChosen = this.packages.filter(el => {
-        if (el.option_description === this.selectedOption) {
-          return el.id;
-        }
-      });
-      console.log(packageChosen);
-      this.optionChosen = packageChosen[0].id;
-      console.log("Option Chosen", this.optionChosen);
-    },
+    // extraPackageClick() {
+    //   this.extraPackagesChosen = [];
+    //   let extraPackagesCount = this.extraPackages.filter(el => {
+    //     if (el.extraPackagesChosen === true) {
+    //       this.extraPackagesChosen.push(el.id);
+    //     }
+    //     return el.extraPackagesChosen === true;
+    //   });
+    //   console.log(extraPackagesCount);
+    //   // categoryCount = []
+    //   console.log("This.extraPackagesChosen", this.extraPackagesChosen);
+    // },
+    // selectedOpt() {
+    //   console.log("TESTING", this.selectedOption);
+    //   let packageChosen = this.packages.filter(el => {
+    //     if (el.option_description === this.selectedOption) {
+    //       return el.id;
+    //     }
+    //   });
+    //   console.log(packageChosen);
+    //   this.optionChosen = packageChosen[0].id;
+    //   console.log("Option Chosen", this.optionChosen);
+    // },
     async checkEmail() {
       let email = {
         email: this.email
@@ -681,7 +526,7 @@ export default {
       formData.append("profile_description", this.description);
       // formData.append("extra_packages", this.extraPackagesChosen);
 
-       if (
+      if (
         this.businessName === "" ||
         this.firstName === "" ||
         this.lastName === "" ||
@@ -692,7 +537,6 @@ export default {
         setTimeout(() => {
           this.error = null;
         }, 1500);
-      
       } else if (!this.categoriesArray.length) {
         this.error = "Choose at least 1 category";
         setTimeout(() => {
@@ -705,11 +549,11 @@ export default {
         }, 1500);
       } else {
         let response = await DirectoryService.editProfile(formData);
-        console.log("THIS IS THE RESPONSE",response.data);
-        this.success = "You have successfully updated your profile"
+        console.log("THIS IS THE RESPONSE", response.data);
+        this.success = "You have successfully updated your profile";
         setTimeout(() => {
           this.$router.push({ name: "home" });
-        }, 2000)
+        }, 2000);
         // let token = response.data.token;
         // let user = response.data.user;
         // console.log(token);
@@ -719,147 +563,18 @@ export default {
         // console.log(this.$store.state.userName);
         // console.log(this.$store.state.email);
       }
-    },
-    setImage(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc = event.target.result;
-          this.cropImg = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage() {
-      // console.log("JUST CHECKING", this.$refs.cropper)
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
-    },
-    rotate() {
-      // guess what this does :)
-      this.$refs.cropper.rotate(90);
-    },
-    // BI1
-
-    setImage1(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc1 = event.target.result;
-          this.cropImg1 = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper1.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage1() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg1 = this.$refs.cropper1.getCroppedCanvas().toDataURL();
-    },
-    rotate1() {
-      // guess what this does :)
-      this.$refs.cropper1.rotate(90);
-    },
-
-    // BI2
-    setImage2(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc2 = event.target.result;
-          this.cropImg2 = event.target.result;
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper2.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage2() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg2 = this.$refs.cropper2.getCroppedCanvas().toDataURL();
-    },
-    rotate2() {
-      // guess what this does :)
-      this.$refs.cropper2.rotate(90);
-    },
-    // BI3
-    setImage3(e) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-      if (typeof FileReader === "function") {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgSrc3 = event.target.result;
-          this.cropImg3 = event.target.result;
-          // rebuild cropperjs with the updated source
-          // if (event.target.result !== undefined) {
-            this.$refs.cropper3.replace(event.target.result);
-          // }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Sorry, FileReader API not supported");
-      }
-    },
-    cropImage3() {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg3 = this.$refs.cropper3.getCroppedCanvas().toDataURL();
-    },
-    rotate3() {
-      // guess what this does :)
-      this.$refs.cropper3.rotate(90);
     }
   }
 };
 </script>
 
 <style scoped>
-.imageDiv {
-  width: 400px;
-  height: 300px;
-  border: 1px solid gray;
-  display: inline-block;
-}
-
 .invalidEmail {
   z-index: 1;
   position: fixed;
   top: 50%;
   margin: 0 auto;
   width: 75%;
-}
-
-@media screen and (max-width: 768px) {
-  .imageDiv {
-    width: 100%;
-  }
 }
 img {
   display: flex;
