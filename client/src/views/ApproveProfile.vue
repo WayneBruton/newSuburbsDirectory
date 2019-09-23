@@ -817,7 +817,7 @@ export default {
         };
         reader.readAsDataURL(file);
       } else {
-        alert("Sorry, FileReader API not supported");
+        alert("Sorry, FileReader API not supported"); 
       }
     },
     cropImage1() {

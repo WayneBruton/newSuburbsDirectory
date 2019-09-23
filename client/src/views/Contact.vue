@@ -53,7 +53,7 @@
             type="success"
             >{{ success }}
           </v-alert>
-          <v-btn id="btn2"   light style="background-color:#F4EBDE;"
+          <v-btn id="btn2"  @click="sendMessage" light style="background-color:#F4EBDE;"
             >Send</v-btn
           >
         </panel>
@@ -64,7 +64,7 @@
 
 <script>
 import Panel from "@/components/Panel.vue";
-// import ContactService from "../services/ContactServices";
+import DirectoryService from "../services/DirectoryServices";
 export default {
   components: {
     Panel
@@ -83,47 +83,52 @@ export default {
     success: null,
     required: value => !!value || "Required."
   }),
-  methods: {
-    // async sendMessage() {
-    //   if (this.firstname === "" || this.lastname === "" || this.email === "" || this.message === "") {
-    //     this.error = "All fields need to be filled in."
-    //   } else {
-    //     this.error = null
-    //     await ContactService.contact({
-    //     firstname: this.firstname,
-    //     lastname: this.lastname,
-    //     email: this.email,
-    //     message: this.message
-    //   })
-    //     .then(response => {
-    //       if (response.data === "There was a problem, please try again later") {
-    //         this.error = `There was a problem ${
-    //           this.firstname
-    //         }, please try again later`;
-    //         this.success = null;
-    //       } else {
-    //         this.error = null;
-    //         this.success = `Thank you ${
-    //           this.firstname
-    //         }. Your email has been sent`;
-    //         this.firstname = "";
-    //         this.lastname = "";
-    //         this.email = "";
-    //         this.message = "";
-    //       }
-    //       setTimeout(() => {
-    //         this.error = null;
-    //         this.success = null;
-    //       }, 2000);
-    //     })
-    //     .catch(() => {
-    //       this.error = "Error sending message, please try again later";
-    //       this.success = null;
-    //     });
+  methods: { 
+    async sendMessage() {
+      if (this.firstname === "" || this.lastname === "" || this.email === "" || this.message === "") {
+        this.error = "All fields need to be filled in."
+      } else {
+        this.error = null
+        await DirectoryService.contact({
+        firstname: this.firstname,
+        lastname: this.lastname,
+        email: this.email,
+        message: this.message
+      })
+        .then(response => {
+          console.log("response", response)
+          if (response.data === "There was a problem, please try again later") {
+            this.error = `There was a problem ${
+              this.firstname
+            }, please try again later`;
+            this.success = null;
+          } else {
+            this.error = null;
+            this.success = `Thank you ${
+              this.firstname
+            }. Your email has been sent`;
+            this.firstname = "";
+            this.lastname = "";
+            this.email = "";
+            this.message = "";
+          }
+          setTimeout(() => {
+            this.error = null;
+            this.success = null;
+            this.firstname = "";
+            this.lastname = "";
+            this.email = "";
+            this.message = "";
+          }, 2000);
+        })
+        .catch(() => {
+          this.error = "Error sending message, please try again later";
+          this.success = null;
+        });
 
-    //   }
+      }
       
-    // }
+    }
   }
 };
 </script>

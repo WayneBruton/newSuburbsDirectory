@@ -268,6 +268,7 @@ export default {
     });
     console.log("This is the website",this.website)
     console.log("This is the Facebook",this.facebook)
+    console.log("profile ID", this.profileId)
     this.getRatings();
   },
   methods: {

@@ -337,6 +337,7 @@ router.post("/updateRatings", function(req, res) {
 router.post("/editProfile", upload.array(), function(req, res) {
   console.log(req.body);
   var base64Data = req.body.file;
+  // console.log("Main Image",base64Data)
   let base64Image = null;
   let base64Image1 = null;
   let base64Image2 = null;
@@ -347,21 +348,21 @@ router.post("/editProfile", upload.array(), function(req, res) {
 
   var base64Data1 = req.body.file1;
   if (base64Data1 !== "") {
-    base64Image1 = base64Data.split(";base64,").pop();
+    base64Image1 = base64Data1.split(";base64,").pop();
   }
   // let base64Image1 = base64Data1.split(";base64,").pop();
   var base64Data2 = req.body.file2;
   if (base64Data2 !== "") {
-    base64Image2 = base64Data.split(";base64,").pop();
+    base64Image2 = base64Data2.split(";base64,").pop();
   }
   // let base64Image2 = base64Data2.split(";base64,").pop();
   var base64Data3 = req.body.file3;
   if (base64Data3 !== "") {
-    base64Image3 = base64Data.split(";base64,").pop();
+    base64Image3 = base64Data3.split(";base64,").pop();
   }
   // let base64Image3 = base64Data3.split(";base64,").pop();
 
-  console.log(base64Image);
+  console.log("Main Image",base64Image);
   console.log(base64Image1);
   console.log(base64Image2);
   console.log(base64Image3);

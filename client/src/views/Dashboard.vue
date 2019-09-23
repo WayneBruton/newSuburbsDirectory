@@ -2,7 +2,7 @@
   <v-container>
       <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
     <br><br>
-    <panel title="Dashboard">
+    <panel title="Dashboard"> 
       <v-layout class="panelWidth" xs12 column>
         <br />
         <v-btn style="background-color: #F4EBDE;" :to="{ name: 'profilelist' }">Profiles</v-btn>

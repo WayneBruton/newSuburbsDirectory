@@ -9,5 +9,5 @@ const pool = mysql.createPool({
   multipleStatements: true, //for more than one query in a get route
   debug: false
 });
-
+ 
 module.exports = pool; 

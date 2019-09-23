@@ -25,12 +25,12 @@
                   type="email"
                   v-model="email"
                   readonly
-                  @click="snackbar = true"
+          
                 ></v-text-field>
-                <v-snackbar style="margin: 150px;" v-model="snackbar">
+                <!-- <v-snackbar style="margin: 150px;" v-model="snackbar">
                   {{ actualMessage }}
                   <v-btn color="pink" text @click="snackbar = false">close</v-btn>
-                </v-snackbar>
+                </v-snackbar> -->
                 <v-text-field
                   label="Business Name"
                   placeholder="Business Name"
@@ -394,7 +394,7 @@ export default {
   methods: {
     uploadProfileImage() {
       this.cropImg = this.$store.state.uploadedImage;
-      // console.log( "Uploaded Image",this.cropImg)
+      console.log( "Uploaded Image",this.cropImg)
       this.originalImage = "";
     },
     cancelProfileUpload() {
@@ -553,7 +553,7 @@ export default {
         this.success = "You have successfully updated your profile";
         setTimeout(() => {
           this.$router.push({ name: "home" });
-        }, 2000);
+        }, 2000); 
         // let token = response.data.token;
         // let user = response.data.user;
         // console.log(token);

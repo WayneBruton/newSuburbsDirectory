@@ -221,9 +221,11 @@ CREATE TABLE extra_packages (
 );
 
 INSERT INTO extra_packages (option_name, option_description, per_month) values 
-('Admin Assist', 'Let us assist you with your admin', 80),
+('Constantia & Surrounds', 'A piggy back site to join', 25),
+('Admin Assist', 'Let us assist you with loading your adverts', 80),
+('Cover Photo', 'Have a monthly cover photo', 1200),
 ('Bishops Court Community Group', 'A piggy back site to join', 25),
-('Upper Claremont Community Group', 'A piggy back site to join', 25)
+('Upper Claremont Community Group', 'A piggy back site to join', 25);
 
 
 

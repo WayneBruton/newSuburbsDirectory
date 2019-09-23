@@ -291,6 +291,40 @@
                                 ></v-text-field>
                               </v-layout>
                               <v-layout row justify-center>
+                                <v-text-field label="Bishops Court" required value readonly></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + extraPackage4Cost.toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (extraPackage4Cost * 12 * .8).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                              </v-layout>
+                              <v-layout row justify-center>
+                                <v-text-field label="Claremont" required value readonly></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Monthly"
+                                  required
+                                  :value="'R' + extraPackage5Cost.toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                                <v-text-field
+                                  class="text-xs-right"
+                                  label="Annual"
+                                  required
+                                  :value="'R' + (extraPackage5Cost * 12 * .8).toFixed(2)"
+                                  readonly
+                                ></v-text-field>
+                              </v-layout>
+                              <v-layout row justify-center>
                                 <v-text-field
                                   label="Total"
                                   required
@@ -302,14 +336,14 @@
                                   class="text-xs-right"
                                   label="Monthly"
                                   required
-                                  :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost).toFixed(2)"
+                                  :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost + extraPackage4Cost + extraPackage5Cost).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                                 <v-text-field
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost + extraPackage4Cost + extraPackage5Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -323,7 +357,7 @@
                                   <v-text-field
                                     class="text-xs-right"
                                     required
-                                    :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost).toFixed(2)"
+                                    :value="'R' + (areaCost + extraPackage1Cost + extraPackage2Cost + extraPackage3Cost + extraPackage4Cost + extraPackage5Cost).toFixed(2)"
                                     readonly
                                   ></v-text-field>
                                 </div>
@@ -331,7 +365,7 @@
                                   <v-text-field
                                     class="text-xs-right"
                                     required
-                                    :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                    :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost + extraPackage4Cost + extraPackage5Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
                                     readonly
                                   ></v-text-field>
                                 </div>
@@ -345,6 +379,53 @@
                         <v-spacer></v-spacer>
                         <v-btn color="orange darken-1" flat @click="dialog = false">Close</v-btn>
                         <!-- <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn> -->
+
+                        <div
+                          style="display: flex; justify-content: center;"
+                          v-if="minimumRequirements"
+                        >
+                          <form
+                            action="https://www.payfast.co.za/eng/process"
+                            name="form_ad990b487f6e182cd44e0c189204bb70"
+                            onsubmit="return click_ad990b487f6e182cd44e0c189204bb70( this );"
+                            method="post"
+                          >
+                            <input type="hidden" name="cmd" value="_paynow" />
+                            <input type="hidden" name="receiver" value="10469596" />
+                            <input
+                              type="hidden"
+                              name="item_name"
+                              value="Suburbs Directory Subscription"
+                            />
+                            <input type="hidden" name="amount" value="95.99" />
+                            <input type="hidden" name="item_description" value />
+                            <input
+                              type="hidden"
+                              name="return_url"
+                              value="https://www.eccentrictoad.com"
+                            />
+                            <input
+                              type="hidden"
+                              name="cancel_url"
+                              value="https://www.eccentrictoad.com"
+                            />
+
+                            <table>
+                              <tr>
+                                <td colspan="2" align="center">
+                                  <input
+                                    type="image"
+                                    src="https://www.payfast.co.za/images/buttons/light-small-paynow.png"
+                                    width="165"
+                                    height="36"
+                                    alt="Pay Now"
+                                    title="Pay Now with PayFast"
+                                  />
+                                </td>
+                              </tr>
+                            </table>
+                          </form>
+                        </div>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -353,7 +434,7 @@
                 <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
                 <v-btn id="btn2" light color="#F4EBDE" @click="save" v-if="!saved">Join Us</v-btn>
                 <v-icon @click="showDialog" style="color: red;">attach_money</v-icon>
-                <div style="display: flex; justify-content: center;" v-if="minimumRequirements">
+                <!-- <div style="display: flex; justify-content: center;" v-if="minimumRequirements">
                   <form
                     action="https://www.payfast.co.za/eng/process"
                     name="form_ad990b487f6e182cd44e0c189204bb70"
@@ -383,7 +464,7 @@
                       </tr>
                     </table>
                   </form>
-                </div>
+                </div>-->
               </form>
             </v-flex>
             <v-alert
@@ -433,6 +514,8 @@ export default {
       extraPackage1Cost: 0,
       extraPackage2Cost: 0,
       extraPackage3Cost: 0,
+      extraPackage4Cost: 0,
+      extraPackage5Cost: 0,
 
       email: "",
       password: "",
@@ -494,7 +577,7 @@ export default {
     this.extraPackages.forEach(el => {
       el.extraPackagesChosen = false;
     });
-    console.log(this.extraPackages);
+    console.log("THESE ARE THE EXTRA PACKAGES", this.extraPackages);
     // this.Authenticate = Authenticate.authenticate;
     // this.Authenticate();
     // if (!this.$store.state.administration.isAdminUserLoggedIn) {
@@ -618,6 +701,8 @@ export default {
       this.extraPackage1Cost = 0;
       this.extraPackage2Cost = 0;
       this.extraPackage3Cost = 0;
+      this.extraPackage4Cost = 0;
+      this.extraPackage5Cost = 0;
       let extraPackagesCount = this.extraPackages.filter(el => {
         if (el.extraPackagesChosen === true) {
           this.extraPackagesChosen.push(el.id);
@@ -636,6 +721,12 @@ export default {
       }
       if (this.extraPackagesChosen.includes(3)) {
         this.extraPackage3Cost = 1200;
+      }
+      if (this.extraPackagesChosen.includes(4)) {
+        this.extraPackage4Cost = 25;
+      }
+      if (this.extraPackagesChosen.includes(5)) {
+        this.extraPackage5Cost = 25;
       }
     },
     selectedOpt() {
@@ -668,7 +759,7 @@ export default {
       } catch (e) {
         console.log(e);
       }
-      // console.log(response);
+      // console.log(response); 
     },
     passwordTest() {
       if (this.password !== this.repeatPassword) {
@@ -762,16 +853,17 @@ export default {
       } else {
         this.minimumRequirements = true;
         let response = await DirectoryService.addProfile(formData);
-        console.log(response.data);
+        // console.log(response.data);
         let token = response.data.token;
         let user = response.data.user;
-        console.log(token);
-        console.log(user);
+        // console.log(token);
+        // console.log(user);
         this.$store.dispatch("setToken", token);
         this.$store.dispatch("setUser", user);
-        console.log(this.$store.state.userName);
-        console.log(this.$store.state.email);
+        // console.log(this.$store.state.userName);
+        // console.log(this.$store.state.email);
         this.saved = true;
+        this.dialog = true;
       }
     }
   }

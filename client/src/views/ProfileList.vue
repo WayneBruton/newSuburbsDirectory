@@ -33,7 +33,7 @@
                 Not Paid Nor Approved ({{ profilesNotYetPaidNorApproved.length }})
                 <v-icon style="color: blue">thumbs_up_down</v-icon>
               </v-tab>
-            </v-tabs>
+            </v-tabs> 
 
             <v-tabs-items v-model="tab">
               <v-tab-item v-for="i in 4" :key="i" :value="'tab-' + i">

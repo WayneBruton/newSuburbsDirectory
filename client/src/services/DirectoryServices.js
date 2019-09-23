@@ -49,7 +49,7 @@ export default {
   },
   editProfile(credentials) {
     console.log(credentials);
-    return Api().post(`/editProfile`, credentials);
+    return Api().post(`/editProfile`, credentials);  
   },
   addNoticeImage(credentials) {
     console.log(credentials);
@@ -99,5 +99,9 @@ export default {
   editTask(credentials) {
     console.log("Profile to Edit::", credentials);
     return Api().put(`/editTask`, credentials);
+  },
+  contact(credentials) {
+    // console.log("Contact Form::", credentials);
+    return Api().put(`/contactform`, credentials);
   }
 };
