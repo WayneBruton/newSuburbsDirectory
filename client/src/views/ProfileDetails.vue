@@ -397,18 +397,14 @@
                               name="item_name"
                               value="Suburbs Directory Subscription"
                             />
-                            <input type="hidden" name="amount" value="95.99" />
-                            <input type="hidden" name="item_description" value />
+                            <input type="hidden" name="amount" :value="amountToPay" />
                             <input
                               type="hidden"
-                              name="return_url"
-                              value="https://www.eccentrictoad.com"
+                              name="item_description"
+                              value="Subscription Suburbs Directory"
                             />
-                            <input
-                              type="hidden"
-                              name="cancel_url"
-                              value="https://www.eccentrictoad.com"
-                            />
+                            <input type="hidden" name="return_url" :value="success_url" />
+                            <input type="hidden" name="cancel_url" :value="cancel_url" />
 
                             <table>
                               <tr>
@@ -541,6 +537,9 @@ export default {
       amountToPay: 0,
       payMonthly: true,
 
+      cancel_url: "",
+      success_url: "",
+
       customToolbar: [
         [{ font: [] }],
         [{ header: [false, 1, 2, 3, 4, 5, 6] }],
@@ -607,6 +606,32 @@ export default {
     }
   },
   methods: {
+    //if this.saved === true
+    async calculateURLS() {
+      let profileID;
+      if (!this.$store.state.profile) {
+        profileID = 283;
+      } else {
+        profileID = this.$store.state.profile;
+      }
+      let dateNow = new Date()
+      console.log("DateNow",dateNow)
+      let credentials = {
+        monthly: this.payMonthly,
+        amount: this.amountToPay,
+        profileID: profileID,
+        dateNow: dateNow
+      };
+      let response = await DirectoryService.payURL(credentials);
+      console.log(response.data);
+
+      let success = process.env.VUE_APP_SUCCESSURL;
+      let cancel = process.env.VUE_APP_CANCELURL;
+      this.success_url = `${success}${response.data}`;
+      this.cancel_url = `${cancel}${response.data}`;
+      console.log(this.success_url);
+      console.log(this.cancel_url);
+    },
     showDialog() {
       this.dialog = true;
       this.amountToPay = (
@@ -615,7 +640,8 @@ export default {
         this.extraPackage2Cost +
         this.extraPackage3Cost
       ).toFixed(2);
-      console.log(this.amountToPay);
+      this.calculateURLS();
+      console.log("This is the amount to pay", this.amountToPay);
     },
     uploadProfileImage() {
       this.cropImg = this.$store.state.uploadedImage;
@@ -642,8 +668,9 @@ export default {
           this.extraPackage2Cost +
           this.extraPackage3Cost
         ).toFixed(2);
+        this.calculateURLS();
         console.log(this.payMonthly);
-        console.log(this.amountToPay);
+        console.log("This is the amount to Pay", this.amountToPay);
       } else {
         this.amountToPay = (
           (this.extraPackage1Cost + this.areaCost + this.extraPackage3Cost) *
@@ -651,8 +678,10 @@ export default {
             0.8 +
           this.extraPackage2Cost * 12
         ).toFixed(2);
+        this.calculateURLS();
         console.log(this.payMonthly);
-        console.log(this.amountToPay);
+        console.log("This is the amount to Pay", this.amountToPay);
+        // console.log(this.amountToPay);
       }
     },
 
@@ -759,7 +788,7 @@ export default {
       } catch (e) {
         console.log(e);
       }
-      // console.log(response); 
+      // console.log(response);
     },
     passwordTest() {
       if (this.password !== this.repeatPassword) {

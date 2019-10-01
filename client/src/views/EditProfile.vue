@@ -25,12 +25,7 @@
                   type="email"
                   v-model="email"
                   readonly
-          
                 ></v-text-field>
-                <!-- <v-snackbar style="margin: 150px;" v-model="snackbar">
-                  {{ actualMessage }}
-                  <v-btn color="pink" text @click="snackbar = false">close</v-btn>
-                </v-snackbar> -->
                 <v-text-field
                   label="Business Name"
                   placeholder="Business Name"
@@ -88,7 +83,7 @@
                       style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                     >
                       <v-checkbox
-                        :id="category.id.toString() + 'C'"
+                        :id="category.id.toString()"
                         v-model="category.categoryChosen"
                         :label="category.category_description"
                         color="beige lighten-1"
@@ -133,7 +128,6 @@
                     style="display: flex; justify-content: center;"
                     v-if="!this.$store.state.uploadedImage && !cropImg1 || originalImage1"
                   >
-                    <!-- <label for="">Original image</label><br> -->
                     <img :src="originalImage1" alt="Original Profile Image" style="width: 40%;" />
                   </div>
                   <v-btn @click="uploadImage1" v-if="this.$store.state.uploadedImage">Use</v-btn>
@@ -183,8 +177,56 @@
                   >Cancel</v-btn>
                 </panel>
                 <br />
-                <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
                 <v-btn id="btn2" light color="#F4EBDE" @click="save">Save</v-btn>
+                <br />
+                <br />
+                <div v-if="paymentDue">
+                  <span>{{ paymentDueMessage }}</span>
+                  <v-flex center>
+                    <v-switch
+                      v-model="switch1"
+                      :label="`${switchLabel}: R${amountToPay}`"
+                      @change="changeTerms"
+                    ></v-switch>
+                  </v-flex>
+                  <br />
+                  <br />
+                  <div style="display: flex; justify-content: center;">
+                    <form
+                      action="https://www.payfast.co.za/eng/process"
+                      name="form_ad990b487f6e182cd44e0c189204bb70"
+                      onsubmit="return click_ad990b487f6e182cd44e0c189204bb70( this );"
+                      method="post"
+                    >
+                      <input type="hidden" name="cmd" value="_paynow" />
+                      <input type="hidden" name="receiver" value="10469596" />
+                      <input type="hidden" name="item_name" value="Suburbs Directory Subscription" />
+                      <input type="hidden" name="amount" :value="amountToPay" />
+                      <input
+                        type="hidden"
+                        name="item_description"
+                        value="Subscription Suburbs Directory"
+                      />
+                      <input type="hidden" name="return_url" :value="success_url" />
+                      <input type="hidden" name="cancel_url" :value="cancel_url" />
+
+                      <table>
+                        <tr>
+                          <td colspan="2" align="center">
+                            <input
+                              type="image"
+                              src="https://www.payfast.co.za/images/buttons/light-small-paynow.png"
+                              width="165"
+                              height="36"
+                              alt="Pay Now"
+                              title="Pay Now with PayFast"
+                            />
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                  </div>
+                </div>
               </form>
             </v-flex>
             <v-alert
@@ -202,11 +244,10 @@
 </template>
 
 <script>
-// import VueCropper from "vue-cropperjs";
-// import "cropperjs/dist/cropper.css";
 import DirectoryService from "@/services/DirectoryServices";
 import Panel from "@/components/Panel";
 import ImageUpload from "@/components/ImageUpload";
+import moment from "moment";
 
 import { VueEditor } from "vue2-editor";
 
@@ -218,27 +259,20 @@ export default {
       originalImage1: "",
       originalImage2: "",
       originalImage3: "",
-      // imgSrc: "",
       cropImg: "",
-      // imgSrc1: "",
       cropImg1: "",
-      // imgSrc2: "",
       cropImg2: "",
-      // imgSrc3: "",
       cropImg3: "",
 
-      // areas: [],
-      // areasArray: [],
-      // packages: null,
-      // items: [],
-      // selectedOption: "",
-      // optionChosen: "",
+      areasArray: [],
+      packages: null,
+      optionChosen: "",
 
       categories: [],
       categoriesArray: [],
 
-      // extraPackages: [],
-      // extraPackagesChosen: [],
+      extraPackages: [],
+      extraPackagesChosen: [],
 
       id: "",
       email: "",
@@ -253,11 +287,28 @@ export default {
 
       openMessage: false,
 
-      // snackbar: false,
-      // actualMessage: "To Change this please contact admin at Suburbs Directory",
-
       error: null,
       success: null,
+
+      cancel_url: "",
+      success_url: "",
+      amountToPay: 0,
+      dateNow: null,
+      expiryDate: null,
+      paymentDue: false,
+      paymentDueMessage: "",
+      payMonthly: true,
+      suburbsPayMonthly: 0,
+      suburbsPayAnnually: 0,
+      extraPackageMonthly: 0,
+      extraPackageAnnually: 0,
+
+      switch1: true,
+      switchLabel: "Monthly",
+
+       profile_approved: false,
+      paid_to_date: false,
+      payment_expires: null,
 
       customToolbar: [
         [{ font: [] }],
@@ -275,24 +326,18 @@ export default {
       ]
     };
   },
+
   async mounted() {
     this.$store.dispatch("setUploadedImage", "");
-    // this.areas = this.$store.state.areas;
-    // this.areas.forEach(el => {
-    //   el.areaChosen = false;
-    // });
-    this.categories = this.$store.state.categories;
-
-    this.categories.forEach(el => {
-      el.categoryChosen = false;
-    });
-    // let response = await DirectoryService.getExtraPackages();
-    // this.extraPackages = response.data;
-    // this.extraPackages.forEach(el => {
-    //   el.extraPackagesChosen = false;
-    // });
     let profile = await DirectoryService.getProfile(this.$store.state.profile);
-    console.log(profile.data);
+    this.expiryDate = moment(profile.data[0].payment_expires)._d;
+    let dateNow = moment()._d;
+    this.dateNow = dateNow;
+    let now = moment(this.dateNow); //todays date
+    let end = moment(this.expiryDate); // another date
+    let duration = moment.duration(end.diff(now));
+    let days = duration.asDays();
+
     this.id = profile.data[0].id;
     this.businessName = profile.data[0].businessName;
     this.email = profile.data[0].email;
@@ -303,65 +348,107 @@ export default {
     this.faceBook = profile.data[0].facebook;
     this.instagram = profile.data[0].instagram;
     this.description = profile.data[0].profile_description;
-    // this.optionChosen = profile.data[0].selectedOption;
-    // this.extraPackagesChosen = JSON.parse(profile.data[0].extra_packages);
-    // this.areasArray = JSON.parse(profile.data[0].areas);
+    this.optionChosen = profile.data[0].selectedOption;
+    this.extraPackagesChosen = JSON.parse(profile.data[0].extra_packages);
+    this.areasArray = JSON.parse(profile.data[0].areas);
     this.categoriesArray = JSON.parse(profile.data[0].catarea);
+    this.profile_approved = profile.data[0].profile_approved;
+    this.paid_to_date = profile.data[0].paid_to_date;
+    this.payment_expires = profile.data[0].payment_expires;
+    console.log("Expiry at",this.payment_expires)
     let img = process.env.VUE_APP_IMAGEURL;
-    // console.log(img)
     this.originalImage = `${img}${profile.data[0].profile_image}`;
-    // this.cropImg = `${img}${profile.data[0].profile_image}`;
     this.originalImage1 = `${img}${profile.data[0].business_image1}`;
-    // this.cropImg1 = `${img}${profile.data[0].business_image1}`;
     this.originalImage2 = `${img}${profile.data[0].business_image2}`;
-    // this.cropImg2 = `${img}${profile.data[0].business_image2}`;
     this.originalImage3 = `${img}${profile.data[0].business_image3}`;
-    // this.cropImg3 = `${img}${profile.data[0].business_image3}`;
-    // this.setImage()
-    console.log(this.imgSrc);
-    // this.areasArray.forEach(el => {
-    //   let area = el;
-    //   this.areas.forEach(element => {
-    //     if (element.id == area) {
-    //       element.areaChosen = true;
-    //     }
-    //   });
-    // });
-    this.categoriesArray.forEach(el => {
-      let category = el;
-      this.categories.forEach(element => {
-        if (element.id == category) {
-          element.categoryChosen = true;
-        }
-      });
+
+    let categoriesResponse = await DirectoryService.getCategories();
+    this.categories = categoriesResponse.data;
+    this.categories.forEach(el => {
+      if (this.categoriesArray.includes(el.id)) {
+        el.categoryChosen = true;
+      } else {
+        el.categoryChosen = false;
+      }
     });
-    // let numberOfSuburbs = {
-    //   number: this.areasArray.length
-    // };
-    // let suburbs = await DirectoryService.getPackages(numberOfSuburbs);
-    // this.packages = suburbs.data;
-    // let items = [];
-    // this.packages.forEach(el => {
-    //   items.push(el.option_description);
-    // });
-    // this.items = items;
-    // let packageChosen = this.packages.filter(el => {
-    //   if (el.id === this.optionChosen) {
-    //     return el.option_description;
-    //   }
-    // });
-    // this.selectedOption = packageChosen[0].option_description;
-    // this.extraPackagesChosen.forEach(el => {
-    //   let extraPackage = el;
-    //   this.extraPackages.forEach(element => {
-    //     if (element.id == extraPackage) {
-    //       element.extraPackagesChosen = true;
-    //     }
-    //   });
-    // });
-    setTimeout(() => {
-      this.openMessage = false;
-    }, 2000);
+
+    let numberOfAreas = {
+      number: this.areasArray.length
+    };
+    let packagesResponse = await DirectoryService.getPackages(numberOfAreas);
+    this.packages = packagesResponse.data;
+    let extraPackagesResponse = await DirectoryService.getExtraPackages();
+    this.extraPackages = extraPackagesResponse.data;
+    if (this.optionChosen === 1) {
+      this.suburbsPayMonthly = this.packages[0].per_month.toFixed(2);
+      this.suburbsPayAnnually = (this.suburbsPayMonthly * 12 * 0.8).toFixed(2);
+    } else if (this.optionChosen === 2) {
+      this.suburbsPayMonthly = this.packages[1].per_month.toFixed(2);
+      this.suburbsPayAnnually = (this.suburbsPayMonthly * 12 * 0.8).toFixed(2);
+    }
+
+    this.extraPackages.forEach(el => {
+      if (el.option_name.includes("Assist")) {
+        el.annualDiscount = false;
+      } else {
+        el.annualDiscount = true;
+      }
+    });
+    this.extraPackagesChosen.push(1);
+    this.extraPackagesChosen.push(2);
+    this.extraPackagesChosen.push(4);
+    if (this.extraPackagesChosen.length > 0) {
+      let totalExtras = [];
+      this.extraPackagesChosen.forEach(el => {
+        this.extraPackages.forEach(element => {
+          if (el == element.id) {
+            let details = {
+              id: element.id,
+              option: element.option_name,
+              annualDiscount: element.annualDiscount,
+              per_month: element.per_month
+            };
+            totalExtras.push(details);
+          }
+        });
+      });
+      this.extraPackageMonthly = totalExtras
+        .reduce((total, current) => {
+          return total + current.per_month;
+        }, 0)
+        .toFixed(2);
+
+      this.extraPackageAnnually = totalExtras
+        .reduce((total, current) => {
+          if (current.annualDiscount === true) {
+            total = total + current.per_month * 12 * 0.8;
+          } else {
+            total = total + current.per_month * 12;
+          }
+          return total;
+        }, 0)
+        .toFixed(2);
+    }
+    this.amountToPay =
+      parseFloat(this.suburbsPayMonthly) + parseFloat(this.extraPackageMonthly);
+    let profileID = this.id;
+    let credentials = {
+      monthly: this.payMonthly,
+      amount: this.amountToPay,
+      profileID: profileID
+    };
+    let response = await DirectoryService.payURL(credentials);
+    let success = process.env.VUE_APP_SUCCESSURL;
+    let cancel = process.env.VUE_APP_CANCELURL;
+    this.success_url = `${success}${response.data}`;
+    this.cancel_url = `${cancel}${response.data}`;
+    if (profile.data[0].paid_to_date === 1 && days < 7) {
+      this.paymentDueMessage = "Your Payment is due to expire soon.";
+      this.paymentDue = true;
+    } else if (profile.data[0].paid_to_date === 0) {
+      this.paymentDueMessage = "subscribe to make your profile visible.";
+      this.paymentDue = true;
+    }
 
     // this.Authenticate = Authenticate.authenticate;
     // this.Authenticate();
@@ -392,9 +479,36 @@ export default {
     }
   },
   methods: {
+    async changeTerms() {
+      if (this.payMonthly !== "true") {
+        this.amountToPay =
+          parseFloat(this.suburbsPayMonthly) +
+          parseFloat(this.extraPackageMonthly);
+        this.switchLabel = "Monthly";
+        this.payMonthly = "true";
+      } else {
+        this.amountToPay =
+          parseFloat(this.suburbsPayAnnually) +
+          parseFloat(this.extraPackageAnnually);
+        this.switchLabel = "Annual";
+        this.payMonthly = "false";
+      }
+      let dateNow = new Date()
+      let profileID = this.id;
+      let credentials = {
+        monthly: this.payMonthly,
+        amount: this.amountToPay,
+        profileID: profileID,
+        dateNow: dateNow
+      };
+      let response = await DirectoryService.payURL(credentials);
+      let success = process.env.VUE_APP_SUCCESSURL;
+      let cancel = process.env.VUE_APP_CANCELURL;
+      this.success_url = `${success}${response.data}`;
+      this.cancel_url = `${cancel}${response.data}`;
+    },
     uploadProfileImage() {
       this.cropImg = this.$store.state.uploadedImage;
-      console.log( "Uploaded Image",this.cropImg)
       this.originalImage = "";
     },
     cancelProfileUpload() {
@@ -406,7 +520,6 @@ export default {
       this.originalImage1 = "";
     },
     canceluploadImage1Upload() {
-      // this.$store.dispatch("setUploadedImage", "");
       this.cropImg1 = "";
     },
     uploadImage2() {
@@ -414,7 +527,6 @@ export default {
       this.originalImage2 = "";
     },
     canceluploadImage2Upload() {
-      // this.$store.dispatch("setUploadedImage", "");
       this.cropImg2 = "";
     },
     uploadImage3() {
@@ -422,35 +534,8 @@ export default {
       this.originalImage3 = "";
     },
     canceluploadImage3Upload() {
-      // this.$store.dispatch("setUploadedImage", "");
       this.cropImg3 = "";
     },
-    // async areaClick() {
-    //   this.areasArray = [];
-    //   let areaCount = this.areas.filter(el => {
-    //     if (el.areaChosen === true) {
-    //       this.areasArray.push(el.id);
-    //     }
-    //     return el.areaChosen === true;
-    //   });
-    //   console.log(areaCount);
-    //   let numberOfSuburbs = {
-    //     number: this.areasArray.length
-    //   };
-    //   let response = await DirectoryService.getPackages(numberOfSuburbs);
-    //   console.log(response.data);
-    //   this.packages = response.data;
-    //   let items = [];
-    //   this.packages.forEach(el => {
-    //     items.push(el.option_description);
-    //   });
-    //   console.log("ITEMS:", items);
-    //   this.items = items;
-    //   console.log(this.items);
-
-    //   areaCount = [];
-    //   console.log(this.areasArray);
-    // },
     categoryClick() {
       this.categoriesArray = [];
       let categoryCount = this.categories.filter(el => {
@@ -459,32 +544,7 @@ export default {
         }
         return el.categoryChosen === true;
       });
-      console.log(categoryCount);
-      console.log(this.categoriesArray);
     },
-    // extraPackageClick() {
-    //   this.extraPackagesChosen = [];
-    //   let extraPackagesCount = this.extraPackages.filter(el => {
-    //     if (el.extraPackagesChosen === true) {
-    //       this.extraPackagesChosen.push(el.id);
-    //     }
-    //     return el.extraPackagesChosen === true;
-    //   });
-    //   console.log(extraPackagesCount);
-    //   // categoryCount = []
-    //   console.log("This.extraPackagesChosen", this.extraPackagesChosen);
-    // },
-    // selectedOpt() {
-    //   console.log("TESTING", this.selectedOption);
-    //   let packageChosen = this.packages.filter(el => {
-    //     if (el.option_description === this.selectedOption) {
-    //       return el.id;
-    //     }
-    //   });
-    //   console.log(packageChosen);
-    //   this.optionChosen = packageChosen[0].id;
-    //   console.log("Option Chosen", this.optionChosen);
-    // },
     async checkEmail() {
       let email = {
         email: this.email
@@ -498,14 +558,11 @@ export default {
             this.error = null;
           }, 2500);
         }
-        console.log(response.data);
       } catch (e) {
         console.log(e);
       }
     },
     async save() {
-      console.log("Clicked");
-
       let formData = new FormData();
       formData.append("id", this.id);
       formData.append("file", this.cropImg);
@@ -520,11 +577,15 @@ export default {
       formData.append("website", this.website);
       formData.append("facebook", this.faceBook);
       formData.append("instagram", this.instagram);
-      // formData.append("areas", this.areasArray);
-      // formData.append("selectedOption", this.optionChosen);
+      formData.append("areas", this.areasArray);
+      // formData.append("areas", this.areaChosen);
+      formData.append("selectedOption", this.optionChosen);
       formData.append("catarea", this.categoriesArray);
       formData.append("profile_description", this.description);
-      // formData.append("extra_packages", this.extraPackagesChosen);
+      formData.append("extra_packages", this.extraPackagesChosen);
+      formData.append("profile_approved", this.profile_approved);
+      formData.append("paid_to_date", this.paid_to_date);
+      formData.append("payment_expires", this.payment_expires);
 
       if (
         this.businessName === "" ||
@@ -549,19 +610,10 @@ export default {
         }, 1500);
       } else {
         let response = await DirectoryService.editProfile(formData);
-        console.log("THIS IS THE RESPONSE", response.data);
         this.success = "You have successfully updated your profile";
         setTimeout(() => {
           this.$router.push({ name: "home" });
-        }, 2000); 
-        // let token = response.data.token;
-        // let user = response.data.user;
-        // console.log(token);
-        // console.log(user);
-        // this.$store.dispatch("setToken", token);
-        // this.$store.dispatch("setUser", user);
-        // console.log(this.$store.state.userName);
-        // console.log(this.$store.state.email);
+        }, 2000);
       }
     }
   }

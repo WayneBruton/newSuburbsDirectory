@@ -168,6 +168,28 @@ router.put("/contactform", function(req, res) {
   });
   // res.json({response: "There was a problem, please try again later"})
 });
+
+
+router.get("/getCategories", (req, res) => {
+  // console.log("Testing")
+  // res.json({response: "Fucking A!!"})
+
+  let mysql =
+    "select * from categories where isActive = true order by category_description";
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+      console.log(err);
+    }
+    connection.query(mysql, function(error, result) {
+      if (error) throw error;
+      res.json(result);
+      // console.log(result)
+    });
+    connection.release();
+  });
+});
 //AM HERE
 
 // let sql = `SELECT
@@ -223,5 +245,7 @@ router.put("/contactform", function(req, res) {
 //     });
 //   }
 // });
+
+
 
 module.exports = router;

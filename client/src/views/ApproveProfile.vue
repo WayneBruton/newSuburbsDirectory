@@ -86,12 +86,12 @@
                     style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                   >
                     <v-checkbox
-                      @click="snackbar = true"
+                    @change="areaClick"
                       v-model="area.areaChosen"
                       :id="area.id.toString()"
                       :label="area.area_description"
                       color="beige lighten-1"
-                      readonly
+                    
                     ></v-checkbox>
                   </li>
                 </ul>
@@ -111,8 +111,9 @@
                       :label="optionChosen 
                               ? 
                               selectedOption : 'Choose your package option'"
-                      readonly
-                      @click="snackbar = true"
+                      @change="selectedOptionChosen"
+                 
+                  
                     ></v-select>
                   </v-flex>
                 </div>
@@ -139,17 +140,9 @@
                     </li>
                   </ul>
                 </v-flex>
-                <!-- <v-textarea
-                  label="Business Description"
-                  required
-                  placeholder="Description about 250 words"
-                  v-model="description"
-                ></v-textarea>-->
                 <vue-editor v-model="description" :editorToolbar="customToolbar"></vue-editor>
                 <br />
                 <div v-if="description" v-html="description" style="border: 1px solid lightgrey"></div>
-                <!-- <p v-html="description"></p> -->
-
                 <br />
                 <v-flex>
                   <v-label>Other Options</v-label>
@@ -168,8 +161,8 @@
                         v-model="extraPackage.extraPackagesChosen"
                         :label="extraPackage.option_name"
                         color="beige lighten-1"
-                        @click="snackbar = true"
-                        readonly
+                        @change="extraPackageClick"
+         
                       ></v-checkbox>
                     </li>
                   </ul>
@@ -178,16 +171,8 @@
                   <v-label>Active Options</v-label>
                 </v-flex>
                 <v-flex>
-                  <v-checkbox
-                    v-model="profile_approved"
-                    label="Approved"
-                    color="beige lighten-1"
-                  ></v-checkbox>
-                  <v-checkbox
-                    v-model="paid_to_date"
-                    label="Paid"
-                    color="beige lighten-1"  
-                  ></v-checkbox>
+                  <v-checkbox v-model="profile_approved" label="Approved" color="beige lighten-1"></v-checkbox>
+                  <v-checkbox v-model="paid_to_date" label="Paid" color="beige lighten-1"></v-checkbox>
                   <v-menu
                     ref="menu1"
                     v-model="menu1"
@@ -415,8 +400,7 @@
                   <br />
                 </panel>
                 <br />
-                <!-- <v-btn light color="#F4EBDE">Save & return later</v-btn> -->
-                <v-btn id="btn2" light color="#F4EBDE" @click="save" style="display: none;">Save</v-btn>
+                <v-btn id="btn2" light color="#F4EBDE" @click="save">Save</v-btn>
               </form>
             </v-flex>
             <v-alert
@@ -486,12 +470,9 @@ export default {
       openMessage: true,
 
       snackbar: false,
-      actualMessage: "To Change this please contact admin at Suburbs Directory",
-
-      // date: payment_expires.toISOString().substr(0, 10),
-      // dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+      actualMessage:
+        "To Change BLA BLA BLA this please contact admin at Suburbs Directory",
       menu1: false,
-
       error: null,
       success: null,
 
@@ -529,7 +510,6 @@ export default {
     let profile = await DirectoryService.getProfile(
       this.$store.state.selectedProfileAdminUsage
     );
-    console.log(profile.data);
     this.id = profile.data[0].id;
     this.businessName = profile.data[0].businessName;
     this.email = profile.data[0].email;
@@ -542,25 +522,19 @@ export default {
     this.description = profile.data[0].profile_description;
     this.optionChosen = profile.data[0].selectedOption;
     this.extraPackagesChosen = JSON.parse(profile.data[0].extra_packages);
+    console.log("EXTRA PACKAGES", this.extraPackagesChosen)
     this.areasArray = JSON.parse(profile.data[0].areas);
+    console.log("AREAS",this.areasArray)
     this.categoriesArray = JSON.parse(profile.data[0].catarea);
+    console.log("CATEGORIES",this.categoriesArray)
     this.profile_approved = profile.data[0].profile_approved;
     this.paid_to_date = profile.data[0].paid_to_date;
-    this.payment_expires = (profile.data[0].payment_expires)
-
-    console.log(this.payment_expires)
+    this.payment_expires = profile.data[0].payment_expires;
     let img = process.env.VUE_APP_IMAGEURL;
-    // console.log(img)
     this.originalImage = `${img}${profile.data[0].profile_image}`;
-    // this.cropImg = `${img}${profile.data[0].profile_image}`;
     this.originalImage1 = `${img}${profile.data[0].business_image1}`;
-    // this.cropImg1 = `${img}${profile.data[0].business_image1}`;
     this.originalImage2 = `${img}${profile.data[0].business_image2}`;
-    // this.cropImg2 = `${img}${profile.data[0].business_image2}`;
     this.originalImage3 = `${img}${profile.data[0].business_image3}`;
-    // this.cropImg3 = `${img}${profile.data[0].business_image3}`;
-    // this.setImage()
-    console.log(this.imgSrc);
     this.areasArray.forEach(el => {
       let area = el;
       this.areas.forEach(element => {
@@ -581,18 +555,27 @@ export default {
       number: this.areasArray.length
     };
     let suburbs = await DirectoryService.getPackages(numberOfSuburbs);
+    console.log("OPTION CHOSEN$$$$$", suburbs.data)
     this.packages = suburbs.data;
     let items = [];
     this.packages.forEach(el => {
       items.push(el.option_description);
     });
     this.items = items;
-    let packageChosen = this.packages.filter(el => {
-      if (el.id === this.optionChosen) {
-        return el.option_description;
-      }
-    });
-    this.selectedOption = packageChosen[0].option_description;
+
+    if (this.optionChosen === 1) {
+      this.selectedOption = this.packages[0].option_description
+    } else {
+      this.selectedOption = this.packages[1].option_description
+
+    }
+    // let packageChosen = this.packages.filter(el => {
+    //   if (el.numberOfSuburbs === this.optionChosen) {
+    //     console.log("el.option_descrition", el.option_description)
+    //     return el.option_description;
+    //   }
+    // });
+    // this.selectedOption = packageChosen[0].option_description;
     this.extraPackagesChosen.forEach(el => {
       let extraPackage = el;
       this.extraPackages.forEach(element => {
@@ -628,10 +611,17 @@ export default {
       let newContent = this.description;
       newContent = newContent.replace(/"/g, "'");
       this.description = newContent;
-      console.log(this.description);
     }
   },
   methods: {
+    selectedOptionChosen() {
+      let str = this.selectedOption
+      if (str.includes("Thursday")) {
+        this.optionChosen = 2
+      } else {
+        this.optionChosen = 1
+      }
+    },
     async areaClick() {
       this.areasArray = [];
       let areaCount = this.areas.filter(el => {
@@ -640,23 +630,17 @@ export default {
         }
         return el.areaChosen === true;
       });
-      console.log(areaCount);
       let numberOfSuburbs = {
         number: this.areasArray.length
       };
       let response = await DirectoryService.getPackages(numberOfSuburbs);
-      console.log(response.data);
       this.packages = response.data;
       let items = [];
       this.packages.forEach(el => {
         items.push(el.option_description);
       });
-      console.log("ITEMS:", items);
       this.items = items;
-      console.log(this.items);
-
       areaCount = [];
-      console.log(this.areasArray);
     },
     categoryClick() {
       this.categoriesArray = [];
@@ -666,8 +650,6 @@ export default {
         }
         return el.categoryChosen === true;
       });
-      console.log(categoryCount);
-      console.log(this.categoriesArray);
     },
     extraPackageClick() {
       this.extraPackagesChosen = [];
@@ -677,20 +659,14 @@ export default {
         }
         return el.extraPackagesChosen === true;
       });
-      console.log(extraPackagesCount);
-      // categoryCount = []
-      console.log("This.extraPackagesChosen", this.extraPackagesChosen);
     },
     selectedOpt() {
-      console.log("TESTING", this.selectedOption);
       let packageChosen = this.packages.filter(el => {
         if (el.option_description === this.selectedOption) {
           return el.id;
         }
       });
-      console.log(packageChosen);
       this.optionChosen = packageChosen[0].id;
-      console.log("Option Chosen", this.optionChosen);
     },
     async checkEmail() {
       let email = {
@@ -705,14 +681,11 @@ export default {
             this.error = null;
           }, 2500);
         }
-        console.log(response.data);
       } catch (e) {
-        console.log(e);
+        console.log("EMAIL ERROR",e);
       }
     },
     async save() {
-      console.log("Clicked");
-
       let formData = new FormData();
       formData.append("id", this.id);
       formData.append("file", this.cropImg);
@@ -727,12 +700,16 @@ export default {
       formData.append("website", this.website);
       formData.append("facebook", this.faceBook);
       formData.append("instagram", this.instagram);
-      // formData.append("areas", this.areasArray);
-      // formData.append("selectedOption", this.optionChosen);
+      formData.append("areas", this.areasArray);
+      // formData.append("areas", this.areaChosen);
+      formData.append("selectedOption", this.optionChosen);
       formData.append("catarea", this.categoriesArray);
       formData.append("profile_description", this.description);
-      // formData.append("extra_packages", this.extraPackagesChosen);
-
+      formData.append("extra_packages", this.extraPackagesChosen);
+      formData.append("profile_approved", this.profile_approved);
+      formData.append("paid_to_date", this.paid_to_date);
+      formData.append("payment_expires", this.payment_expires);
+    
       if (
         this.businessName === "" ||
         this.firstName === "" ||
@@ -756,19 +733,10 @@ export default {
         }, 1500);
       } else {
         let response = await DirectoryService.editProfile(formData);
-        console.log("THIS IS THE RESPONSE", response.data);
         this.success = "You have successfully updated your profile";
         setTimeout(() => {
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "dashboard" });
         }, 2000);
-        // let token = response.data.token;
-        // let user = response.data.user;
-        // console.log(token);
-        // console.log(user);
-        // this.$store.dispatch("setToken", token);
-        // this.$store.dispatch("setUser", user);
-        // console.log(this.$store.state.userName);
-        // console.log(this.$store.state.email);
       }
     },
     setImage(e) {
@@ -791,7 +759,6 @@ export default {
       }
     },
     cropImage() {
-      // console.log("JUST CHECKING", this.$refs.cropper)
       // get image data for post processing, e.g. upload or setting image src
       this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
     },
@@ -817,7 +784,7 @@ export default {
         };
         reader.readAsDataURL(file);
       } else {
-        alert("Sorry, FileReader API not supported"); 
+        alert("Sorry, FileReader API not supported");
       }
     },
     cropImage1() {
@@ -915,8 +882,5 @@ export default {
 img {
   display: flex;
   justify-content: center;
-}
-#btn2 {
-  display: none;
 }
 </style>

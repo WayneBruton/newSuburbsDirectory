@@ -6,6 +6,10 @@ const fs = require("fs");
 const Joi = require("joi");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Cryptr = require("cryptr");
+// const cryptr = new Cryptr("myTotalySecretKey");
+const cryptr = new Cryptr(process.env.ENCRYPTION_SECRET);
+const moment = require("moment");
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
@@ -148,18 +152,10 @@ router.post("/addProfile", upload.array(), function(req, res) {
     let sql1 = ` INSERT INTO client_profiles (businessName,first_name,last_name,mob_no,email,website,facebook,instagram,
     areas,selectedOption,catarea,profile_description, extra_packages,password,   profile_approved, paid_to_date
 ) values (
-'${req.body.businessName}','${req.body.firstName}','${req.body.lastName}','${
-      req.body.contactNumber
-    }','${req.body.email}','${req.body.website}','${req.body.facebook}','${
-      req.body.instagram
-    }',
-"[${areas}]",${req.body.selectedOption},"[${catarea}]","${
-      req.body.profile_description
-    }", "[${extra_packages}]","${hash}", true, true
+'${req.body.businessName}','${req.body.firstName}','${req.body.lastName}','${req.body.contactNumber}','${req.body.email}','${req.body.website}','${req.body.facebook}','${req.body.instagram}',
+"[${areas}]",${req.body.selectedOption},"[${catarea}]","${req.body.profile_description}", "[${extra_packages}]","${hash}", false, false
 )`;
-    let sql2 = `select id from client_profiles where email like '${
-      req.body.email
-    }' and businessName like '${req.body.businessName}' `;
+    let sql2 = `select id from client_profiles where email like '${req.body.email}' and businessName like '${req.body.businessName}' `;
     let sql = `${sql1};${sql2}`;
     pool.getConnection(function(err, connection) {
       if (err) {
@@ -337,6 +333,7 @@ router.post("/updateRatings", function(req, res) {
 router.post("/editProfile", upload.array(), function(req, res) {
   console.log(req.body);
   var base64Data = req.body.file;
+  let extra_packages = [];
   // console.log("Main Image",base64Data)
   let base64Image = null;
   let base64Image1 = null;
@@ -360,9 +357,32 @@ router.post("/editProfile", upload.array(), function(req, res) {
   if (base64Data3 !== "") {
     base64Image3 = base64Data3.split(";base64,").pop();
   }
+
+  let initPackagesArray = []
+  if (req.body.extra_packages !== "") {
+    initPackagesArray = req.body.extra_packages.split(",");
+    for (i = 0; i < initPackagesArray.length; i++) {
+      extra_packages.push(parseInt(initPackagesArray[i]));
+    }
+  } else {
+    extra_packages = [];
+  }
+
+  let areas = []
+  let initAreasArray = []
+  if (req.body.areas !== "") {
+    initAreasArray = req.body.areas.split(",");
+    for (i = 0; i < initAreasArray.length; i++) {
+      areas.push(parseInt(initAreasArray[i]));
+    }
+  } else {
+    areas = [];
+  }
+  console.log("AREAS@@##",areas)
+  console.log("EXTRA PACKAGES", extra_packages)
   // let base64Image3 = base64Data3.split(";base64,").pop();
 
-  console.log("Main Image",base64Image);
+  console.log("Main Image", base64Image);
   console.log(base64Image1);
   console.log(base64Image2);
   console.log(base64Image3);
@@ -389,18 +409,14 @@ router.post("/editProfile", upload.array(), function(req, res) {
   //     extra_packages = [];
   //   }
   let id = req.body.id;
+  let payment_expires = moment(req.body.payment_expires).format("YYYY-MM-DD HH:mm")
+  // payment_expires = payment_expires.substring(0, payment_expires.length - 5)
+  console.log(payment_expires)
+
   // console.log("ID", id)
-  let sql = `update client_profiles set businessName = "${
-    req.body.businessName
-  }",first_name = "${req.body.firstName}",last_name = "${req.body.lastName}", 
-      mob_no = "${req.body.contactNumber}",email = "${
-    req.body.email
-  }", website = "${req.body.website}",facebook = "${
-    req.body.facebook
-  }",instagram = "${req.body.instagram}",
-      catarea = "[${catarea}]" ,profile_description = "${
-    req.body.profile_description
-  }" where id = ${id}`;
+  let sql = `update client_profiles set businessName = "${req.body.businessName}",first_name = "${req.body.firstName}",last_name = "${req.body.lastName}", 
+      mob_no = "${req.body.contactNumber}",email = "${req.body.email}", website = "${req.body.website}",facebook = "${req.body.facebook}",instagram = "${req.body.instagram}",
+      catarea = "[${catarea}]" ,profile_description = "${req.body.profile_description}", extra_packages = "[${extra_packages}]", areas = "[${areas}]", selectedOption = ${req.body.selectedOption}, profile_approved = ${req.body.profile_approved}, paid_to_date = ${req.body.paid_to_date}, payment_expires = '${payment_expires}' where id = ${id}`;
 
   pool.getConnection(function(err, connection) {
     if (err) {
@@ -497,14 +513,13 @@ router.post("/addNoticeImage", upload.single("image"), function(req, res) {
   fs.rename(oldPath, newPath, () => {
     console.log("Moved");
     console.log(url);
-    res.json({url: url})
+    res.json({ url: url });
   });
 });
 
-
 router.post("/postNotice", function(req, res) {
-  let heading = req.body.heading
-  let notice_text = req.body.notice_text
+  let heading = req.body.heading;
+  let notice_text = req.body.notice_text;
   // res.json({awesome: "It works!!!"})
   let sql = `insert into notices (heading, notice_text) values ("${heading}","${notice_text}")`;
   pool.getConnection(function(err, connection) {
@@ -514,10 +529,10 @@ router.post("/postNotice", function(req, res) {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
-        res.json({result: "Success!!"});
+        console.log(result);
+        res.json({ result: "Success!!" });
       }
       // res.json(result);
     });
@@ -525,8 +540,8 @@ router.post("/postNotice", function(req, res) {
   });
 });
 
-router.get('/getNotices', (req,res) => {
-  let sql = `select * from notices order by id desc`
+router.get("/getNotices", (req, res) => {
+  let sql = `select * from notices order by id desc`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -534,21 +549,21 @@ router.get('/getNotices', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
       // res.json(result);
     });
     connection.release();
   });
-})
+});
 
-router.post('/deleteNotices', (req, res) => {
-  console.log(req.body.id)
-  let id = req.body.id
-  let sql = `delete from notices where id = ${id}`
+router.post("/deleteNotices", (req, res) => {
+  console.log(req.body.id);
+  let id = req.body.id;
+  let sql = `delete from notices where id = ${id}`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -556,20 +571,20 @@ router.post('/deleteNotices', (req, res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json("success!!");
       }
       // res.json(result);
     });
     connection.release();
   });
-})
+});
 
 router.post("/addFAQ", function(req, res) {
-  let title = req.body.title
-  let faq_description  = req.body.description
+  let title = req.body.title;
+  let faq_description = req.body.description;
   // console.log(title)
   // console.log(description)
   // res.json({awesome: "It works!!!"})
@@ -581,10 +596,10 @@ router.post("/addFAQ", function(req, res) {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
-        res.json({result: "Success!!"});
+        console.log(result);
+        res.json({ result: "Success!!" });
       }
       // res.json(result);
     });
@@ -592,8 +607,8 @@ router.post("/addFAQ", function(req, res) {
   });
 });
 
-router.get('/getFAQ', (req,res) => {
-  let sql = `select * from faq order by title`
+router.get("/getFAQ", (req, res) => {
+  let sql = `select * from faq order by title`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -601,21 +616,21 @@ router.get('/getFAQ', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
       // res.json(result);
     });
     connection.release();
   });
-})
+});
 
-router.post('/deleteFAQ', (req, res) => {
-  console.log(req.body.id)
-  let id = req.body.id
-  let sql = `delete from faq where id = ${id}`
+router.post("/deleteFAQ", (req, res) => {
+  console.log(req.body.id);
+  let id = req.body.id;
+  let sql = `delete from faq where id = ${id}`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -623,18 +638,18 @@ router.post('/deleteFAQ', (req, res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json("success!!");
       }
     });
     connection.release();
   });
-})
+});
 
-router.get('/getProfilesForDashboard', (req,res) => {
-  let sql = `select id, businessName, profile_approved, paid_to_date from client_profiles order by businessName`
+router.get("/getProfilesForDashboard", (req, res) => {
+  let sql = `select id, businessName, profile_approved, paid_to_date from client_profiles order by businessName`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -642,22 +657,21 @@ router.get('/getProfilesForDashboard', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
       // res.json(result);
     });
     connection.release();
   });
-})
+});
 
-
-router.get('/getProfileForAdmin/:profileID', (req,res) => {
-  let id = req.params.profileID
-  console.log("Profile ID", id)
-  let sql = `select * from client_profiles where id = ${id}`
+router.get("/getProfileForAdmin/:profileID", (req, res) => {
+  let id = req.params.profileID;
+  console.log("Profile ID", id);
+  let sql = `select * from client_profiles where id = ${id}`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -665,20 +679,19 @@ router.get('/getProfileForAdmin/:profileID', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
       // res.json(result);
     });
     connection.release();
   });
-})
+});
 
-
-router.get('/getTasks', (req,res) => {
-  let sql = `select * from tasks order by created_at desc`
+router.get("/getTasks", (req, res) => {
+  let sql = `select * from tasks order by created_at desc`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -686,18 +699,18 @@ router.get('/getTasks', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
     });
     connection.release();
   });
-})
-router.post('/addTask', (req,res) => {
-  let sql = `insert into tasks (headline, title, subtitle, done) values ("${req.body.headline}","${req.body.title}","${req.body.subtitle}", false)`
-  console.log(sql)
+});
+router.post("/addTask", (req, res) => {
+  let sql = `insert into tasks (headline, title, subtitle, done) values ("${req.body.headline}","${req.body.title}","${req.body.subtitle}", false)`;
+  console.log(sql);
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -705,18 +718,18 @@ router.post('/addTask', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
     });
     connection.release();
   });
-})
-router.delete('/deleteTask/:id', (req,res) => {
-  let id = req.params.id
-  let sql = `delete from tasks where id = ${id}`
+});
+router.delete("/deleteTask/:id", (req, res) => {
+  let id = req.params.id;
+  let sql = `delete from tasks where id = ${id}`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -724,20 +737,20 @@ router.delete('/deleteTask/:id', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
       // res.json(result);
     });
     connection.release();
   });
-})
+});
 
-router.put('/editTask', (req,res) => {
-  console.log(req.body)
-  let sql = `Update tasks set done = ${req.body.done} where id = ${req.body.id}`
+router.put("/editTask", (req, res) => {
+  console.log(req.body);
+  let sql = `Update tasks set done = ${req.body.done} where id = ${req.body.id}`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -745,14 +758,107 @@ router.put('/editTask', (req,res) => {
     }
     connection.query(sql, function(error, result) {
       if (error) {
-        console.log(error)
+        console.log(error);
       } else {
-        console.log(result)
+        console.log(result);
         res.json(result);
       }
     });
     connection.release();
   });
-})
+});
+
+router.put("/payurl", (req, res) => {
+  console.log(req.body);
+  let credentials = `${req.body.monthly}|${req.body.amount}|${req.body.profileID}|${req.body.dateNow}`;
+
+  const encryptedString = cryptr.encrypt(credentials);
+  const decryptedString = cryptr.decrypt(encryptedString);
+
+  console.log(encryptedString);
+  console.log(decryptedString);
+
+  res.send(encryptedString);
+
+  // let sql = `Update tasks set done = ${req.body.done} where id = ${req.body.id}`;
+  // pool.getConnection(function(err, connection) {
+  //   if (err) {
+  //     connection.release();
+  //     resizeBy.send("Error with connection");
+  //   }
+  //   connection.query(sql, function(error, result) {
+  //     if (error) {
+  //       console.log(error);
+  //     } else {
+  //       console.log(result);
+  //       res.json(result);
+  //     }
+  //   });
+  //   connection.release();
+  // });
+});
+
+router.put("/paymentsuccess/:credentials", (req, res) => {
+  console.log(req.params.credentials);
+  let credentials = req.params.credentials;
+
+  // let credentials = `${req.body.monthly}|${req.body.amount}|${req.body.profileID}`;
+
+  // const encryptedString = cryptr.encrypt(credentials);
+  const decryptedString = cryptr.decrypt(credentials);
+
+  // console.log(encryptedString)
+  console.log(decryptedString);
+
+  const id = decryptedString.split("|")[2];
+  console.log("ID", id);
+
+  // res.send(decryptedString);
+
+  let sql = `select payment_expires from client_profiles where id = ${id}`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(result);
+        res.json({
+          result: result,
+          decryptedString: decryptedString
+        });
+      } 
+    });
+    connection.release();
+  });
+});
+
+router.put("/processPayment", (req, res) => {
+  console.log(req.body);
+  let expirydate = req.body.expiryDate;
+  let id = req.body.profileID;
+  console.log("The Date IS@@@@@@@", expirydate);
+  let sql1 = `Update client_profiles set profile_approved = true, paid_to_date = true, payment_expires =  '${expirydate}'  where id = ${id}`;
+  let sql2 = `select first_name, email, businessName from client_profiles  where id = ${id}`;
+  let sql = `${sql1};${sql2}`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) {
+        console.log("EEERRROOORRR", error);
+      } else {
+        console.log(result);
+        res.json(result[1]);
+      }
+    });
+    connection.release();
+  });
+});
 
 module.exports = router;

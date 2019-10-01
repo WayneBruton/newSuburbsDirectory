@@ -25,8 +25,6 @@
           in our communities receive regular financial support. It was that desire that lead us to start The Suburbs Directory.
         </p>
       </v-flex>
-      <!-- </v-layout> -->
-      <!-- <v-layout row wrap justify-space-between> -->
       <v-flex ml-1 mt-4 mr-2 xs12 sm8 md4 offset-sm0 offset-xs0 offset-md0>
         <img class="imgCat" src="../assets/Nicole.jpeg" alt />
         <br />
@@ -117,10 +115,7 @@ export default {
 <style scoped>
 .imgCat {
   width: 100%;
-  /* background-color: #F4EBDE; */
-
   border: 1px solid black;
-  /* border: 1px solid transparent; */
   border-radius: 50%;
 }
 .imgCat:hover {
@@ -129,8 +124,6 @@ export default {
 }
 .emptyOfProfiles:hover {
   opacity: 0.3;
-  /* width: 30%; */
-  /* height: 30%; */
 }
 
 .noProfiles {
@@ -141,12 +134,6 @@ export default {
   width: 75%;
 }
 @media screen and (max-width: 768px) {
-  /* v-card {
-    width: 250px;
-    margin-left: 0%;
-    margin-right: 10%;
-     padding: 0%;
-  } */
   .showroom {
     width: 100;
   }

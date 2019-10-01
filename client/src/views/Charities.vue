@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <!-- <img src="../assets/heart_PNG51352.png" alt="LOGO" style="width: 10%;" /> -->
     <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
 
     <v-flex xs12>

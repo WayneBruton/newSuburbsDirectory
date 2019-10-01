@@ -21,6 +21,7 @@
     "vue-draggable-resizable": "^2.0.0-rc2",
     "vue-lazyload": "^1.2.6",
     "vue-load-image": "^0.1.7",
+    "vue-moment": "^4.0.0",
     "vue-router": "^3.0.3",
     "vue-social-sharing": "^2.4.5",
     "vue2-editor": "^2.9.1",

@@ -21,6 +21,8 @@ import FAQAdd from "./views/FAQAdd.vue";
 import ProfileList from "./views/ProfileList.vue";
 import ApproveProfile from "./views/ApproveProfile.vue";
 import Todo from "./views/Todo.vue";
+import PaymentSuccessfull from "./views/PaymentSuccessfull.vue";
+import PaymentNotSuccessfull from "./views/PaymentNotSuccessfull.vue";
 
 Vue.use(Router);
 
@@ -132,6 +134,16 @@ export default new Router({
       path: "/todo",
       name: "todo",
       component: Todo
+    },
+    {
+      path: "/paymentsuccess/:details",
+      name: "paymentsuccess",
+      component: PaymentSuccessfull
+    },
+    {
+      path: "/paymentunsuccess/:details",
+      name: "paymentunsuccess",
+      component: PaymentNotSuccessfull
     }
   ]
 });

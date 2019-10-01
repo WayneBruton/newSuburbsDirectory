@@ -11,6 +11,7 @@ export default {
     return Api().put(`/profiles`, credentials);
   },
   getPackages(credentials) {
+    // console.log(credentials)
     return Api().put(`/getPackages`, credentials);
   },
   getExtraPackages() {
@@ -103,5 +104,20 @@ export default {
   contact(credentials) {
     // console.log("Contact Form::", credentials);
     return Api().put(`/contactform`, credentials);
-  }
-};
+  },
+  payURL(credentials) {
+    console.log("Payment Details:", credentials);
+    return Api().put(`/payurl`, credentials);
+  },
+  paymentsuccess(credentials) { 
+    console.log(credentials);
+    return Api().put(`/paymentsuccess/${credentials}`);
+  },
+  processPayment(credentials) {
+    console.log(credentials);
+    return Api().put(`/processPayment`, credentials);
+  },
+  getCategories() {
+    return Api().get(`/getCategories`);
+  },
+}; 
