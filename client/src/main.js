@@ -7,7 +7,13 @@ import "vuetify/dist/vuetify.min.css";
 import { sync } from "vuex-router-sync";
 import "material-design-icons/iconfont/material-icons.css";
 import VueDisqus from "vue-disqus";
-import VueMoment from 'vue-moment';
+import VueMoment from "vue-moment";
+import VTooltip from "v-tooltip";
+import Ripple from "vue-ripple-directive";
+
+Vue.use(Ripple);
+
+Vue.use(VTooltip);
 
 Vue.use(Vuetify);
 Vue.use(VueDisqus);

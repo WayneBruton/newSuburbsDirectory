@@ -47,7 +47,7 @@ router.get("/categories/:areaId", (req, res) => {
     LEFT JOIN
     client_profiles p
       ON  JSON_CONTAINS(p.areas,      '${area}',                    '$')
-      AND JSON_CONTAINS(p.catarea, CAST(c.id AS CHAR(32)), '$') and p.paid_to_date = true 
+      AND JSON_CONTAINS(p.catarea, CAST(c.id AS CHAR(32)), '$') and p.paid_to_date = true  and p.profile_approved = true
     GROUP BY c.id
     ORDER BY c.category_description`;
 

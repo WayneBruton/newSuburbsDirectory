@@ -60,6 +60,7 @@ export default {
   },
   mounted() {
     this.categories = this.$store.state.categories;
+    console.log(this.categories)
   },
 
   methods: {

@@ -86,12 +86,11 @@
                     style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
                   >
                     <v-checkbox
-                    @change="areaClick"
+                      @change="areaClick"
                       v-model="area.areaChosen"
                       :id="area.id.toString()"
                       :label="area.area_description"
                       color="beige lighten-1"
-                    
                     ></v-checkbox>
                   </li>
                 </ul>
@@ -112,8 +111,6 @@
                               ? 
                               selectedOption : 'Choose your package option'"
                       @change="selectedOptionChosen"
-                 
-                  
                     ></v-select>
                   </v-flex>
                 </div>
@@ -162,7 +159,6 @@
                         :label="extraPackage.option_name"
                         color="beige lighten-1"
                         @change="extraPackageClick"
-         
                       ></v-checkbox>
                     </li>
                   </ul>
@@ -400,7 +396,7 @@
                   <br />
                 </panel>
                 <br />
-                <v-btn id="btn2" light color="#F4EBDE" @click="save">Save</v-btn>
+                <v-btn id="btn2" v-ripple v-tooltip.top-start="'Update this Profile Status'" light color="#F4EBDE" @click="save" >Save</v-btn>
               </form>
             </v-flex>
             <v-alert
@@ -522,11 +518,11 @@ export default {
     this.description = profile.data[0].profile_description;
     this.optionChosen = profile.data[0].selectedOption;
     this.extraPackagesChosen = JSON.parse(profile.data[0].extra_packages);
-    console.log("EXTRA PACKAGES", this.extraPackagesChosen)
+    console.log("EXTRA PACKAGES", this.extraPackagesChosen);
     this.areasArray = JSON.parse(profile.data[0].areas);
-    console.log("AREAS",this.areasArray)
+    console.log("AREAS", this.areasArray);
     this.categoriesArray = JSON.parse(profile.data[0].catarea);
-    console.log("CATEGORIES",this.categoriesArray)
+    console.log("CATEGORIES", this.categoriesArray);
     this.profile_approved = profile.data[0].profile_approved;
     this.paid_to_date = profile.data[0].paid_to_date;
     this.payment_expires = profile.data[0].payment_expires;
@@ -555,7 +551,7 @@ export default {
       number: this.areasArray.length
     };
     let suburbs = await DirectoryService.getPackages(numberOfSuburbs);
-    console.log("OPTION CHOSEN$$$$$", suburbs.data)
+    console.log("OPTION CHOSEN$$$$$", suburbs.data);
     this.packages = suburbs.data;
     let items = [];
     this.packages.forEach(el => {
@@ -564,10 +560,9 @@ export default {
     this.items = items;
 
     if (this.optionChosen === 1) {
-      this.selectedOption = this.packages[0].option_description
+      this.selectedOption = this.packages[0].option_description;
     } else {
-      this.selectedOption = this.packages[1].option_description
-
+      this.selectedOption = this.packages[1].option_description;
     }
     // let packageChosen = this.packages.filter(el => {
     //   if (el.numberOfSuburbs === this.optionChosen) {
@@ -615,11 +610,11 @@ export default {
   },
   methods: {
     selectedOptionChosen() {
-      let str = this.selectedOption
+      let str = this.selectedOption;
       if (str.includes("Thursday")) {
-        this.optionChosen = 2
+        this.optionChosen = 2;
       } else {
-        this.optionChosen = 1
+        this.optionChosen = 1;
       }
     },
     async areaClick() {
@@ -682,7 +677,7 @@ export default {
           }, 2500);
         }
       } catch (e) {
-        console.log("EMAIL ERROR",e);
+        console.log("EMAIL ERROR", e);
       }
     },
     async save() {
@@ -705,11 +700,16 @@ export default {
       formData.append("selectedOption", this.optionChosen);
       formData.append("catarea", this.categoriesArray);
       formData.append("profile_description", this.description);
-      formData.append("extra_packages", this.extraPackagesChosen);
+      if (this.extraPackagesChosen.length == 0) {
+        formData.append("extra_packages", "0");
+      } else {
+        formData.append("extra_packages", this.extraPackagesChosen);
+      }
       formData.append("profile_approved", this.profile_approved);
       formData.append("paid_to_date", this.paid_to_date);
       formData.append("payment_expires", this.payment_expires);
-    
+      console.log("extra packages", this.extraPackagesChosen);
+
       if (
         this.businessName === "" ||
         this.firstName === "" ||

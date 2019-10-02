@@ -544,6 +544,7 @@ export default {
         }
         return el.categoryChosen === true;
       });
+      console.log(categoryCount)
     },
     async checkEmail() {
       let email = {
@@ -610,6 +611,7 @@ export default {
         }, 1500);
       } else {
         let response = await DirectoryService.editProfile(formData);
+        console.log(response)
         this.success = "You have successfully updated your profile";
         setTimeout(() => {
           this.$router.push({ name: "home" });

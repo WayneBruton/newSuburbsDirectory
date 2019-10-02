@@ -357,15 +357,15 @@ router.post("/editProfile", upload.array(), function(req, res) {
   if (base64Data3 !== "") {
     base64Image3 = base64Data3.split(";base64,").pop();
   }
-
+console.log("EEEXTRAAA!!!!", req.body.extra_packages)
   let initPackagesArray = []
-  if (req.body.extra_packages !== "") {
+  if (req.body.extra_packages !== NaN) {
     initPackagesArray = req.body.extra_packages.split(",");
     for (i = 0; i < initPackagesArray.length; i++) {
       extra_packages.push(parseInt(initPackagesArray[i]));
     }
   } else {
-    extra_packages = [];
+    extra_packages = [0];
   }
 
   let areas = []

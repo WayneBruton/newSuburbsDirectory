@@ -95,6 +95,7 @@
                       :id="area.id.toString()"
                       :label="area.area_description"
                       color="beige lighten-1"
+                      v-tooltip.top-start="'Dont forget to choose your package option below'"
                     ></v-checkbox>
                   </li>
                   <v-icon @click="showDialog" style="color: red;">attach_money</v-icon>
@@ -115,6 +116,7 @@
                       :items="items"
                       box
                       label="Choose your package option"
+                      background-color="orange"
                     ></v-select>
                     <!-- <v-select :items="item.option_description" box label="Choose your package option"></v-select> -->
                   </v-flex>
