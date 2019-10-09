@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <br><br>
     <!-- <img src="../assets/heart_PNG51352.png" alt="LOGO" style="width: 10%;" /> -->
     <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
 
@@ -9,7 +10,7 @@
         <br>
         <br>
         <v-layout row wrap>
-          <v-flex xs12 sm8 md10 offset-md1>
+          <v-flex xs12 sm8 md10 offset-md1 offset-xs0>
             <v-expansion-panel popout light>
               <v-expansion-panel-content
                 v-for="(item, i) in items"

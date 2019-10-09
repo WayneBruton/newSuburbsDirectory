@@ -3,8 +3,9 @@
     <br />
     <br />
     <h1>Business Listings</h1>
-    <div style="display: flex;">
+    <div class="mainDiv" >
       <div
+       class="displayMap"
         id="map"
         style="display:flex; flex-direction: column; justify-content: flex-start;  padding: 5px;"
       >
@@ -94,15 +95,12 @@
           </map>
         </div>
       </div>
-      <div
-        style="display:flex; flex-direction: column; background-color: #f2f6f5; margin-top: 10px;padding: 20px; border: 1px solid #f2f6f5; border-radius: 7px;"
-      >
-        <div>
+      <div class="mobileStyles">
+        <div class="explain">
           <p>
             <strong>HELP! Where do I click?</strong>
             <br />
-            <br />
-            You have got two options here, if you’re feeling adventurous you can
+            <br />You have got two options here, if you’re feeling adventurous you can
             hover your mouse over the Suburbs on the map to your left... once
             you’re on the Suburb of your choice just click, and you’ll be
             whisked away to our business categories! Not one for fun and games?
@@ -112,23 +110,15 @@
           </p>
         </div>
         <div>
-          <ul
-            style="display: flex; justify-content: space-between; flex-wrap: wrap; width: 100%;"
-          >
-            <li
-              v-for="(area, i) in areas"
-              :key="i"
-              style="width: 100%; margin: 1px;"
-            >
+          <ul style="display: flex; justify-content: space-around; flex-wrap: wrap; width: 100%;">
+            <li v-for="(area, i) in areas" :key="i" style="width: 100%; margin: 1px;">
               <v-btn
+                class="buttons"
                 :id="area.id"
                 light
                 color="#F4EBDE"
                 @click="chooseArea($event)"
-                style="width: 40%;"
-              >
-                {{ area.area_description }}
-              </v-btn>
+              >{{ area.area_description }}</v-btn>
             </li>
           </ul>
         </div>
@@ -326,7 +316,7 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.$store.dispatch("setCategories", this.categories); 
+      this.$store.dispatch("setCategories", this.categories);
     }
   }
 };
@@ -344,5 +334,57 @@ area {
 }
 li {
   list-style: none;
+}
+.buttons {
+  width: 40%;
+}
+.mobileStyles {
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f6f5;
+  margin-top: 10px;
+  padding: 20px;
+  border: 1px solid #f2f6f5;
+  border-radius: 7px;
+}
+.mainDiv {
+  display: flex;
+}
+@media screen and (max-width: 768px) {
+  .explain {
+    display: none;
+  }
+  .buttons {
+    width: 85%;
+    padding-left: 0%;
+  }
+  ul {
+    align-content: flex-start;
+    align-items: flex-start;
+    padding-left: 0%;
+  }
+  .mobileStyles {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    background-color: #f2f6f5;
+    margin-top: 10px;
+    margin-left: 0px;
+    padding: 2px;
+    border: 1px solid #f2f6f5;
+    border-radius: 7px;
+  }
+  .displayMap {
+    display: none;
+  }
+  .mainDiv {
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  margin: 0%;
+}
+img {
+  display: none;
+}
 }
 </style>

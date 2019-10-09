@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <v-app>
-      <PageHeader/>
-      <v-container>
+      <PageHeader />
+      <v-container fluid style="margin: 0px; padding: 0px; width: 100%">
         <div id="nav">
-          <router-view/>
+          <router-view />
         </div>
       </v-container>
-      <Footer/>
+      <Footer />
     </v-app>
   </div>
 </template>

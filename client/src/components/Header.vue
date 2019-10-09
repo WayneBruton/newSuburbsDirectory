@@ -60,7 +60,7 @@
     </v-toolbar-items>
     <!-- /////////////////// -->
 
-    <v-toolbar-items class="dropDown">
+    <v-toolbar-items class="dropDown scroll-y" style="max-height: 100px;">
       <v-menu offset-y class="dropDown">
         <template v-slot:activator="{ on }" class="dropDown">
           <!-- <v-btn class="#305f72 notHamburger" flat :to="{name: 'directory'}">  -->

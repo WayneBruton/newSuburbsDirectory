@@ -50,7 +50,7 @@ export default {
   },
   editProfile(credentials) {
     console.log(credentials);
-    return Api().post(`/editProfile`, credentials);  
+    return Api().post(`/editProfile`, credentials);
   },
   addNoticeImage(credentials) {
     console.log(credentials);
@@ -109,7 +109,7 @@ export default {
     console.log("Payment Details:", credentials);
     return Api().put(`/payurl`, credentials);
   },
-  paymentsuccess(credentials) { 
+  paymentsuccess(credentials) {
     console.log(credentials);
     return Api().put(`/paymentsuccess/${credentials}`);
   },
@@ -119,5 +119,5 @@ export default {
   },
   getCategories() {
     return Api().get(`/getCategories`);
-  },
-}; 
+  }
+};

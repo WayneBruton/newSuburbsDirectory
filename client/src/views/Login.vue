@@ -1,6 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout class="panelWidth" xs12 sm8 md4 column justify-space-around>
+      <br><br>
       <v-flex xs12 sm8 md4 offset-xs0>
         <img src="../assets/newLogo.png" alt="LOGO" style="width: 10%;">
         <br>

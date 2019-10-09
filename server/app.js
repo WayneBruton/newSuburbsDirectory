@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const morgan = require("morgan");
-const fs = require("fs");
+// const morgan = require("morgan");
+// const fs = require("fs");
 const path = require("path");
 // const history = require("connect-history-api-fallback");
 app = express();
@@ -23,15 +23,22 @@ app.use(
   bodyParser.urlencoded({
     extended: true
   })
-);
+); 
+
 app.use(bodyParser.json());
 
-// const storeRoutes = require("../server/routes/store"),
+
 const mainRoutes = require("./routes/initialRoutes"),
   profileRoutes = require("./routes/profileRoutes"),
   authorizationRoutes = require("./routes/authorizationRoutes"),
-  paymentRoutes = require("./routes/paymentRoutes");
-//   checkoutRoutes = require("./routes/checkoutRoutes"),
+  paymentRoutes = require("./routes/paymentRoutes"),
+  taskRoutes = require("./routes/taskRoutes"),
+  adminRoutes = require("./routes/adminRoutes"),
+  faqRoutes = require("./routes/faqRoutes"),
+  noticesRoutes = require("./routes/noticesRoutes"),
+  ratingsRoutes = require("./routes/ratingsRoutes"),
+  scheduleRoutes = require("./routes/scheduleRoutes"),
+  contactRoutes = require("./routes/contactRoutes");
 //   finalizePaymentRoutes = require("./routes/finalizePaymentRoutes"),
 //   contactRoutes = require("./routes/contactRoutes"),
 //   authenticationRoutes = require("./routes/authenticationRoutes"),
@@ -44,7 +51,13 @@ app.use(mainRoutes);
 app.use(profileRoutes);
 app.use(authorizationRoutes);
 app.use(paymentRoutes);
-// app.use(contactRoutes);
+app.use(taskRoutes);
+app.use(adminRoutes);
+app.use(faqRoutes);
+app.use(noticesRoutes);
+app.use(ratingsRoutes);
+app.use(scheduleRoutes);
+app.use(contactRoutes);
 // app.use(checkoutRoutes);
 // app.use(finalizePaymentRoutes);
 // app.use(authenticationRoutes);

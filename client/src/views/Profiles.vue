@@ -1,10 +1,11 @@
 <template>
-  <v-container column justify-content-space-evenly style=" width: 100%">
+  <v-container column justify-content-space-evenly style=" width: 100%" >
     <v-layout column>
-      <v-flex xs12 sm8 md4>
+      <!-- <v-flex xs12 sm8 md4>
         <img src="../assets/newLogo.png" alt="LOGO" style="width: 10%;">
-      </v-flex>
-      <transition name="welcome">
+      </v-flex> -->
+      <br>
+      <transition name="welcome" style="margin-top: 15%;">
         <v-flex>
           <h1>{{ this.$store.state.profilesForCategoryAndAreaChosen.areaDescription }}</h1>
           <h2>{{ this.$store.state.profilesForCategoryAndAreaChosen.category_description }}</h2>
@@ -45,7 +46,7 @@
             slot-scope="{ hover }"
             :class="`elevation-${hover ? 12 : 2}`"
             class="mx-auto showroom"
-            width="300"
+            :width="cardWidth"
             height="550"
             offset-xs0
             offset-sm0
@@ -114,13 +115,21 @@ export default {
       items: [],
       totalItems: [],
       selectedId: null,
-      rating: 3.5
+      rating: 3.5,
+      cardWidth: 300
     };
   },
   components: {
     Panel
   },
   async mounted() {
+    let w = window.innerWidth;
+    if (w < 768) {
+      this.cardWidth = 225
+    } else {
+      this.cardWidth = 300
+    }
+    console.log(w)
       let area = this.$store.state.profilesForCategoryAndAreaChosen.area
       let category = this.$store.state.profilesForCategoryAndAreaChosen.category
       // console.log(area)
@@ -179,9 +188,9 @@ img {
 }
 
 
-@media screen and (max-width: 820px) {
+@media screen and (max-width: 768px) {
   v-card {
-    width: 250px;
+    width: 150px;
     margin-left: 0%;
     // padding: 0%;
   }

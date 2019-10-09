@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <br><br>
     <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%; " />
 
     <v-layout class="panelWidth" xs3 column justify-space-around>

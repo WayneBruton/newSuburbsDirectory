@@ -1,5 +1,6 @@
 <template>
   <v-container column justify-content-space-evenly style=" width: 100%">
+    <br><br>
     <v-layout column>
       <v-flex xs12 sm8 md4>
         <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />

@@ -178,5 +178,47 @@ router.put("/resetPasswordLink", (req, res) => {
     // res.send({itWorks: "AWESOME"})
   });
 
+  router.put("/checkEmail", function(req, res) {
+    let email = req.body.email;
+    console.log(email);
+    var sql = `select email from client_profiles where email = '${email}'`;
+    const schema = {
+      email: Joi.string().email()
+    };
+    const { error, value } = Joi.validate(req.body, schema);
+    if (error) {
+      console.log("ERROR IS:", error.details[0].context.key);
+      switch (error.details[0].context.key) {
+        case "email":
+          res.json({
+            error: "You must provide a valid email address"
+          });
+          break;
+        default:
+          res.json({
+            error: "Invalid email information"
+          });
+      }
+    } else {
+      pool.getConnection(function(err, connection) {
+        if (err) {
+          connection.release();
+          resizeBy.send("Error with connection");
+        }
+        connection.query(sql, function(error, result) {
+          if (error) throw error;
+          if (result.length) {
+            res.json({
+              error: "This email already exists, rather log in"
+            });
+          } else {
+            res.json(result);
+          }
+        });
+        connection.release();
+      });
+    }
+  });
+
 
 module.exports = router;
