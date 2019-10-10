@@ -92,7 +92,7 @@ export default {
             this.error = null;
           }, 3000);
         });
-    }
+    } 
   }
 };
 </script>

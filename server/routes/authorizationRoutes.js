@@ -89,7 +89,7 @@ router.put("/resetPasswordLink", (req, res) => {
         let resetEmail = cryptr.encrypt(JSON.stringify(req.body.email))
         // console.log(resetEmail)
         let resetURL = `${process.env.RESET_URL}/${resetEmail}`
-        //SEND EMAIL TO CLIENT
+        //SEND EMAIL TO CLIENT 
 
         let response = {
           success: "A reset Email has been sent to you!",

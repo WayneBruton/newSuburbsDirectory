@@ -15,7 +15,7 @@
                 readonly
               ></v-text-field>
               <br />
-              <v-text-field
+              <v-text-field 
                 label="Password"
                 type="password"
                 :rules="passwordRules"
@@ -37,7 +37,7 @@
           <!-- <div class="danger-alert" v-html="error" /> -->
           <v-alert class="danger-alert" v-if="error" :value="true" type="warning">{{ error }}</v-alert>
           <v-alert class="danger-alert" v-if="message" :value="true" type="info">{{ message }}</v-alert>
-          <v-btn id="btn2" :class="this.$store.state.siteSetup.color" @click="reset" dark
+          <v-btn id="btn2" @click="reset" color="#f4ebde"
             >Reset Password
           </v-btn>
         </panel>
