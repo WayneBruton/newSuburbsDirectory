@@ -141,8 +141,14 @@ export default {
       this.email = response.data[0].email;
       this.businessName = response.data[0].businessName;
 
-      console.log("The new date", this.newDate);
+      
     }
+    console.log("The new date", this.newDate);
+      setTimeout(() => {
+        this.$router.push({name: 'profile'})
+        // DirectoryService.getProfile(this.profileID)
+        console.log("Testing")
+      }, 1500)
   },
   methods: {}
 };

@@ -24,6 +24,7 @@ export default {
     return Api().post(`/addProfile`, credentials);
   },
   getProfile(credentials) {
+    console.log(credentials)
     return Api().get(`/getProfile/${credentials}`);
   },
   getRatings(credentials) {
@@ -119,5 +120,22 @@ export default {
   },
   getCategories() {
     return Api().get(`/getCategories`);
+  },
+  loginAdmin(credentials) {
+    console.log(credentials);
+    return Api().put(`/loginAdmin`, credentials);
+  },
+  authenticateAdmin(credentials) {
+    console.log("These are the credentials", credentials);
+    return Api().put(`/authenticateAdmin`, credentials);
+  },
+  resetAdminPasswordLink(credentials) {
+    return Api().put(`/resetAdminPasswordLink`, credentials);
+  },
+  resetAdminPasswordStart(uri) {
+    return Api().get(`/resetAdminPasswordStart/${uri}`);
+  },
+  resetAdminPassword(credentials) {
+    return Api().put(`/resetAdminPassword`, credentials);
   }
 };

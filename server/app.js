@@ -31,6 +31,7 @@ app.use(bodyParser.json());
 const mainRoutes = require("./routes/initialRoutes"),
   profileRoutes = require("./routes/profileRoutes"),
   authorizationRoutes = require("./routes/authorizationRoutes"),
+  authorizationAdminRoutes = require("./routes/authorizationAdminRoutes"),
   paymentRoutes = require("./routes/paymentRoutes"),
   taskRoutes = require("./routes/taskRoutes"),
   adminRoutes = require("./routes/adminRoutes"),
@@ -50,6 +51,7 @@ const mainRoutes = require("./routes/initialRoutes"),
 app.use(mainRoutes);
 app.use(profileRoutes);
 app.use(authorizationRoutes);
+app.use(authorizationAdminRoutes);
 app.use(paymentRoutes);
 app.use(taskRoutes);
 app.use(adminRoutes);

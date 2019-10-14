@@ -20,7 +20,14 @@ export default new Vuex.Store({
 
     selectedProfile: null,
     selectedProfileAdminUsage: null,
-    uploadedImage: ""
+    uploadedImage: "",
+
+    adminToken: null,
+    isAdminUserLoggedIn: null,
+    adminEmail: null,
+    adminId: null,
+    admin_user: null,
+    admin_username: null
   },
   mutations: {
     setAreaChosen(state, areaChosen) {
@@ -59,6 +66,14 @@ export default new Vuex.Store({
     },
     setUploadedImage(state, loadedImage) {
       state.uploadedImage = loadedImage;
+    },
+    setAdminToken(state, token) {
+      state.adminToken = token;
+    },
+    setAdminUser(state, user) {
+      state.isAdminUserLoggedIn = true;
+      state.adminEmail = user.email;
+      state.adminId = user.id;
     }
   },
   actions: {
@@ -91,6 +106,12 @@ export default new Vuex.Store({
     },
     setUploadedImage({ commit }, loadedImage) {
       commit("setUploadedImage", loadedImage);
+    },
+    setAdminToken({ commit }, token) {
+      commit("setAdminToken", token);
+    },
+    setAdminUser({ commit }, user) {
+      commit("setAdminUser", user);
     }
   }
 });

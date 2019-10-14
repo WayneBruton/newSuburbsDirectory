@@ -158,7 +158,7 @@ create table users (
     createdAt TIMESTAMP DEFAULT NOW(),
     resettoken varchar(20),
     resetexpiry TIMESTAMP DEFAULT NOW()
-);
+); 
 
 insert into users (email, Upassword) values ('waynebruton@icloud.com', 'password');
 

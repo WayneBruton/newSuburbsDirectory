@@ -243,7 +243,7 @@ export default {
   // async beforemount() {
   async beforeMount() {
     this.profileId = this.$store.state.selectedProfile;
-    let response = await DirectoryService.getProfile(this.profileId);
+    let response = await DirectoryService.getProfile(this.profileId); 
     this.items = response.data;
     this.items.forEach(el => {
       this.profile_image = `${process.env.VUE_APP_IMAGEURL}${el.profile_image}`;

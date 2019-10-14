@@ -11,6 +11,7 @@ import Profile from "./views/Profile.vue";
 import Launchpad from "./views/Launchpad.vue";
 import Login from "./views/Login.vue";
 import ResetPassword from "./views/ResetPassword.vue";
+import ResetAdminPassword from "./views/ResetAdminPassword.vue";
 import EditProfile from "./views/EditProfile.vue";
 import Pricing from "./views/Pricing.vue";
 import Dashboard from "./views/Dashboard.vue";
@@ -23,6 +24,7 @@ import ApproveProfile from "./views/ApproveProfile.vue";
 import Todo from "./views/Todo.vue";
 import PaymentSuccessfull from "./views/PaymentSuccessfull.vue";
 import PaymentNotSuccessfull from "./views/PaymentNotSuccessfull.vue";
+import LoginAdmin from "./views/LoginAdmin.vue";
 
 Vue.use(Router);
 
@@ -144,6 +146,16 @@ export default new Router({
       path: "/paymentunsuccess/:details",
       name: "paymentunsuccess",
       component: PaymentNotSuccessfull
-    }
+    },
+    {
+      path: "/loginAdmin",
+      name: "loginAdmin",
+      component: LoginAdmin
+    },
+    {
+      path: "/resetAdminPassword/:reset",
+      name: "resetAdminPassword",
+      component: ResetAdminPassword
+    },
   ]
 });
