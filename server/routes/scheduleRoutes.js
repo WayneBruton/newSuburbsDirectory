@@ -30,7 +30,7 @@ cron.schedule(
 );
 
 cron.schedule(
-  "15 3 * * *",
+  "30 3 * * *",
   () => {
     console.log("Running a job at 09:12 at Africa/Johannesburg timezone");
     checkStatistics()

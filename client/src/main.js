@@ -10,6 +10,10 @@ import VueDisqus from "vue-disqus";
 import VueMoment from "vue-moment";
 import VTooltip from "v-tooltip";
 import Ripple from "vue-ripple-directive";
+import Chartkick from "vue-chartkick";
+import Chart from "chart.js";
+
+Vue.use(Chartkick.use(Chart));
 
 Vue.use(Ripple);
 

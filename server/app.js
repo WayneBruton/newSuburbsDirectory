@@ -1,12 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const morgan = require("morgan");
-// const fs = require("fs");
 const path = require("path");
-// const history = require("connect-history-api-fallback");
+const history = require("connect-history-api-fallback");
 app = express();
-
 // app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use(cors());
@@ -16,8 +13,6 @@ if (port === 3000) {
   const dotenv = require("dotenv").config();
 }
 
-// console.log(__dirname)
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   bodyParser.urlencoded({
@@ -26,6 +21,8 @@ app.use(
 ); 
 
 app.use(bodyParser.json());
+
+app.use(history());
 
 
 const mainRoutes = require("./routes/initialRoutes"),
@@ -40,13 +37,6 @@ const mainRoutes = require("./routes/initialRoutes"),
   ratingsRoutes = require("./routes/ratingsRoutes"),
   scheduleRoutes = require("./routes/scheduleRoutes"),
   contactRoutes = require("./routes/contactRoutes");
-//   finalizePaymentRoutes = require("./routes/finalizePaymentRoutes"),
-//   contactRoutes = require("./routes/contactRoutes"),
-//   authenticationRoutes = require("./routes/authenticationRoutes"),
-//   adminRoutes = require("./routes/adminRoutes"),
-//   databaseRoutes = require("./routes/databaseRoutes"),
-//   statsRoutes = require("./routes/statsRoutes");
-//  historyRoutes = require("./routes/historyRoutes");
 
 app.use(mainRoutes);
 app.use(profileRoutes);
@@ -60,36 +50,15 @@ app.use(noticesRoutes);
 app.use(ratingsRoutes);
 app.use(scheduleRoutes);
 app.use(contactRoutes);
-// app.use(checkoutRoutes);
-// app.use(finalizePaymentRoutes);
-// app.use(authenticationRoutes);
-// app.use(databaseRoutes);
-// app.use(statsRoutes);
-
-// app.use(adminRoutes);
-// app.use(authorizationRoutes);
 
 
-// const staticFileMiddleware = express.static(path.join(__dirname + "/dist"));
-// const staticFileMiddleware = express.static(path.join(__dirname));
-// // const staticFileMiddleware = express.static("/");
-
-// app.use(staticFileMiddleware);
-// app.use(
-//   history({
-//     disableDotRule: true,
-//     verbose: true
-//   })
-// );
-// app.use(staticFileMiddleware);
-
-// app.get("/", function(req, res) {
-//   // res.render(path.join(__dirname + "/dist/index.html"));
-//   // res.render(path.join(__dirname + "/index.html"));
-//   // res.render("index.html");
+// history({
+//   rewrites: [
+//     { from: /\/pricing/, to: '/pricing.html'}
+//   ]
 // });
-
-
+// app.use(history());
+// app.use('/', express.static(path.join(__dirname, 'dist')));
 
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);

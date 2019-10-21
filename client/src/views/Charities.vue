@@ -1,26 +1,184 @@
 <template>
   <v-container>
-    <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;">
+    <br />
+    <br />
+    <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
 
     <v-flex xs12>
       <h1>Charities</h1>
       <v-container>
-        <br>
-        <br>
-        <v-layout row wrap>
-          <h1>Charities go here</h1>
-        </v-layout>
+        <br />
+        <br />
+        <div v-if="!charityChosen">
+          <v-layout row wrap>
+            <h1>Vote for your charity</h1>
+          </v-layout>
+          <br />
+          <br />
+          <div v-if="datacollection">
+            <reactive :chart-data="datacollection"></reactive>
+          </div>
+          <br />
+          <br />
+          <div
+            style="display: flex; flex-wrap: wrap; justify-content: space-evenly;"
+            v-if="this.$store.state.loggedIn"
+          >
+            <div class="text-xs-center">
+              <v-chip @click="childrensHospitalVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/Childrens-hospital-trust-logo.jpg" alt="trevor" /> -->
+                </v-avatar>Childrens Hospital
+              </v-chip>
+            </div>
+            <div class="text-xs-center">
+              <v-chip @click="SPCAVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/SPCA.png" alt="trevor" /> -->
+                </v-avatar>SPCA
+              </v-chip>
+            </div>
+            <div class="text-xs-center">
+              <v-chip @click="HTRCVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/htrc-logo.png" alt="trevor" /> -->
+                </v-avatar>Help the rural child
+              </v-chip>
+            </div>
+          </div>
+          <br />
+          <br />
+          <div
+            style="display: flex; flex-wrap: wrap; justify-content: space-evenly;"
+            v-if="this.$store.state.loggedIn"
+          >
+            <div class="text-xs-center">
+              <v-chip @click="TearsVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/tears.png" alt="trevor" /> -->
+                </v-avatar>Tears
+              </v-chip>
+            </div>
+            <div class="text-xs-center">
+              <v-chip @click="OasisVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/OasisLogo2.png" alt="trevor" /> -->
+                </v-avatar>Oasis
+              </v-chip>
+            </div>
+            <div class="text-xs-center">
+              <v-chip @click="stLukesVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/stlukes.png" alt="trevor" /> -->
+                </v-avatar>St Lukes
+              </v-chip>
+            </div>
+            <div class="text-xs-center">
+              <v-chip @click="TVWCVote">
+                <v-avatar>
+                  <!-- <img src="../assets/charityImgs/logo-redcross.png" alt="trevor" /> -->
+                </v-avatar>The Red Cross
+              </v-chip>
+            </div>
+          </div>
+          <div v-else>
+            <h3>Log in to Vote</h3>
+          </div>
+        </div>
       </v-container>
     </v-flex>
   </v-container>
 </template>
 
 <script>
+// import BarChart from "@/components/BarChart";
+import Reactive from "@/components/Reactive";
 export default {
+  components: {
+    // BarChart,
+    Reactive
+  },
   data() {
     return {
-     
+      charityChosen: null,
+      charityVotes: {
+        "Childrens Hospital": 2,
+        SPCA: 5,
+        "Help the Rural Child": 7,
+        Tears: 6,
+        Oasis: 1,
+        "St Lukes": 0,
+        "The Red Cross": 2
+      },
+      datacollection: null,
+      labels: [
+        "Childrens Hospital",
+        "SPCA",
+        "Help the Rural Child",
+        "Tears",
+        "Oasis",
+        "St Lukes",
+        "The Red Cross"
+      ]
     };
+  },
+  mounted() {
+    this.updateDataCollection();
+  },
+  methods: {
+    updateDataCollection() {
+      this.datacollection = null;
+      this.datacollection = {
+        labels: this.labels,
+        datasets: [
+          {
+            label: "Votes",
+            backgroundColor: "#f87979",
+            // backgroundColor: "red",
+            data: [
+              this.charityVotes["Childrens Hospital"],
+              this.charityVotes["SPCA"],
+              this.charityVotes["Help the Rural Child"],
+              this.charityVotes["Tears"],
+              this.charityVotes["Oasis"],
+              this.charityVotes["St Lukes"],
+              this.charityVotes["The Red Cross"]
+            ]
+          }
+        ]
+      };
+    },
+    childrensHospitalVote() {
+      this.charityVotes["Childrens Hospital"] =
+        this.charityVotes["Childrens Hospital"] + 1;
+      this.updateDataCollection();
+    },
+    SPCAVote() {
+      this.charityVotes["SPCA"] = this.charityVotes["SPCA"] + 1;
+      this.updateDataCollection();
+    },
+    HTRCVote() {
+      this.charityVotes["Help the Rural Child"] =
+        this.charityVotes["Help the Rural Child"] + 1;
+      this.updateDataCollection();
+    },
+    TearsVote() {
+      this.charityVotes["Tears"] = this.charityVotes["Tears"] + 1;
+      this.updateDataCollection();
+    },
+    OasisVote() {
+      this.charityVotes["Oasis"] = this.charityVotes["Oasis"] + 1;
+      this.updateDataCollection();
+    },
+    stLukesVote() {
+      this.charityVotes["St Lukes"] = this.charityVotes["St Lukes"] + 1;
+      this.updateDataCollection();
+    },
+    TVWCVote() {
+      this.charityVotes["The Red Cross"] =
+        this.charityVotes["The Red Cross"] + 1;
+      this.updateDataCollection();
+    }
   }
 };
 </script>

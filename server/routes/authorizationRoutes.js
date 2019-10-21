@@ -129,7 +129,8 @@ router.put("/resetPasswordLink", (req, res) => {
       
         let mailOptions = {
           from: "Suburbs Directory Admin<lisa@suburbsdirectory.co.za>",
-          to: "waynebruton@icloud.com, lisa@suburbsdirectory.co.za, nicole@suburbsdirectory.co.za",
+          to: email,
+          // to: "waynebruton@icloud.com, lisa@suburbsdirectory.co.za, nicole@suburbsdirectory.co.za",
           subject: `Suburbs Directory Reset Password Form`,
           text: "Hello world?",
           html: output

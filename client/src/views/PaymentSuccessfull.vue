@@ -14,13 +14,16 @@
             <br />
             <span style="font-weight: bold">Welcome {{ firstName }}</span>
             <br />
-            <span
-              v-if="businessName"
-            >Your business "{{ businessName.toUpperCase() }}" has been successfully subscribed to Suburbs Directory</span>
+            <span v-if="businessName">
+              Your business "{{ businessName.toUpperCase() }}" has been
+              successfully subscribed to Suburbs Directory</span
+            >
             <br />
-            <span
-              v-if="amountPaid"
-            >You subscription expires: {{ newDate }}. Your payment was R{{ amountPaid.toFixed(2) }}</span>
+            <span v-if="amountPaid"
+              >You subscription expires: {{ newDate }}. Your payment was R{{
+                amountPaid.toFixed(2)
+              }}</span
+            >
             <br />
             <span>An email will be sent to {{ email }} for your records.</span>
           </div>
@@ -62,23 +65,23 @@ export default {
     console.log(
       "current payment_expires",
       response.data.result[0].payment_expires
-    ); 
+    );
     this.monthly = data[0];
     this.amountPaid = parseInt(data[1]);
     this.profileID = parseInt(data[2]);
-    this.dateNow = (data[3]);
+    this.dateNow = data[3];
     console.log("monthly", this.monthly);
     console.log("Amount Paid:", this.amountPaid);
     console.log("profile:", this.profileID);
     console.log("Date Now::", this.dateNow);
-    let dateNow = moment().format("DD-MM-YYYY")
-    let newDateNow = moment(this.dateNow).format("DD-MM-YYYY")
+    let dateNow = moment().format("DD-MM-YYYY");
+    let newDateNow = moment(this.dateNow).format("DD-MM-YYYY");
     if (dateNow === newDateNow) {
-      console.log("THE DATES MATCH")
+      console.log("THE DATES MATCH");
     } else {
-      console.log("THE DATES DO NOT MATCH!!!")
+      console.log("THE DATES DO NOT MATCH!!!");
     }
-    console.log("***Now Payment Processed***", dateNow)
+    console.log("***Now Payment Processed***", dateNow);
     let currentExpiry = moment(response.data.result[0].payment_expires);
     let now = moment();
     console.log("Current Expiry", currentExpiry._d);
@@ -91,7 +94,7 @@ export default {
       setTimeout(() => {
         this.$router.push({ name: "home" });
       }, 2500);
-    } else if (diff > 0 && diff <= 7) {
+    } else if (diff >= 0 && diff <= 7) {
       this.currentDate = currentExpiry;
       now = currentExpiry;
       console.log("Now", now);
@@ -130,25 +133,23 @@ export default {
           .add(1, "year")
           .format("YYYY-MM-DD hh:mm");
       }
-      credentials = {
-        expiryDate: this.newDate,
-        profileID: this.profileID,
-        amountPaid: this.amountPaid
-      };
-      response = await DirectoryService.processPayment(credentials);
-      console.log("this is the second response", response.data[0]);
-      this.firstName = response.data[0].first_name;
-      this.email = response.data[0].email;
-      this.businessName = response.data[0].businessName;
-
-      
+      // credentials = {
+      //   expiryDate: this.newDate,
+      //   profileID: this.profileID,
+      //   amountPaid: this.amountPaid
+      // };
+      // response = await DirectoryService.processPayment(credentials);
+      // console.log("this is the second response", response.data[0]);
+      // this.firstName = response.data[0].first_name;
+      // this.email = response.data[0].email;
+      // this.businessName = response.data[0].businessName;
     }
     console.log("The new date", this.newDate);
-      setTimeout(() => {
-        this.$router.push({name: 'profile'})
-        // DirectoryService.getProfile(this.profileID)
-        console.log("Testing")
-      }, 1500)
+    setTimeout(() => {
+      this.$router.push({ name: "profile" });
+      // DirectoryService.getProfile(this.profileID)
+      console.log("Testing");
+    }, 1500);
   },
   methods: {}
 };

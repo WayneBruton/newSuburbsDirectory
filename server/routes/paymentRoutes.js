@@ -1,15 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("./connection");
-const fs = require("fs");
-const axios = require("axios");
-const multer = require("multer");
-const Joi = require("joi");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+// const fs = require("fs");
+// const axios = require("axios");
+// const multer = require("multer");
+// const Joi = require("joi");
+// const bcrypt = require("bcryptjs");
+// const jwt = require("jsonwebtoken");
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr(process.env.ENCRYPTION_SECRET);
-const moment = require("moment");
+// const moment = require("moment");
+const nodemailer = require("nodemailer");
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
@@ -30,11 +31,20 @@ router.put("/paymentsuccess/:credentials", (req, res) => {
   console.log(req.params.credentials);
   let credentials = req.params.credentials;
   const decryptedString = cryptr.decrypt(credentials);
-  console.log(decryptedString);
+  console.log("DECRYPTED STRING", decryptedString);
 
   const id = decryptedString.split("|")[2];
+  const amount = decryptedString.split("|")[1];
+  // const typePmt = decryptedString.split("|")[0];
+  // console.log(typePmt)
+  // if (typePmt == true) {
+  //   typePmt = "Monthly"
+  // } else {
+  //   typePamt = "Annual"
+  // }
+
   console.log("ID", id);
-  let sql = `select payment_expires from client_profiles where id = ${id}`;
+  let sql = `select id, first_name,email,  businessName, payment_expires from client_profiles where id = ${id}`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -45,11 +55,27 @@ router.put("/paymentsuccess/:credentials", (req, res) => {
         console.log(error);
       } else {
         console.log(result);
+        console.log("R$$$$$$@@@@@@@@@@@@@@@@@", result);
+
+        let firstNameA = `Lisa & Nicole`;
+        let emailA = `lisa@suburbsdirectory.co.za`;
+        //   let expiryDateA = el.payment_expires;
+        let businessNameA = `Suburbs Directory`;
+        let messageA = `  You have received a <strong>Payment</strong><br>
+                            For: ${result[0].businessName} <br>
+                            email: ${result[0].email}<br>
+                            Amount: R${amount}<br>
+                            Client Name: ${result[0].first_name} 
+
+                            `;
+        console.log(messageA);
+        let subjectA = `Suburbs Directory Payment Received`;
+        paymentNotification(firstNameA, emailA, messageA, subjectA);
         res.json({
           result: result,
           decryptedString: decryptedString
         });
-      } 
+      }
     });
     connection.release();
   });
@@ -72,7 +98,6 @@ router.put("/processPayment", (req, res) => {
       if (error) {
         console.log("EEERRROOORRR", error);
       } else {
-        console.log(result);
         res.json(result[1]);
       }
     });
@@ -80,41 +105,61 @@ router.put("/processPayment", (req, res) => {
   });
 });
 
-// router.post("/v1/checkouts", function(req, res) {
-//   let data = JSON.stringify(req.body);
-//   console.log("##############################");
+let paymentNotification = function(firstNameA, emailA, messageA, subjectA) {
+  let response = {
+    success: "Your Email has been sent!",
+    failure: "There was a problem, please try again later"
+  };
+  let firstName = firstNameA;
+  console.log(firstName);
+  // let expiryDate = expiryDateA;
+  // let businessName = businessNameA
+  let email = emailA;
+  let message = messageA;
+  let subject = subjectA;
+  const output = `
+ 
+  <h3>Details</h3>
+  <ul>
+    <li>First Name: Dear ${firstName}</li><br>
+    <li>Email: ${email}</li><br>
+  </ul><br>
+  <h3>Message</h3><br>
+  <p>${message}</p>
+    `;
 
-//   console.log("This is my DATA: ", data);
-//   var path = "/v1/checkouts";
-//   let options = {
-//     port: 443,
-//     // host: "https://test.oppwa.com/",
-//     path: path,
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/x-www-form-urlencoded",
-//       "Content-Length": data.length,
-//       Authorization:
-//         "Bearer OGFjN2E0Y2E2YmIxNWE4MzAxNmJiMWY0NTI1OTAyYTJ8V1NEclpKeTlhNQ=="
-//     }
-//   };
+  let transporter = nodemailer.createTransport({
+    host: process.env.MAILHOST,
+    port: 465, //587
+    secure: true,
+    auth: {
+      user: process.env.MAILUSER,
+      pass: process.env.MAILPASSWORD
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
 
-//   console.log("##############################");
-//   axios.post("https://test.oppwa.com/", options).then(res => {
-//     console.log(res); //RESULT IS 200
+  let mailOptions = {
+    from: "Suburbs Directory Admin<lisa@suburbsdirectory.co.za>",
+    to: `${email}`,
+    cc: `nicole@suburbsdirectory.co.za, lisa@suburbsdirectory.co.za, waynebruton@icloud.com`,
+    subject: `${subject}`,
+    text: "Hello world?",
+    html: output
+  };
 
-//     // pool.getConnection(function(err, connection) {
-//     //   if (err) {
-//     //     connection.release();
-//     //     resizeBy.send("Error with connection");
-//     //   }
-//     //   connection.query(sql, function(error, result) {
-//     //     if (error) throw error;
-
-//     //     res.json(result);
-//     //   });
-//     //   connection.release();
-//   });
-// });
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      var messageResult = response.failure;
+      console.log("Error", error, messageResult);
+      // res.json({error: "Error"})
+    }
+    console.log("AWESOME");
+    var messageResult = response.success;
+    console.log("Success", info, messageResult);
+  });
+};
 
 module.exports = router;
