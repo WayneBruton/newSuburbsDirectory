@@ -160,7 +160,7 @@ create table users (
     resetexpiry TIMESTAMP DEFAULT NOW()
 ); 
 
-insert into users (email, Upassword) values ('waynebruton@icloud.com', 'password');
+insert into users (email, Upassword) values ('lisa@suburbsdirectory.co.za', 'password'), ('nicole@suburbsdirectory.co.za', 'password');
 
 CREATE TABLE charities (
     id INT AUTO_INCREMENT PRIMARY KEY,
