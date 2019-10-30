@@ -62,19 +62,19 @@
                 ></v-text-field>
                 <v-text-field
                   label="Website"
-                  placeholder="Enter your Website URL"
+                  placeholder="www."
                   autocomplete="false"
                   v-model="website"
                 ></v-text-field>
                 <v-text-field
                   label="Facebook"
-                  placeholder="Enter your Facebook link"
+                  placeholder="Copy & paste your Facebook link"
                   autocomplete="false"
                   v-model="faceBook"
                 ></v-text-field>
                 <v-text-field
                   label="Instagram"
-                  placeholder="Enter your instagram link"
+                  placeholder="Copy & paste your instagram link"
                   autocomplete="false"
                   v-model="instagram"
                 ></v-text-field>
@@ -236,7 +236,7 @@
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (areaCost * 12 * .8).toFixed(2)"
+                                  :value="'R' + (areaCost * 12 * .9).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -254,7 +254,7 @@
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (extraPackage1Cost * 12 * .8).toFixed(2)"
+                                  :value="'R' + (extraPackage1Cost * 12 * .9).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -288,7 +288,7 @@
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (extraPackage3Cost * 12 * .8).toFixed(2)"
+                                  :value="'R' + (extraPackage3Cost * 12 * .9).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -305,7 +305,7 @@
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (extraPackage4Cost * 12 * .8).toFixed(2)"
+                                  :value="'R' + (extraPackage4Cost * 12 * 1).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -322,7 +322,7 @@
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (extraPackage5Cost * 12 * .8).toFixed(2)"
+                                  :value="'R' + (extraPackage5Cost * 12 * 1).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -345,7 +345,7 @@
                                   class="text-xs-right"
                                   label="Annual"
                                   required
-                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost + extraPackage4Cost + extraPackage5Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                  :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .9)+((extraPackage2Cost + extraPackage4Cost + extraPackage5Cost) * 12)).toFixed(2)"
                                   readonly
                                 ></v-text-field>
                               </v-layout>
@@ -367,7 +367,7 @@
                                   <v-text-field
                                     class="text-xs-right"
                                     required
-                                    :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost + extraPackage4Cost + extraPackage5Cost) * 12 * .8)+(extraPackage2Cost * 12)).toFixed(2)"
+                                    :value="'R' + (((extraPackage1Cost + areaCost + extraPackage3Cost) * 12 * .9)+((extraPackage2Cost + extraPackage4Cost + extraPackage5Cost) * 12)).toFixed(2)"
                                     readonly
                                   ></v-text-field>
                                 </div>
@@ -388,12 +388,12 @@
                         >
                           <form
                             action="https://www.payfast.co.za/eng/process"
-                            name="form_ad990b487f6e182cd44e0c189204bb70"
-                            onsubmit="return click_ad990b487f6e182cd44e0c189204bb70( this );"
+                            name="form_6bad5ca80c7f0692985e881b8dc9d22c"
+                            onsubmit="return click_6bad5ca80c7f0692985e881b8dc9d22c( this );"
                             method="post"
                           >
                             <input type="hidden" name="cmd" value="_paynow" />
-                            <input type="hidden" name="receiver" value="10469596" />
+                            <input type="hidden" name="receiver" value="14103754" />
                             <input
                               type="hidden"
                               name="item_name"

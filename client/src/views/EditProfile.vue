@@ -59,13 +59,13 @@
                 ></v-text-field>
                 <v-text-field
                   label="Facebook"
-                  placeholder="Enter your Facebook link"
+                  placeholder="Copy & paste your Facebook link"
                   autocomplete="false"
                   v-model="faceBook"
                 ></v-text-field>
                 <v-text-field
                   label="Instagram"
-                  placeholder="Enter your instagram link"
+                  placeholder="Copy & paste your instagram link"
                   autocomplete="false"
                   v-model="instagram"
                 ></v-text-field>
@@ -194,12 +194,12 @@
                   <div style="display: flex; justify-content: center;">
                     <form
                       action="https://www.payfast.co.za/eng/process"
-                      name="form_ad990b487f6e182cd44e0c189204bb70"
-                      onsubmit="return click_ad990b487f6e182cd44e0c189204bb70( this );"
+                      name="form_6bad5ca80c7f0692985e881b8dc9d22c"
+                      onsubmit="return click_6bad5ca80c7f0692985e881b8dc9d22c( this );"
                       method="post"
                     >
                       <input type="hidden" name="cmd" value="_paynow" />
-                      <input type="hidden" name="receiver" value="10469596" />
+                      <input type="hidden" name="receiver" value="14103754" />
                       <input type="hidden" name="item_name" value="Suburbs Directory Subscription" />
                       <input type="hidden" name="amount" :value="amountToPay" />
                       <input
@@ -381,17 +381,17 @@ export default {
     this.extraPackages = extraPackagesResponse.data;
     if (this.optionChosen === 1) {
       this.suburbsPayMonthly = this.packages[0].per_month.toFixed(2);
-      this.suburbsPayAnnually = (this.suburbsPayMonthly * 12 * 0.8).toFixed(2);
+      this.suburbsPayAnnually = (this.suburbsPayMonthly * 12 * 0.9).toFixed(2);
     } else if (this.optionChosen === 2) {
       this.suburbsPayMonthly = this.packages[1].per_month.toFixed(2);
-      this.suburbsPayAnnually = (this.suburbsPayMonthly * 12 * 0.8).toFixed(2);
+      this.suburbsPayAnnually = (this.suburbsPayMonthly * 12 * 0.9).toFixed(2);
     }
 
     this.extraPackages.forEach(el => {
-      if (el.option_name.includes("Assist")) {
-        el.annualDiscount = false;
-      } else {
+      if (el.option_name.includes("Cover")) {
         el.annualDiscount = true;
+      } else {
+        el.annualDiscount = false;
       }
     });
     this.extraPackagesChosen.push(1);
@@ -421,7 +421,7 @@ export default {
       this.extraPackageAnnually = totalExtras
         .reduce((total, current) => {
           if (current.annualDiscount === true) {
-            total = total + current.per_month * 12 * 0.8;
+            total = total + current.per_month * 12 * 0.9;
           } else {
             total = total + current.per_month * 12;
           }

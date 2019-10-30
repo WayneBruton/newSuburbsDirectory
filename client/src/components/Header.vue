@@ -49,10 +49,10 @@
     <v-toolbar-items>
       <v-btn class="#305f72 notHamburger" flat :to="{ name: 'charities' }">Charity</v-btn>
     </v-toolbar-items>
-    <v-toolbar-items>
+    <!-- <v-toolbar-items>
       <v-btn class="#305f72 notHamburger" flat :to="{ name: 'todo' }">Todo</v-btn>
-    </v-toolbar-items>
-    <v-spacer></v-spacer>
+    </v-toolbar-items> -->
+    <!-- <v-spacer></v-spacer> -->
     <v-toolbar-items>
       <v-btn class="#305f72 notHamburger" flat :to="{ name: 'pricing' }">
         Pricing
@@ -185,10 +185,10 @@
         </v-list-tile>
         <v-divider></v-divider>
         <v-divider></v-divider>
-        <v-list-tile class="hamburgerMenu" :to="{ name: 'todo' }">
+        <!-- <v-list-tile class="hamburgerMenu" :to="{ name: 'todo' }">
           <v-list-tile-title>TODO</v-list-tile-title>
         </v-list-tile>
-        <v-divider></v-divider>
+        <v-divider></v-divider> -->
         <v-list-tile class="hamburgerMenu" v-if="!this.$store.state.loggedIn" :to="{ name: 'login' }">
           <v-list-tile-title>Login</v-list-tile-title>
         </v-list-tile>

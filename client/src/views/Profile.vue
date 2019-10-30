@@ -1,6 +1,9 @@
 <template>
+
   <div class="about">
+<br>
     <v-container>
+    
       <v-layout column justify-space-around>
         <v-flex xs12 sm8 md4>
           <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
@@ -17,6 +20,8 @@
           :autoplay="true"
           :autoplay-timeout="2000"
           :display="3"
+          :width="500"
+          :height="300"
         >
           <slide class="img" :index="0">
             <img class="about1" :src="profile_image" alt="LOGO" />
@@ -36,7 +41,7 @@
         <hr />
         <br />
         <!-- <v-rating readonly half-increments light v-model="ratingsToDate">
-        </v-rating> -->
+        </v-rating>-->
         <div style="display: flex; justify-content: space-around">
           <div style="display: flex; flex-direction: column;">
             <div>
@@ -68,36 +73,22 @@
         <br />
         <br />
         <hr />
-        <v-flex
-          xs12
-          sm12
-          md12
-          offset-xs0
-          offset-md0
-          offset-sm0
-          justify-space-evenly
-        >
+        <v-flex xs12 sm12 md12 offset-xs0 offset-md0 offset-sm0 justify-space-evenly>
           <!-- <v-textarea v-model="profile_description" readonly rows="20"> -->
-         
+
           <!-- </v-textarea> -->
 
-           <div v-html="profile_description" readonly rows="20"></div>
+          <div v-html="profile_description" readonly rows="20"></div>
         </v-flex>
         <br />
         <h3>Share</h3>
         <br />
         <br />
-        <social-sharing
-          url="https://www.suburbsdirectory.co.za"
-          inline-template
-        >
+        <social-sharing url="https://www.suburbsdirectory.co.za" inline-template>
           <div id="network" style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
             <network network="facebook" style="margin: 10px;">
               <i class="fab fa-facebook-square fa-2x" style="color: #366ed8;"></i>
             </network>
-            <!-- <network network="googleplus" style="margin: 10px;">
-              <i class="fab fa-google-plus-g fa-2x" style="color: red;"></i>
-            </network> -->
             <network network="linkedin" style="margin: 10px;">
               <i class="fab fa-linkedin fa-2x" style="color: #556fb5;"></i>
             </network>
@@ -127,9 +118,7 @@
           type="error"
           v-if="error"
           style="width: 100%;"
-        >
-          {{ error }}
-        </v-alert>
+        >{{ error }}</v-alert>
         <v-layout column justify-space-around>
           <v-flex>
             <h4>Rate "{{ businessName }}"</h4>
@@ -139,7 +128,9 @@
             </h5>
             <br />
             <br />
-            <vue-disqus shortname="waynesite" :identifier="profileId"></vue-disqus> 
+            <div class="comments">
+              <vue-disqus shortname="waynesite" :identifier="profileId"></vue-disqus>
+            </div>
             <!-- <h6>
               If an email address does not exist, the comment will be deleted.
             </h6>
@@ -147,7 +138,7 @@
               If comments appear unreasonable, admin reserves the right to
               contact the poster, should no response be received, Admin can and
               will delete the comment..
-            </h6> -->
+            </h6>-->
             <br />
           </v-flex>
           <br />
@@ -169,7 +160,7 @@
             >
             </v-rating>
             <v-btn light color="#F4EBDE" @click="updateRatings">Rate</v-btn>
-          </div> -->
+          </div>-->
         </v-layout>
         <br />
         <br />
@@ -197,7 +188,7 @@
               </label>
             </li>
           </ul>
-        </div> -->
+        </div>-->
       </v-layout>
     </v-container>
   </div>
@@ -243,32 +234,36 @@ export default {
   // async beforemount() {
   async beforeMount() {
     this.profileId = this.$store.state.selectedProfile;
-    let response = await DirectoryService.getProfile(this.profileId); 
+    let response = await DirectoryService.getProfile(this.profileId);
     this.items = response.data;
     this.items.forEach(el => {
       this.profile_image = `${process.env.VUE_APP_IMAGEURL}${el.profile_image}`;
-      this.business_image1 = `${process.env.VUE_APP_IMAGEURL}${
-        el.business_image1
-      }`;
-      this.business_image2 = `${process.env.VUE_APP_IMAGEURL}${
-        el.business_image2
-      }`;
-      this.business_image3 = `${process.env.VUE_APP_IMAGEURL}${
-        el.business_image3
-      }`;
+      this.business_image1 = `${process.env.VUE_APP_IMAGEURL}${el.business_image1}`;
+      this.business_image2 = `${process.env.VUE_APP_IMAGEURL}${el.business_image2}`;
+      this.business_image3 = `${process.env.VUE_APP_IMAGEURL}${el.business_image3}`;
       this.businessName = el.businessName;
       this.email = "mailTo:" + el.email;
-      this.facebook = 'http://' + el.facebook;
+      this.facebook = el.facebook;
       this.first_name = el.first_name;
-      this.instagram = 'http://' + el.instagram;
+      this.instagram = el.instagram;
       this.last_name = el.last_name;
       this.mob_no = el.mob_no;
       this.profile_description = el.profile_description;
-      this.website = 'http://' + el.website;
+      this.website = el.website;
     });
-    console.log("This is the website",this.website)
-    console.log("This is the Facebook",this.facebook)
-    console.log("profile ID", this.profileId)
+    let web = this.website;
+    if (
+      web.substring(0, 7) === "http://" ||
+      web.substring(0, 8) === "https://"
+    ) {
+      this.website = web;
+    } else {
+      this.website = "http://" + web;
+    }
+    console.log("This is the website", this.website);
+    console.log("This is the Facebook", this.facebook);
+    console.log("This is the Instagram", this.instagram);
+    console.log("profile ID", this.profileId);
     this.getRatings();
   },
   methods: {
@@ -316,7 +311,6 @@ export default {
 </script>
 
 <style scoped>
-
 .img {
   background-color: white;
   /* border: transparent; */

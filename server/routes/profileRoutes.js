@@ -20,7 +20,10 @@ function jwtSignUser(user) {
 }
 
 const upload = multer({
-  dest: "./public/uploads/"
+  dest: "./public/uploads/",
+  limits: {
+    fieldSize: 100 * 1024 * 1024
+  }
 });
 
 // SET/USE TOKEN

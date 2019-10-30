@@ -59,7 +59,7 @@
         <br />
         <v-flex xs12 sm8 md10 offset-md1>
           <p>
-            * We offer a 20% discount if you pay upfront for the year.
+            * We offer a 10% discount if you pay upfront for the year.
             This does not apply to admin assist.
             <br />* If you would like to advertise for 1 month only please
             contact us to discuss our once off advertising fee.
@@ -100,39 +100,39 @@ export default {
           name: "Per suburb (facebook group) / per month",
           details: "Mondays only",
           monthly: 90,
-          annual: 864,
-          discount: "20%"
+          annual: 972,
+          discount: "10%"
         },
         {
           name: "Per suburb (facebook group) / per month",
           details: "Monday & Thursday",
           monthly: 120,
-          annual: 1152,
-          discount: "20%"
+          annual: 1296,
+          discount: "10%"
         },
         {
           name: "Constantia & Surrounds / per month",
           details: `*Please note to make use of this service you need to be signed up to post
                     in Southern Suburbs Sell & Swop.`,
           monthly: 25,
-          annual: 240,
-          discount: "20%"
+          annual: 300,
+          discount: "n/a"
         },
         {
           name: "Bishops Court Community Group / per month",
           details: `*Please note to make use of this service you need to be signed up to post
                     in Southern Suburbs Sell & Swop.`,
           monthly: 25,
-          annual: 240,
-          discount: "20%"
+          annual: 300,
+          discount: "n/a"
         },
         {
           name: "Upper Claremont Community Group / per month",
           details: `*Please note to make use of this service you need to be signed up to post
                     in Southern Suburbs Sell & Swop.`,
           monthly: 25,
-          annual: 240,
-          discount: "20%"
+          annual: 300,
+          discount: "n/a"
         },
         {
           name: `Admin assist / per month / per
@@ -152,7 +152,7 @@ export default {
                     exposure your business can receive.`,
           monthly: 1200,
           annual: 11520,
-          discount: "20%"
+          discount: "10%"
         }
       ],
       isMobile: false
@@ -168,39 +168,39 @@ export default {
             name: "Per suburb (facebook group) / per month",
             details: "Mondays only",
             monthly: 90,
-            annual: 864,
-            discount: "20%"
+            annual: 972,
+            discount: "10%"
           },
           {
             name: "Per suburb (facebook group) / per month",
             details: "Monday & Thursday",
             monthly: 120,
-            annual: 1152,
-            discount: "20%"
+            annual: 1296,
+            discount: "10%"
           },
           {
             name: "Constantia & Surrounds / per month",
             details: `*Please note to make use of this service you need to be signed up to post
                     in Southern Suburbs Sell & Swop.`,
             monthly: 25,
-            annual: 240,
-            discount: "20%"
+            annual: 300,
+            discount: "n/a"
           },
           {
             name: "Bishops Court Community Group / per month",
             details: `*Please note to make use of this service you need to be signed up to post
                     in Southern Suburbs Sell & Swop.`,
             monthly: 25,
-            annual: 240,
-            discount: "20%"
+            annual: 300,
+            discount: "n/a"
           },
           {
             name: "Upper Claremont Community Group / per month",
             details: `*Please note to make use of this service you need to be signed up to post
                     in Southern Suburbs Sell & Swop.`,
             monthly: 25,
-            annual: 240,
-            discount: "20%"
+            annual: 300,
+            discount: "n/a"
           },
           {
             name: `Admin assist / per month / per
@@ -219,8 +219,8 @@ export default {
                     group cover photo is the maximum amount of
                     exposure your business can receive.`,
             monthly: 1200,
-            annual: 11520,
-            discount: "20%"
+            annual: 12960,
+            discount: "10%"
           }
         ];
       } else {
@@ -229,36 +229,36 @@ export default {
             name: "Per suburb per month",
             details: "Mondays only",
             monthly: 90,
-            annual: 864,
-            discount: "20%"
+            annual: 972,
+            discount: "10%"
           },
           {
             name: "Per suburb per month",
             details: "Monday & Thursday",
             monthly: 120,
-            annual: 1152,
-            discount: "20%"
+            annual: 1296,
+            discount: "10%"
           },
           {
             name: "Constantia & Surrounds",
             details: `Only members of Southern Suburbs Sell & Swop.`,
             monthly: 25,
-            annual: 240,
-            discount: "20%"
+            annual: 300,
+            discount: "n/a"
           },
           {
             name: "Bishops Court Community Group",
              details: `Only members of Southern Suburbs Sell & Swop.`,
             monthly: 25,
-            annual: 240,
-            discount: "20%"
+            annual: 300,
+            discount: "n/a"
           },
           {
             name: "Upper Claremont Community Group",
              details: `Only members of Southern Suburbs Sell & Swop.`,
             monthly: 25,
-            annual: 240,
-            discount: "20%"
+            annual: 300,
+            discount: "n/a"
           },
           {
             name: `Admin assist per
@@ -274,8 +274,8 @@ export default {
             details: `Get maximum 
                     exposure for your business.`,
             monthly: 1200,
-            annual: 11520,
-            discount: "20%"
+            annual: 12960,
+            discount: "10%"
           }
         ];
       }
