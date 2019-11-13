@@ -284,6 +284,7 @@ console.log("EEEXTRAAA!!!!", req.body.extra_packages)
 
       ////////////////////////
       if (base64Image !== null) {
+        console.log("AWESOME THEN")
         fs.writeFile(
           `public/images/profiles/${id}ProfilePic.png`,
           base64Image,
@@ -352,5 +353,27 @@ console.log("EEEXTRAAA!!!!", req.body.extra_packages)
     connection.release();
   });
 });
+
+router.get("/getSearchedCategory/:category", function(req, res) {
+  console.log(req.params.category);
+  let category_chosen = req.params.category
+  var sql = `SELECT id, businessName, profile_image 
+  FROM client_profiles
+  WHERE JSON_CONTAINS(catarea, '${category_chosen}');`;
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(sql, function(error, result) {
+      if (error) throw error;
+
+      res.json(result);
+    });
+    connection.release();
+  });
+});
+
+
 
 module.exports = router;

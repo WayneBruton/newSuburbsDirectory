@@ -137,5 +137,12 @@ export default {
   },
   resetAdminPassword(credentials) {
     return Api().put(`/resetAdminPassword`, credentials);
+  },
+  getTimezone() {
+    return Api().get(`/getTimezone`);
+  },
+  getSearchedCategory(credentials) {
+    console.log("Searching by category:", credentials);
+    return Api().get(`/getSearchedCategory/${credentials}`);
   }
 };

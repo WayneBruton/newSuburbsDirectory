@@ -56,8 +56,8 @@
                 <v-text-field
                   label="Contact Number"
                   placeholder="Contact Number"
-                  type="number"
                   autocomplete="false"
+                  v-mask="'(###) ###-####'"
                   v-model="contactNumber"
                 ></v-text-field>
                 <v-text-field
@@ -616,8 +616,8 @@ export default {
       } else {
         profileID = this.$store.state.profile;
       }
-      let dateNow = new Date()
-      console.log("DateNow",dateNow)
+      let dateNow = new Date();
+      console.log("DateNow", dateNow);
       let credentials = {
         monthly: this.payMonthly,
         amount: this.amountToPay,

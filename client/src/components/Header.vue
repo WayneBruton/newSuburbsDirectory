@@ -58,6 +58,14 @@
         Pricing
       </v-btn>
     </v-toolbar-items>
+    <v-spacer></v-spacer>
+
+    <v-toolbar-items>
+      <v-btn class="#305f72 notHamburger" flat :to="{ name: 'search' }">
+        Search
+         <v-icon right class="ml-2">search</v-icon>
+      </v-btn>
+    </v-toolbar-items>
     <!-- /////////////////// -->
 
     <v-toolbar-items class="dropDown scroll-y" style="max-height: 100px;">
@@ -120,6 +128,7 @@
           </v-list-tile>
           <v-divider></v-divider>
         </v-list>
+        
       </v-menu>
     </v-toolbar-items>
     <!-- /////////////// -->
@@ -184,11 +193,11 @@
           <v-list-tile-title>Pricing</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-divider></v-divider>
-        <!-- <v-list-tile class="hamburgerMenu" :to="{ name: 'todo' }">
-          <v-list-tile-title>TODO</v-list-tile-title>
+          <v-list-tile class="hamburgerMenu" :to="{ name: 'search' }">
+          <v-list-tile-title>Search
+            <v-icon left>search</v-icon>
+          </v-list-tile-title>
         </v-list-tile>
-        <v-divider></v-divider> -->
         <v-list-tile class="hamburgerMenu" v-if="!this.$store.state.loggedIn" :to="{ name: 'login' }">
           <v-list-tile-title>Login</v-list-tile-title>
         </v-list-tile>

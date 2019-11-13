@@ -64,8 +64,11 @@ export default {
       ]
     };
   },
-  created() {
+  async created() {
     this.loadFAQ()
+    let response = await DirectoryService.getTimezone()
+    console.log(response.data)
+
   },
   methods: {
     async loadFAQ() {

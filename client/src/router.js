@@ -25,6 +25,7 @@ import Todo from "./views/Todo.vue";
 import PaymentSuccessfull from "./views/PaymentSuccessfull.vue";
 import PaymentNotSuccessfull from "./views/PaymentNotSuccessfull.vue";
 import LoginAdmin from "./views/LoginAdmin.vue";
+import Search from "./views/Search.vue";
 
 Vue.use(Router);
 
@@ -157,5 +158,10 @@ export default new Router({
       name: "resetAdminPassword",
       component: ResetAdminPassword
     },
+    {
+      path: "/search",
+      name: "search",
+      component: Search
+    }
   ]
 });

@@ -2,7 +2,6 @@
   <v-container>
     <!-- <img src="../assets/heart_PNG51352.png" alt="LOGO" style="width: 10%;" /> -->
     <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
-
     <v-flex xs12>
       <h1>Add Notice</h1>
       <v-container xs12>
@@ -17,13 +16,20 @@
           <!-- <input type="text" placeholder="Notice Title Here" style="width: 100%; font-size: 120%;"> -->
           <v-text-field label="Title" placeholder="title" v-model="title" outline></v-text-field>
           <br />
+          <!-- <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor> -->
           <br />
-          <!-- <vue-editor v-model="content" :editorToolbar="customToolbar" @change="test"></vue-editor> -->
-          <vue-editor
+          <!-- <vue-editor
             id="editor"
-            :editorToolbar="customToolbar"
             useCustomImageHandler
             @imageAdded="handleImageAdded"
+            v-model="htmlForEditor"
+          ></vue-editor>-->
+          <!-- <vue-editor v-model="content" :editorToolbar="customToolbar" @change="test"></vue-editor> -->
+          <!-- :editorToolbar="customToolbar" -->
+          <vue-editor
+            id="editor"
+            useCustomImageHandler
+            @image-added="handleImageAdded"
             v-model="htmlForEditor"
           ></vue-editor>
           <br />
@@ -67,6 +73,8 @@
 <script>
 import DirectoryService from "@/services/DirectoryServices";
 import { VueEditor } from "vue2-editor";
+import axios from "axios";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 export default {
   data() {
     return {
@@ -75,11 +83,17 @@ export default {
       customToolbar: [
         ["bold", "italic", "underline"],
         [{ list: "ordered" }, { list: "bullet" }],
-        ["image", "code-block"]
+        ["image"]
       ],
       notices: [],
       snackbar: false,
       snackBarMessage: ""
+
+      // editor: ClassicEditor,
+      // editorData: "<p>Rich-text editor content.</p>",
+      // editorConfig: {
+      //   // The configuration of the rich-text editor.
+      // }
     };
   },
   components: {
@@ -131,20 +145,44 @@ export default {
         );
       });
     },
+    // handleImageAdded: function(file, Editor, cursorLocation, resetUploader) {
+    //   var formData = new FormData();
+    //   formData.append("image", file);
+    //   console.log("This is the formData",formData)
+    //   let url;
+    //   DirectoryService.addNoticeImage(formData)
+    //     .then(response => {
+    //       url = response.data.url;
+    //       console.log(url);
+    //       Editor.insertEmbed(cursorLocation, "image", url);
+    //       resetUploader();
+    //     })
+    //     .catch(err => {
+    //       console.log("Error Here!!!", err);
+    //     });
+    // },
     handleImageAdded: function(file, Editor, cursorLocation, resetUploader) {
+      // An example of using FormData
+      // NOTE: Your key could be different such as:
+      // formData.append('file', file)
+
       var formData = new FormData();
       formData.append("image", file);
-      console.log("image", file);
-      let url;
-      DirectoryService.addNoticeImage(formData)
-        .then(response => {
-          url = response.data.url;
-          console.log(url);
+      console.log(formData);
+      console.log("Testing");
+
+      axios({
+        url: "http://localhost:3000/addNoticeImage",
+        method: "POST",
+        data: formData
+      })
+        .then(result => {
+          let url = result.data.url; // Get url from response
           Editor.insertEmbed(cursorLocation, "image", url);
           resetUploader();
         })
         .catch(err => {
-          console.log("Error Here!!!", err);
+          console.log(err);
         });
     },
     postNotice() {
@@ -163,6 +201,7 @@ export default {
           .then(response => {
             console.log(response.data.result);
             this.loadNotices();
+            this.htmlForEditor = "";
           })
           .catch(err => {
             console.log(err);

@@ -12,6 +12,11 @@ import VTooltip from "v-tooltip";
 import Ripple from "vue-ripple-directive";
 import Chartkick from "vue-chartkick";
 import Chart from "chart.js";
+import CKEditor from "@ckeditor/ckeditor5-vue";
+import VueMask from "v-mask";
+Vue.use(VueMask);
+
+Vue.use(CKEditor);
 
 Vue.use(Chartkick.use(Chart));
 

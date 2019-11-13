@@ -9,7 +9,9 @@ const upload = multer({
   });
 
 router.post("/addNoticeImage", upload.single("image"), function(req, res) {
+  console.log(req)
     let file = req.file;
+    console.log(file)
     let filename = req.file.filename;
     let mimetype = req.file.mimetype.split("/");
     mimetype = mimetype[1];
@@ -20,7 +22,7 @@ router.post("/addNoticeImage", upload.single("image"), function(req, res) {
     console.log(file);
     fs.rename(oldPath, newPath, () => {
       console.log("Moved");
-      console.log(url);
+      console.log(url); 
       res.json({ url: url });
     });
   });

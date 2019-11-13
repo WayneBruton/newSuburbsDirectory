@@ -3,7 +3,17 @@ const router = express.Router();
 const pool = require("./connection");
 const cron = require("node-cron");
 const moment = require("moment");
+const momentTZ = require("moment-timezone");
 const nodemailer = require("nodemailer");
+
+router.get('/getTimezone', (req,res)=>{
+  let newTimeZone = moment.tz.guess()
+  res.json({ timezone: newTimeZone})
+
+});
+
+let currentTimezone = moment.tz.guess()
+// console.log(currentTimezone)
 
 cron.schedule(
   "0 3 * * *",
@@ -13,7 +23,8 @@ cron.schedule(
   },
   {
     scheduled: true,
-    timezone: "Africa/Johannesburg"
+    timezone: currentTimezone
+    // timezone: "Africa/Johannesburg"
   }
 );
 
@@ -25,19 +36,23 @@ cron.schedule(
   },
   {
     scheduled: true,
-    timezone: "Africa/Johannesburg"
+    timezone: currentTimezone
+    // timezone: "Africa/Johannesburg"
   }
 );
 
 cron.schedule(
   "30 3 * * *",
+  // "* * * * *",
   () => {
-    console.log("Running a job at 09:12 at Africa/Johannesburg timezone");
-    checkStatistics()
+    console.log("Running a job at 09:12 at Europe/Berlin timezone");
+    // checkStatistics()
   },
   {
     scheduled: true,
-    timezone: "Africa/Johannesburg"
+    // timezone: "Africa/Johannesburg"
+    timezone: currentTimezone
+    // timezone: CET
   }
 );
 

@@ -306,7 +306,7 @@ export default {
       switch1: true,
       switchLabel: "Monthly",
 
-       profile_approved: false,
+      profile_approved: false,
       paid_to_date: false,
       payment_expires: null,
 
@@ -355,7 +355,7 @@ export default {
     this.profile_approved = profile.data[0].profile_approved;
     this.paid_to_date = profile.data[0].paid_to_date;
     this.payment_expires = profile.data[0].payment_expires;
-    console.log("Expiry at",this.payment_expires)
+    console.log("Expiry at", this.payment_expires);
     let img = process.env.VUE_APP_IMAGEURL;
     this.originalImage = `${img}${profile.data[0].profile_image}`;
     this.originalImage1 = `${img}${profile.data[0].business_image1}`;
@@ -493,7 +493,7 @@ export default {
         this.switchLabel = "Annual";
         this.payMonthly = "false";
       }
-      let dateNow = new Date()
+      let dateNow = new Date();
       let profileID = this.id;
       let credentials = {
         monthly: this.payMonthly,
@@ -544,7 +544,7 @@ export default {
         }
         return el.categoryChosen === true;
       });
-      console.log(categoryCount)
+      console.log(categoryCount);
     },
     async checkEmail() {
       let email = {
@@ -611,7 +611,7 @@ export default {
         }, 1500);
       } else {
         let response = await DirectoryService.editProfile(formData);
-        console.log(response)
+        console.log(response);
         this.success = "You have successfully updated your profile";
         setTimeout(() => {
           this.$router.push({ name: "home" });
