@@ -208,7 +208,6 @@ router.post("/addProfile", upload.array(), function(req, res) {
   });
 });
 
-
 router.post("/editProfile", upload.array(), function(req, res) {
   console.log(req.body);
   var base64Data = req.body.file;
@@ -236,8 +235,8 @@ router.post("/editProfile", upload.array(), function(req, res) {
   if (base64Data3 !== "") {
     base64Image3 = base64Data3.split(";base64,").pop();
   }
-console.log("EEEXTRAAA!!!!", req.body.extra_packages)
-  let initPackagesArray = []
+  console.log("EEEXTRAAA!!!!", req.body.extra_packages);
+  let initPackagesArray = [];
   if (req.body.extra_packages !== NaN) {
     initPackagesArray = req.body.extra_packages.split(",");
     for (i = 0; i < initPackagesArray.length; i++) {
@@ -247,8 +246,8 @@ console.log("EEEXTRAAA!!!!", req.body.extra_packages)
     extra_packages = [0];
   }
 
-  let areas = []
-  let initAreasArray = []
+  let areas = [];
+  let initAreasArray = [];
   if (req.body.areas !== "") {
     initAreasArray = req.body.areas.split(",");
     for (i = 0; i < initAreasArray.length; i++) {
@@ -266,9 +265,11 @@ console.log("EEEXTRAAA!!!!", req.body.extra_packages)
   console.log("CatArea", catarea);
 
   let id = req.body.id;
-  let payment_expires = moment(req.body.payment_expires).format("YYYY-MM-DD HH:mm")
+  let payment_expires = moment(req.body.payment_expires).format(
+    "YYYY-MM-DD HH:mm"
+  );
 
-  console.log(payment_expires)
+  console.log(payment_expires);
 
   let sql = `update client_profiles set businessName = "${req.body.businessName}",first_name = "${req.body.firstName}",last_name = "${req.body.lastName}", 
       mob_no = "${req.body.contactNumber}",email = "${req.body.email}", website = "${req.body.website}",facebook = "${req.body.facebook}",instagram = "${req.body.instagram}",
@@ -284,7 +285,7 @@ console.log("EEEXTRAAA!!!!", req.body.extra_packages)
 
       ////////////////////////
       if (base64Image !== null) {
-        console.log("AWESOME THEN")
+        console.log("AWESOME THEN");
         fs.writeFile(
           `public/images/profiles/${id}ProfilePic.png`,
           base64Image,
@@ -356,10 +357,10 @@ console.log("EEEXTRAAA!!!!", req.body.extra_packages)
 
 router.get("/getSearchedCategory/:category", function(req, res) {
   console.log(req.params.category);
-  let category_chosen = req.params.category
+  let category_chosen = req.params.category;
   var sql = `SELECT id, businessName, profile_image 
   FROM client_profiles
-  WHERE JSON_CONTAINS(catarea, '${category_chosen}');`;
+  WHERE JSON_CONTAINS(catarea, '${category_chosen}')  and profile_approved = true and paid_to_date = true;`;
   pool.getConnection(function(err, connection) {
     if (err) {
       connection.release();
@@ -373,7 +374,5 @@ router.get("/getSearchedCategory/:category", function(req, res) {
     connection.release();
   });
 });
-
-
 
 module.exports = router;

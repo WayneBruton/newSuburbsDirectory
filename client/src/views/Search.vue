@@ -57,6 +57,11 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-layout v-else>
+      <v-flex>
+        <h3>There are no profiles in this category</h3>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -81,10 +86,17 @@ export default {
       };
       this.categories.push(item);
     });
+    if (this.$store.state.selectedSearchCategory !== null) {
+      this.category_chosen = this.$store.state.selectedSearchCategory;
+      this.searchChosen()
+    }
+    
+    // console.log("Store Value",this.$store.state.selectedSearchCategory)
   },
 
   methods: {
     async searchChosen() {
+      console.log(this.category_chosen)
       let response = await DirectoryService.getSearchedCategory(
         this.category_chosen
       );
@@ -92,6 +104,10 @@ export default {
         el.profile_image = `${process.env.VUE_APP_IMAGEURL}${el.profile_image}`;
       });
       this.profiles_selected = response.data;
+      let categoryID = this.category_chosen
+      console.log(categoryID)
+      this.$store.dispatch("setSelectedSearchCategory", categoryID);
+      console.log("Store Value",this.$store.state.selectedSearchCategory)
     },
     chooseProfile(event) {
       let targetId = event.currentTarget.id;
@@ -104,6 +120,6 @@ export default {
 
 <style scoped>
 .imageLoaded {
-  padding: 7px 7px ;
+  padding: 7px 7px;
 }
 </style>

@@ -21,6 +21,7 @@ export default new Vuex.Store({
     selectedProfile: null,
     selectedProfileAdminUsage: null,
     uploadedImage: "",
+    selectedSearchCategory: null,
 
     adminToken: null,
     isAdminUserLoggedIn: null,
@@ -74,6 +75,9 @@ export default new Vuex.Store({
       state.isAdminUserLoggedIn = true;
       state.adminEmail = user.email;
       state.adminId = user.id;
+    },
+    setSelectedSearchCategory(state, categoryID) {
+      state.selectedSearchCategory = categoryID;
     }
   },
   actions: {
@@ -112,6 +116,9 @@ export default new Vuex.Store({
     },
     setAdminUser({ commit }, user) {
       commit("setAdminUser", user);
+    },
+    setSelectedSearchCategory({ commit }, categoryID) {
+      commit("setSelectedSearchCategory", categoryID);
     }
   }
 });

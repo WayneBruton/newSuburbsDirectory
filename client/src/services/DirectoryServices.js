@@ -24,7 +24,7 @@ export default {
     return Api().post(`/addProfile`, credentials);
   },
   getProfile(credentials) {
-    console.log(credentials)
+    console.log(credentials);
     return Api().get(`/getProfile/${credentials}`);
   },
   getRatings(credentials) {
