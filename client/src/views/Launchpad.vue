@@ -338,6 +338,9 @@ li {
 .buttons {
   width: 40%;
 }
+.buttons:hover {
+  cursor: pointer;
+}
 .mobileStyles {
   display: flex;
   flex-direction: column;

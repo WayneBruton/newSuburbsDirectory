@@ -55,7 +55,7 @@ router.get("/categories/:areaId", (req, res) => {
       res.json(result);
     });
     connection.release();
-  });
+  }); 
 });
 
 router.put("/profiles", (req, res) => {

@@ -6,6 +6,8 @@
 
     <v-flex xs12>
       <h1>Charities</h1>
+      <h2>This is a sample test</h2>
+      <h2>Charity coming soon</h2>
       <v-container>
         <br />
         <br />

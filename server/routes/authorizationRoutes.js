@@ -77,7 +77,7 @@ router.put("/resetPasswordLink", (req, res) => {
     pool.getConnection(function(err, connection) {
       if (err) {
         connection.release();
-        resizeBy.send("Error with connection");
+        resizeBy.send("Error with connection"); 
       }
       connection.query(mysql, function(error, result) {
         if (error) {

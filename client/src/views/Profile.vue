@@ -1,9 +1,7 @@
 <template>
-
   <div class="about">
-<br>
+    <br />
     <v-container>
-    
       <v-layout column justify-space-around>
         <v-flex xs12 sm8 md4>
           <img src="../assets/newLogo.png" alt="LOGO" style="width: 7.5%;" />
@@ -47,7 +45,7 @@
             <div>
               <label for style="font-weight: bold;">Proprietor:</label>
               <label for>{{ first_name }}</label>
-              <label for>{{ last_name }}</label>
+              <label for> {{ last_name }}</label>
             </div>
             <div>
               <label for style="font-weight: bold;">Contact Number:</label>
@@ -73,7 +71,16 @@
         <br />
         <br />
         <hr />
-        <v-flex xs12 sm12 md12 offset-xs0 offset-md0 offset-sm0 justify-space-evenly>
+        <br />
+        <v-flex
+          xs12
+          sm12
+          md12
+          offset-xs0
+          offset-md0
+          offset-sm0
+          justify-space-evenly
+        >
           <!-- <v-textarea v-model="profile_description" readonly rows="20"> -->
 
           <!-- </v-textarea> -->
@@ -84,10 +91,19 @@
         <h3>Share</h3>
         <br />
         <br />
-        <social-sharing url="https://www.suburbsdirectory.co.za" inline-template>
-          <div id="network" style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+        <social-sharing
+          url="https://www.suburbsdirectory.co.za"
+          inline-template
+        >
+          <div
+            id="network"
+            style="display: flex; justify-content: space-evenly; flex-wrap: wrap;"
+          >
             <network network="facebook" style="margin: 10px;">
-              <i class="fab fa-facebook-square fa-2x" style="color: #366ed8;"></i>
+              <i
+                class="fab fa-facebook-square fa-2x"
+                style="color: #366ed8;"
+              ></i>
             </network>
             <network network="linkedin" style="margin: 10px;">
               <i class="fab fa-linkedin fa-2x" style="color: #556fb5;"></i>
@@ -99,10 +115,16 @@
               <i class="fab fa-reddit-square fa-2x" style="color: red;"></i>
             </network>
             <network network="twitter" style="margin: 10px;">
-              <i class="fab fa-twitter-square fa-2x" style="color: #207dff;"></i>
+              <i
+                class="fab fa-twitter-square fa-2x"
+                style="color: #207dff;"
+              ></i>
             </network>
             <network network="whatsapp" style="margin: 10px;">
-              <i class="fab fa-whatsapp-square fa-2x" style="color: #a1c45a;"></i>
+              <i
+                class="fab fa-whatsapp-square fa-2x"
+                style="color: #a1c45a;"
+              ></i>
             </network>
           </div>
         </social-sharing>
@@ -118,7 +140,8 @@
           type="error"
           v-if="error"
           style="width: 100%;"
-        >{{ error }}</v-alert>
+          >{{ error }}</v-alert
+        >
         <v-layout column justify-space-around>
           <v-flex>
             <h4>Rate "{{ businessName }}"</h4>
@@ -129,7 +152,10 @@
             <br />
             <br />
             <div class="comments">
-              <vue-disqus shortname="waynesite" :identifier="profileId"></vue-disqus>
+              <vue-disqus
+                shortname="https-www-suburbsdirectory-co-za"
+                :identifier="profileId"
+              ></vue-disqus>
             </div>
             <!-- <h6>
               If an email address does not exist, the comment will be deleted.

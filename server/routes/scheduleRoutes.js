@@ -1,60 +1,79 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("./connection");
-const cron = require("node-cron");
+const cronJob = require("cron").CronJob;
 const moment = require("moment");
 const momentTZ = require("moment-timezone");
 const nodemailer = require("nodemailer");
+const schedule = require("node-schedule");
 
-router.get('/getTimezone', (req,res)=>{
-  let newTimeZone = moment.tz.guess()
-  res.json({ timezone: newTimeZone})
-
+router.get("/getTimezone", (req, res) => {
+  let newTimeZone = moment.tz.guess();
+  res.json({ timezone: newTimeZone });
 });
 
-let currentTimezone = moment.tz.guess()
-// console.log(currentTimezone)
 
-cron.schedule(
-  "0 3 * * *",
-  () => {
-    console.log("Running a job at 09:12 at Africa/Johannesburg timezone");
-    checkExpiryDates()
-  },
-  {
-    scheduled: true,
-    timezone: currentTimezone
-    // timezone: "Africa/Johannesburg"
-  }
-);
 
-cron.schedule(
-  "15 3 * * *",
-  () => {
-    console.log("Running a job at 09:12 at Africa/Johannesburg timezone");
-    checkExpiredProfiles()
-  },
-  {
-    scheduled: true,
-    timezone: currentTimezone
-    // timezone: "Africa/Johannesburg"
-  }
-);
+var j = schedule.scheduleJob('15 3 * * *', () => {
+  console.log('This is the answer to life')
+  checkExpiryDates();
+})
+var j = schedule.scheduleJob('25 3 * * *', () => {
+  console.log('This is the answer to life')
+  checkExpiredProfiles();
+})
+var j = schedule.scheduleJob('35 3 * * *', () => {
+  console.log('This is the answer to life')
+  checkStatistics();
+})
 
-cron.schedule(
-  "30 3 * * *",
-  // "* * * * *",
-  () => {
+
+
+// setInterval(() => {
+//   console.log("testing")
+// }, 3000)
+
+let cronJ1 = new cronJob(
+  "00 00 03 * * *",
+  // "* * * * * *",
+  function() {
     console.log("Running a job at 09:12 at Europe/Berlin timezone");
-    // checkStatistics()
+    checkExpiryDates();
   },
-  {
-    scheduled: true,
-    // timezone: "Africa/Johannesburg"
-    timezone: currentTimezone
-    // timezone: CET
-  }
+  undefined,
+  true,
+  "Africa/Johannesburg"
 );
+
+let cronJ2 = new cronJob(
+  "00 15 03 * * *",
+  // "* * * * * *",
+  function() {
+    console.log("Running a job at 09:12 at Europe/Berlin timezone");
+    checkExpiredProfiles();
+  },
+  undefined,
+  true,
+  "Africa/Johannesburg"
+);
+
+let cronJ3 = new cronJob(
+  "00 30 03 * * *",
+  // "* * * * * *",
+  function() {
+    console.log("Running a job at 09:12 at Europe/Berlin timezone");
+    checkStatistics();
+  },
+  undefined,
+  true,
+  "Africa/Johannesburg"
+);
+
+cronJ1.start();
+cronJ2.start();
+cronJ3.start();
+
+
 
 let checkExpiryDates = function() {
   let nowDatePlus6 = moment()
@@ -107,11 +126,11 @@ let checkExpiredProfiles = function() {
         expiredProfiles.forEach(el => {
           let firstNameA = el.first_name;
           let emailA = el.email;
-        //   let expiryDateA = el.payment_expires;
+          //   let expiryDateA = el.payment_expires;
           let businessNameA = el.businessName;
           let messageA = `Your subscription on suburbs directory for your business "${businessNameA}" has expired. If you wish to resubscribe, please log into your profile and effect payment. Otherwise, we are sorry to see you go. `;
           let subjectA = `Suburbs Directory subscription Expired`;
-          processSchedule(firstNameA, emailA,messageA, subjectA)
+          processSchedule(firstNameA, emailA, messageA, subjectA);
         });
       }
     });
@@ -122,13 +141,13 @@ let checkExpiredProfiles = function() {
 let checkStatistics = function() {
   let nowDate = moment().format("YYYY-MM-DD");
 
-  let sql1 = `select count(*) as TotalProfiles from client_profiles`
-  let sql2 = `select count(*) as PaidProfiles from client_profiles where paid_to_date = true and profile_approved = true`
-  let sql3 = `select count(*) as PaidNotApprovedProfiles from client_profiles where profile_approved = false and  paid_to_date = true`
-  let sql4 = `select count(*) as approvedNotPaidProfiles from client_profiles where profile_approved = true and  paid_to_date = false`
-  let sql5 = `select count(*) as approvedNorPaidProfiles from client_profiles where profile_approved = false and  paid_to_date = false`
-  let sql6 = `select count(*) as approvedLast30 from client_profiles where created_at > '2019-09-08'`
-  let sql7 = `select count(*) as expiringNext7 from client_profiles where payment_expires > '2019-10-08' and payment_expires < '2019-10-15'`
+  let sql1 = `select count(*) as TotalProfiles from client_profiles`;
+  let sql2 = `select count(*) as PaidProfiles from client_profiles where paid_to_date = true and profile_approved = true`;
+  let sql3 = `select count(*) as PaidNotApprovedProfiles from client_profiles where profile_approved = false and  paid_to_date = true`;
+  let sql4 = `select count(*) as approvedNotPaidProfiles from client_profiles where profile_approved = true and  paid_to_date = false`;
+  let sql5 = `select count(*) as approvedNorPaidProfiles from client_profiles where profile_approved = false and  paid_to_date = false`;
+  let sql6 = `select count(*) as approvedLast30 from client_profiles where created_at > '2019-09-08'`;
+  let sql7 = `select count(*) as expiringNext7 from client_profiles where payment_expires > '2019-10-08' and payment_expires < '2019-10-15'`;
   let sql = `${sql1};${sql2};${sql3};${sql4};${sql5};${sql6};${sql7}`;
   pool.getConnection(function(err, connection) {
     if (err) {
@@ -140,14 +159,13 @@ let checkStatistics = function() {
         console.log(error);
       } else {
         console.log("This is the result", result[0]);
-        console.log(result)
+        console.log(result);
 
-      
-          let firstNameA = `Lisa & Nicole`;
-          let emailA = `lisa@suburbsdirectory.co.za`;
+        let firstNameA = `Lisa & Nicole`;
+        let emailA = `lisa@suburbsdirectory.co.za`;
         //   let expiryDateA = el.payment_expires;
-          let businessNameA = `Suburbs Directory`;
-          let messageA = `  Total profiles on the system: ${result[0][0].TotalProfiles}<br>
+        let businessNameA = `Suburbs Directory`;
+        let messageA = `  Total profiles on the system: ${result[0][0].TotalProfiles}<br>
                             Total paid profiles: ${result[1][0].PaidProfiles}<br>
                             Total paid but NOT approved profiles: ${result[2][0].PaidNotApprovedProfiles}<br>
                             Total approved but NOT paid profiles: ${result[3][0].approvedNotPaidProfiles}<br>
@@ -155,14 +173,13 @@ let checkStatistics = function() {
                             Profiles approved in the last 30 days: ${result[5][0].approvedLast30}<br>
                             Profiles expiring in the next 7 days: ${result[6][0].expiringNext7}
                             `;
-          let subjectA = `Suburbs Directory Statistics`;
-          processSchedule(firstNameA, emailA,messageA, subjectA)
+        let subjectA = `Suburbs Directory Statistics`;
+        processSchedule(firstNameA, emailA, messageA, subjectA);
       }
     });
     connection.release();
   });
 };
-
 
 let processSchedule = function(firstNameA, emailA, messageA, subjectA) {
   let response = {

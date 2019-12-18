@@ -88,7 +88,7 @@ export default {
           this.error = null
         },2000)
       } else {
-        await DirectoryService.resetAdminPassword({
+        await DirectoryService.resetAdminPassword({ 
           email: this.email,
           password: this.password,
           passwordRepeat: this.passwordRepeat

@@ -25,23 +25,31 @@
         v-for="(item, id) in this.$store.state.categories"
         :key="id"
       >
+      <div v-if="item.count > 0" @click="chooseCategory($event)">
         <v-img
           class="imgCat"
-          v-if="item.count > 0"
+          
           :id="item.id"
           :src="item.image_url"
           alt
-          @click="chooseCategory($event)"
+          
         ></v-img>
+        <h3>{{ item.category_description }}({{ item.count }})</h3>
+
+        </div>
+        <div v-else>
         <v-img
           class="imgCat emptyOfProfiles"
-          v-else
+          
           :id="item.id"
           :src="item.image_url"
           alt
           @click="chooseCategory($event)"
         ></v-img>
         <h3>{{ item.category_description }}({{ item.count }})</h3>
+
+        </div>
+        <!-- <h3>{{ item.category_description }}({{ item.count }})</!-->
       </v-flex>
     </v-layout>
   </v-container>

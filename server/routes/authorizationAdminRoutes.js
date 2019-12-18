@@ -91,7 +91,7 @@ router.put("/resetAdminPasswordLink", (req, res) => {
       }
       let resetEmail = cryptr.encrypt(JSON.stringify(req.body.email));
       // console.log(resetEmail)
-      let resetURL = `${process.env.RESET_ADMIN_URL}/${resetEmail}`;
+      let resetURL = `${process.env.RESET_ADMIN_URL}/${resetEmail}`; 
       //SEND EMAIL TO CLIENT
 
       let response = {

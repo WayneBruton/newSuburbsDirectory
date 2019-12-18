@@ -8,7 +8,7 @@ export default {
     return Api().get(`/categories/${area}`);
   },
   profiles(credentials) {
-    return Api().put(`/profiles`, credentials);
+    return Api().put(`/profiles`, credentials); 
   },
   getPackages(credentials) {
     // console.log(credentials)

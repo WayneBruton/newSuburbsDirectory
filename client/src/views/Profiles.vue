@@ -108,7 +108,7 @@
 
 <script>
 import DirectoryService from "@/services/DirectoryServices.js";
-import Panel from "@/components/Panel.vue";
+// import Panel from "@/components/Panel.vue";
 export default {
   data() {
     return {
@@ -120,7 +120,7 @@ export default {
     };
   },
   components: {
-    Panel
+    // Panel
   },
   async mounted() {
     let w = window.innerWidth;
@@ -139,13 +139,14 @@ export default {
       area: area,
       category: category
     };
-    try {
+    try { 
       let response = (await DirectoryService.profiles(credentials));
       console.log(response.data)
       this.items = response.data
       console.log(this.items)
       //   this.isUserLoggedIn = this.$store.state.isUserLoggedIn;
         this.totalItems = this.items;
+        console.log("Items",this.items)
       // console.log(this.items)
     } catch (err) {
       console.log(err);

@@ -63,7 +63,7 @@ const upload = multer({
 // router.put("/authenticateAdmin", checktoken, (req, res) => {});
 
 router.get("/getProfile/:id", function(req, res) {
-  console.log(req.params.id);
+  // console.log(req.params.id);
   // res.json({Awesome: req.params.id})
   var sql = `select * from client_profiles where id = ${req.params.id}`;
   pool.getConnection(function(err, connection) {
@@ -91,7 +91,7 @@ router.post("/addProfile", upload.array(), function(req, res) {
   let base64Image3 = base64Data3.split(";base64,").pop();
 
   let initArray = req.body.areas.split(",");
-  let areas = [];
+  let areas = []; 
   let catarea = [];
   let extra_packages = [];
   for (i = 0; i < initArray.length; i++) {
@@ -209,7 +209,7 @@ router.post("/addProfile", upload.array(), function(req, res) {
 });
 
 router.post("/editProfile", upload.array(), function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var base64Data = req.body.file;
   let extra_packages = [];
   // console.log("Main Image",base64Data)
@@ -220,7 +220,7 @@ router.post("/editProfile", upload.array(), function(req, res) {
   if (base64Data !== "") {
     base64Image = base64Data.split(";base64,").pop();
   }
-
+  console.log("base64Data##########",base64Data)
   var base64Data1 = req.body.file1;
   if (base64Data1 !== "") {
     base64Image1 = base64Data1.split(";base64,").pop();
@@ -235,7 +235,7 @@ router.post("/editProfile", upload.array(), function(req, res) {
   if (base64Data3 !== "") {
     base64Image3 = base64Data3.split(";base64,").pop();
   }
-  console.log("EEEXTRAAA!!!!", req.body.extra_packages);
+  // console.log("EEEXTRAAA!!!!", req.body.extra_packages);
   let initPackagesArray = [];
   if (req.body.extra_packages !== NaN) {
     initPackagesArray = req.body.extra_packages.split(",");
@@ -262,14 +262,14 @@ router.post("/editProfile", upload.array(), function(req, res) {
   for (i = 0; i < initArray.length; i++) {
     catarea.push(parseInt(initArray[i]));
   }
-  console.log("CatArea", catarea);
+  // console.log("CatArea", catarea);
 
   let id = req.body.id;
   let payment_expires = moment(req.body.payment_expires).format(
     "YYYY-MM-DD HH:mm"
   );
 
-  console.log(payment_expires);
+  // console.log(payment_expires);
 
   let sql = `update client_profiles set businessName = "${req.body.businessName}",first_name = "${req.body.firstName}",last_name = "${req.body.lastName}", 
       mob_no = "${req.body.contactNumber}",email = "${req.body.email}", website = "${req.body.website}",facebook = "${req.body.facebook}",instagram = "${req.body.instagram}",
@@ -343,11 +343,11 @@ router.post("/editProfile", upload.array(), function(req, res) {
       }
       let sql3 = `update client_profiles set profile_image = '/images/profiles/${id}ProfilePic.png', business_image1 = '/images/profiles/${id}Business1Pic.png', business_image2 = '/images/profiles/${id}Business2Pic.png', business_image3 = '/images/profiles/${id}Business3Pic.png'
          where id = ${id}`;
-      console.log(sql3);
+      // console.log(sql3);
       connection.query(sql3, function(error, result) {
         if (error) throw error;
         res.json({
-          result: "Congratulations, you have updarted your profile"
+          result: "Congratulations, you have updated your profile"
         });
       });
     });

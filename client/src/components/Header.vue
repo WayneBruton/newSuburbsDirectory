@@ -248,7 +248,7 @@ export default {
   data() {
     return {
       areas: [],
-      categories: []
+      categories: [] 
     };
   },
   async mounted() {

@@ -39,6 +39,6 @@ router.get("/getProfilesForDashboard", (req, res) => {
       });
       connection.release();
     });
-  });
+  }); 
 
   module.exports = router;
